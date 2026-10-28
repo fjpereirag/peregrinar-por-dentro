@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Peregrinar por dentro</title>
+<meta name="description" content="Una serie para rezar desde los lugares de Tierra Santa, vistos en 3D.">
+<meta name="theme-color" content="#140f0b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23140f0b'/%3E%3Cpath d='M20 9v22M13 15h14' stroke='%23d9b26a' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css?v=2">
+</head>
+<body>
+
+<div id="mapa" aria-hidden="true"></div>
+<div id="velo" aria-hidden="true"></div>
+<div id="creditos" class="creditos"></div>
+
+<header class="cabecera">
+  <a class="marca" href="#inicio" aria-label="Peregrinar por dentro · inicio">
+    <svg viewBox="0 0 40 40" class="marca-ic" aria-hidden="true"><circle cx="20" cy="20" r="18"/><path d="M20 10v21M13 15h14"/></svg>
+    <span><b>Peregrinar por dentro</b><small id="marcaLugar">Tierra Santa · 3D</small></span>
+  </a>
+  <button class="btn-menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir el menú">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <nav class="menu" id="menu" aria-label="Apartados">
+    <a href="#inicio">El lugar</a>
+    <a href="#reflexion">Reflexión</a>
+    <a href="#oracion">Oración</a>
+    <a href="#compartir">Compartir</a>
+  </nav>
+</header>
+
+<main id="contenido">
+  <section id="inicio" class="portada" data-vista="inicio">
+    <div class="portada-in">
+      <p class="antetitulo" id="serie"></p>
+      <h1 id="nombre"></h1>
+      <p class="titulo" id="titulo"></p>
+      <p class="lema" id="entradilla"></p>
+      <div class="acciones">
+        <a class="btn oro" href="#reflexion">Empezar a rezar</a>
+        <button class="btn vidrio" type="button" id="volar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <span>Volar de nuevo al lugar</span>
+        </button>
+      </div>
+    </div>
+    <div class="desliza" aria-hidden="true"><span></span>Desliza para entrar</div>
+  </section>
+
+  <div id="reflexion"></div>
+
+  <section id="guardar" class="guardar" data-vista="guardar">
+    <div class="guardar-in">
+      <p class="antetitulo">Para guardar en el corazón</p>
+      <blockquote id="frase"></blockquote>
+    </div>
+  </section>
+
+  <section id="oracion" class="oracion" data-vista="guardar">
+    <div class="tarjeta oracion-in">
+      <p class="antetitulo">Una oración</p>
+      <p class="versos" id="versos"></p>
+      <a class="lectura" id="lectura" target="_blank" rel="noopener"></a>
+    </div>
+  </section>
+
+  <section id="compartir" class="compartir" data-vista="guardar">
+    <div class="tarjeta compartir-in">
+      <p class="antetitulo">Versión para compartir</p>
+      <h2>Mensaje para WhatsApp</h2>
+      <pre class="mensaje" id="mensaje"></pre>
+      <div class="acciones">
+        <a class="btn whatsapp" id="btnWhatsapp" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7L4 20Z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2L9 9.5Z"/></svg>
+          Enviar por WhatsApp
+        </a>
+        <button class="btn vidrio" type="button" id="btnCopiar">Copiar el mensaje</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="serieLista" class="serie-lista" hidden>
+    <p class="antetitulo">La serie</p>
+    <h2>Otros lugares para peregrinar por dentro</h2>
+    <div class="serie-rejilla" id="serieRejilla"></div>
+  </section>
+
+  <footer class="pie">
+    <p><b>Peregrinar por dentro</b> · Una mirada a Tierra Santa para rezar desde lo que vivimos.</p>
+    <p class="pie-nota" id="pieMapa"></p>
+  </footer>
+</main>
+
+<div class="aviso" id="aviso" role="status" hidden></div>
+
+<script src="lugares.js?v=1"></script>
+<script type="module" src="app.js?v=2"></script>
+</body>
+</html>
