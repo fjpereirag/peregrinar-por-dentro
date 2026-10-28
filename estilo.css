@@ -36,23 +36,42 @@ h1,h2,h3{font-family:var(--font-display);font-weight:500;margin:0}
 .salto{position:absolute;left:var(--space-2);top:-60px;z-index:60;background:var(--accent);color:var(--bg);padding:var(--space-1) var(--space-2);text-decoration:none}
 .salto:focus{top:var(--space-2)}
 
-/* ---------- mapa de fondo ---------- */
-#mapa{position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;z-index:0;pointer-events:none;
-  background:radial-gradient(120% 90% at 60% 10%,#2a2116 0%,#14110c 45%,var(--bg) 100%)}
-#mapa iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.8) brightness(.8)}
-#mapa .cesium-viewer,#mapa .cesium-widget,#mapa canvas{width:100%;height:100%}
-#mapa .cesium-viewer-bottom,#mapa .cesium-widget-credits{display:none!important}
-#mapa .maplibregl-canvas{outline:none}
+/* ---------- escena: imágenes IA con movimiento de cine lento (solo transform y opacity) ---------- */
+.escena{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:radial-gradient(120% 90% at 65% 20%,#2a2116 0%,#14110c 50%,var(--bg) 100%)}
+.plano{position:absolute;inset:0;margin:0;opacity:0;transition:opacity 1800ms var(--ease-in-out)}
+.plano.activo{opacity:1}
+.plano img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--foco);opacity:0;transition:opacity 1200ms var(--ease-out);
+  transform-origin:var(--foco);will-change:transform}
+.plano.lista img{opacity:1}
+.plano.activo.kb-a img{animation:kb-a 42s var(--ease-in-out) infinite alternate}
+.plano.activo.kb-b img{animation:kb-b 42s var(--ease-in-out) infinite alternate}
+@keyframes kb-a{from{transform:scale(1.02) translate3d(0,0,0)}to{transform:scale(var(--zoom)) translate3d(-1.5%,-1%,0)}}
+@keyframes kb-b{from{transform:scale(var(--zoom)) translate3d(1.5%,.5%,0)}to{transform:scale(1.02) translate3d(0,0,0)}}
+.plano.vacia{background:radial-gradient(90% 70% at 70% 35%,color-mix(in srgb,var(--accent) 14%,transparent),transparent 70%)}
+@media (prefers-reduced-motion:reduce){.plano.activo img{animation:none!important}.plano{transition-duration:150ms}}
 #velo{position:fixed;inset:0;z-index:1;pointer-events:none;transition:opacity var(--dur-reveal) var(--ease-out);
-  background:linear-gradient(90deg,color-mix(in srgb,var(--bg) 78%,transparent) 0%,color-mix(in srgb,var(--bg) 25%,transparent) 48%,transparent 68%),
-             linear-gradient(0deg,color-mix(in srgb,var(--bg) 70%,transparent),transparent 34%)}
-#velo.lectura{opacity:.8}
-body.modo-2d #velo{background:linear-gradient(90deg,color-mix(in srgb,var(--bg) 85%,transparent),color-mix(in srgb,var(--bg) 40%,transparent) 55%,color-mix(in srgb,var(--bg) 20%,transparent))}
-.creditos{position:fixed;right:10px;bottom:8px;z-index:4;max-width:min(70vw,560px);font:400 10.5px/1.35 var(--font-body);color:color-mix(in srgb,var(--fg) 80%,transparent);
-  text-align:right;text-shadow:0 1px 3px var(--bg);pointer-events:auto;transition:bottom var(--dur-ui) var(--ease-out)}
-.creditos a{color:inherit}
-.creditos img{display:inline-block;vertical-align:middle;max-height:16px}
-.creditos .cesium-credit-lightbox-overlay{z-index:50}
+  background:linear-gradient(90deg,color-mix(in srgb,var(--bg) 80%,transparent) 0%,color-mix(in srgb,var(--bg) 30%,transparent) 48%,transparent 70%),
+             linear-gradient(0deg,color-mix(in srgb,var(--bg) 75%,transparent),transparent 36%)}
+#velo.lectura{opacity:.85}
+
+/* ---------- mapa ilustrado de situación ---------- */
+.situacion{position:absolute;right:var(--gutter);bottom:var(--space-5);width:clamp(11rem,15vw,15rem);margin:0;color:var(--muted);padding:var(--space-2);background:var(--panel);border-left:1px solid var(--line-oro)}
+.situacion svg{display:block;width:100%;height:auto;overflow:visible}
+.situacion p{margin:var(--space-1) 0 0;font-variant:all-small-caps;letter-spacing:.16em;font-size:.9rem;color:var(--accent);text-align:center}
+.situacion svg *{stroke:none}
+.sit-mar{fill:color-mix(in srgb,#3a5a78 22%,transparent)}
+.situacion .sit-costa{fill:none;stroke:var(--line-oro);stroke-width:1}
+.situacion .sit-agua{fill:color-mix(in srgb,#3a5a78 40%,transparent);stroke:var(--line-oro);stroke-width:.6}
+.situacion .sit-rio{fill:none;stroke:color-mix(in srgb,#6f8fae 70%,transparent);stroke-width:.9}
+.sit-ciudad{fill:var(--muted)}
+.sit-rotulo{font:400 7px var(--font-body);fill:var(--muted)}
+.sit-rotulo.mar,.sit-rotulo.agua{font-style:italic;letter-spacing:.06em;font-size:6.5px}
+.sit-actual circle{fill:var(--accent)}
+.situacion .sit-otro circle{fill:none;stroke:var(--accent);stroke-width:1}
+.situacion .sit-pulso{fill:none!important;stroke:var(--accent);stroke-width:1;transform-box:fill-box;transform-origin:center;animation:pulso 3.2s var(--ease-out) infinite}
+@keyframes pulso{from{transform:scale(1);opacity:.9}to{transform:scale(3.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.sit-pulso{animation:none}}
 
 /* ---------- cabecera ---------- */
 .cabecera{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--gutter);
@@ -146,15 +165,6 @@ main{position:relative;z-index:3}
 .pie p{margin:0;max-width:42em}
 .pie b{color:var(--fg);font-weight:600}
 .aviso{position:fixed;left:50%;bottom:var(--space-4);transform:translateX(-50%);z-index:40;max-width:calc(100vw - 2rem);padding:var(--space-2) var(--space-3);background:var(--panel-fuerte);border:1px solid var(--line-oro);font-size:.98rem}
-body.modo-2d #volar{display:none}
-
-/* ---------- marcas del mapa ---------- */
-.marca-lugar{display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
-.marca-lugar span{font:500 1.05rem var(--font-display);color:var(--fg);background:var(--panel-fuerte);border:1px solid var(--line-oro);padding:4px 10px;white-space:nowrap;order:-1}
-.marca-lugar i{width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 0 6px var(--accent-suave)}
-.marca-lugar:not(.actual) i{width:9px;height:9px}
-.marca-lugar>*{transition:opacity var(--dur-reveal) var(--ease-out)}
-body.cerca .marca-lugar>*{opacity:0}
 
 /* ---------- voz ---------- */
 .btn-oir{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;margin-top:var(--space-3);padding:0 1rem 0 .8rem;border:1px solid var(--line-oro);background:transparent;color:var(--accent);
@@ -179,7 +189,6 @@ body.cerca .marca-lugar>*{opacity:0}
 .rp-info b{font:500 1.1rem var(--font-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rp-barra{display:block;height:1px;background:var(--line);margin-top:.35rem;overflow:hidden}
 .rp-barra span{display:block;height:100%;width:0;background:var(--accent)}
-body:has(.reproductor:not([hidden])) .creditos{bottom:80px}
 
 /* ---------- tableta ---------- */
 @media (max-width:1100px){
@@ -204,7 +213,6 @@ body:has(.reproductor:not([hidden])) .creditos{bottom:80px}
   .menu a.actual{color:var(--accent);border-bottom-color:var(--line)}
   #velo{background:linear-gradient(0deg,color-mix(in srgb,var(--bg) 94%,transparent) 0%,color-mix(in srgb,var(--bg) 60%,transparent) 42%,transparent 72%),
                     linear-gradient(180deg,color-mix(in srgb,var(--bg) 55%,transparent),transparent 18%)}
-  body.modo-2d #velo{background:linear-gradient(0deg,color-mix(in srgb,var(--bg) 90%,transparent),color-mix(in srgb,var(--bg) 35%,transparent) 60%,color-mix(in srgb,var(--bg) 15%,transparent))}
   .portada{align-items:flex-end;padding:var(--space-6) var(--gutter) var(--space-5)}
   .portada h1{font-size:clamp(3.6rem,17vw,5rem)}
   .titulo{font-size:1.45rem;margin-top:var(--space-2)}
@@ -220,6 +228,8 @@ body:has(.reproductor:not([hidden])) .creditos{bottom:80px}
   .versos{font-size:1.35rem}
   .compartir{padding-bottom:var(--space-6)}
   .compartir-in{padding:var(--space-3)}
-  .creditos{max-width:calc(100vw - 20px);font-size:9.5px}
+  .situacion{top:5.2rem;bottom:auto;right:var(--gutter);width:5.6rem;padding:.4rem}
+  .situacion p{display:none}
+  .situacion .sit-rotulo{display:none}
   .reproductor{bottom:.6rem}
 }

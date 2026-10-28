@@ -1,7 +1,7 @@
 # Peregrinar por dentro
 
-Una serie para rezar desde los lugares de Tierra Santa, vistos en 3D.
-Cada lugar empieza con un vuelo sobre un mapa 3D gratuito, desde Tierra Santa entera hasta el sitio, y luego sigue la reflexión al ritmo del scroll.
+Una serie para rezar desde los lugares de Tierra Santa.
+Cada lugar se recorre con imágenes creadas con IA, una por apartado, con movimiento de cine lento, y la reflexión al ritmo del scroll.
 
 - Web: https://fjpereirag.github.io/peregrinar-por-dentro/
 - Un lugar concreto: `…/peregrinar-por-dentro/?l=getsemani`. Sin `?l=`, se abre el último lugar publicado.
@@ -12,45 +12,36 @@ Cada lugar empieza con un vuelo sobre un mapa 3D gratuito, desde Tierra Santa en
 |---|---|
 | `index.html` | Estructura de la página (no hace falta tocarlo) |
 | `estilo.css` | Aspecto visual |
-| `app.js` | Mapa 3D, vuelo de cámara, menú y botones |
+| `app.js` | Imágenes y su movimiento, mapa de situación, menú, voz y botones |
 | `lugares.js` | **Los textos de cada lugar**: aquí se añade el lugar de cada día |
-| `config.js` | El token gratuito de Cesium para los edificios en 3D real |
 | `voz.js` | Cómo se reparte el texto en audios y dónde van las pausas |
+| `img/<lugar>/` | Las imágenes de cada apartado (00.webp … 07.webp) |
 | `audio/<lugar>/` | Los MP3 de la voz (00.mp3, 01.mp3…) |
 | `favicon.svg`, `og.jpg`, `404.html` | Icono, imagen al compartir el enlace (1200×630) y página de error con el mismo estilo |
+| `herramienta-imagenes/` | Prompts para generar las imágenes y conversor a WebP (`preparar-imagenes.bat`) |
 | `herramienta-voz/` | Herramientas para crear los MP3 en tu ordenador: voz gratuita (`voz-gratis.bat`) o ElevenLabs (`generar-voz.html`) |
 
 ## Añadir un lugar nuevo
 
 1. Abre `lugares.js`.
 2. Copia el bloque de Getsemaní entero, desde `{` hasta `},`, y pégalo debajo.
-3. Cambia `id` (sin espacios ni tildes, por ejemplo `belen`), `numero`, los textos y `coord`. Para sacar las coordenadas, haz clic derecho sobre el lugar en Google Maps o en OpenStreetMap y copia las dos cifras.
-4. En cada apartado puedes ajustar la `vista` de la cámara. El archivo explica qué hace cada número.
-5. Sube `lugares.js` a GitHub.
+3. Cambia `id` (sin espacios ni tildes, por ejemplo `belen`), `numero`, los textos, las citas y `coord`. Para sacar las coordenadas, haz clic derecho sobre el lugar en Google Maps o en OpenStreetMap y copia las dos cifras.
+4. Prepara sus imágenes y su voz (apartados de abajo).
+5. Sube `lugares.js`, la carpeta `img/<id>` y la carpeta `audio/<id>` a GitHub.
 
-## Mapa 3D gratuito, sin claves ni tarjeta
+## Imágenes (creadas con IA)
 
-El mapa se monta solo con servicios abiertos y gratuitos, sin registrarse en nada:
+Cada apartado tiene su propia imagen a pantalla completa, con un movimiento muy lento de acercamiento (efecto de cine). Al bajar, la imagen cambia con un fundido. Arriba a la derecha, un mapa ilustrado marca dónde está el lugar.
 
-- **Relieve del terreno:** Terrain Tiles (Mapzen), alojados por AWS como datos abiertos.
-- **Foto aérea:** Esri World Imagery.
-- **Edificios:** solo con el token de Cesium (3D real). Sin él, se ven el relieve y la foto aérea, sin cubos.
-- **Motor 3D:** MapLibre GL JS, de código abierto.
+1. Abre `herramienta-imagenes/prompts-<lugar>.md`. Para Getsemaní ya está hecho: `prompts-getsemani.md`.
+2. En Gemini (Nanobanana), pega el **bloque de estilo** y después el prompt de cada escena. Genera en 16:9 y, si quieres, también en 9:16 para el móvil.
+3. Guarda las imágenes en `img/<lugar>/` con su número: `00.png`, `01.png`… `07.png` (y `00-movil.png`… si hiciste verticales).
+4. Doble clic en `herramienta-imagenes/preparar-imagenes.bat`: crea los `.webp` ligeros que usa la web.
+5. Sube a GitHub los `.webp` de `img/<lugar>/`.
 
-Si un equipo no puede mostrar 3D, la web enseña el mapa plano de OpenStreetMap. Las autorías salen siempre en la esquina inferior derecha y en el pie de página.
+Mientras falte alguna imagen, ese apartado muestra un fondo oscuro con un halo dorado.
 
-## Edificios en 3D real (gratis, con Cesium ion)
-
-Con un token gratuito de Cesium se ven los edificios, los olivos y el terreno en 3D fotorrealista (los Google Photorealistic 3D Tiles). La cuenta Community es gratuita para uso no comercial e incluye unas 1.000 visitas al mes. Si un mes se agotan, la web pasa sola al mapa gratuito.
-
-1. Crea la cuenta en https://ion.cesium.com/signup (plan **Community**).
-2. Ve a **Asset Depot**, busca «Google Photorealistic 3D Tiles» y pulsa **Add to my assets**.
-3. Ve a **Access Tokens → Create token**:
-   - Nombre: «peregrinar».
-   - Deja marcado el permiso `assets:read`.
-   - En **Selected assets**, elige «Google Photorealistic 3D Tiles».
-   - En **Allowed URLs**, añade `https://fjpereirag.github.io`.
-4. Copia el token, pégalo en `config.js` entre las comillas de `tokenCesium: ''` y sube ese archivo.
+Para mover el punto de interés de una imagen o cambiar cuánto se acerca, ajusta `imagenes` en `lugares.js` (`foco` y `zoom`).
 
 ## La voz
 

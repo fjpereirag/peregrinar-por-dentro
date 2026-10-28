@@ -4,16 +4,15 @@
 // (desde la llave { hasta la llave } con coma), pégalo debajo y cambia
 // los textos y las coordenadas. El número 1, 2, 3… marca el orden.
 //
-// coord:   latitud y longitud del punto principal (Google Maps u OpenStreetMap → clic
-//          derecho sobre el lugar → copiar las dos cifras).
-// altura:  metros sobre el nivel del mar del suelo en ese punto.
-// vista:   cómo mira la cámara en cada apartado:
-//            rumbo   0 = mirando al norte, 90 = este, 180 = sur, 270 = oeste
-//            incl    inclinación hacia abajo (-10 casi horizontal, -60 muy cenital)
-//            dist    distancia en metros al punto
-// cita:    referencia bíblica de cada apartado (sale en versalitas bajo el título)
-//            gira    true = vuelo de dron en círculo alrededor del lugar
-//            vel     velocidad del giro en grados por segundo (4 = una vuelta cada 90 s)
+// coord:   latitud y longitud del lugar, para el mapa de situación de la portada
+//          (Google Maps u OpenStreetMap → clic derecho sobre el lugar → copiar las dos cifras).
+// cita:    referencia bíblica de cada apartado (sale en versalitas bajo el título).
+// IMÁGENES: van en img/<id>/ con estos nombres (los mismos que los audios):
+//            00 portada · 01…05 apartados · 06 frase final · 07 oración
+//          00.webp (horizontal, 16:9) y, si quieres, 00-movil.webp (vertical, 9:16).
+// imagenes: (opcional) ajuste de cada imagen:
+//            foco   qué punto se mantiene a la vista al recortar y hacia dónde se acerca ('50% 50%' = centro)
+//            zoom   cuánto se acerca el movimiento lento (1.12 = un 12 %)
 // ---------------------------------------------------------------
 window.LUGARES = [
   {
@@ -24,13 +23,10 @@ window.LUGARES = [
     entradilla: 'Hay noches en las que la fe apenas consigue pronunciar una frase: «Padre, estoy aquí».',
     ubicacion: 'Monte de los Olivos · Jerusalén',
     coord: [31.77945, 35.23975],
-    altura: 700,
-    vistaInicio: { rumbo: 95, incl: -11, dist: 110, gira: true, vel: 4 },
     secciones: [
       {
         id: 'pregunta',
         cita: 'Mc 14,34',
-        vista: { rumbo: 70, incl: -22, dist: 320 },
         parrafos: [
           '¿Alguna vez has rezado y el miedo seguía ahí? Has pedido por alguien, por una situación que no sabes resolver, por una noticia que temes recibir. Y, al terminar, la preocupación continuaba.',
           'Quizá entonces te preguntaste si estabas rezando mal.',
@@ -41,7 +37,6 @@ window.LUGARES = [
         id: 'lugar',
         cita: 'Mc 14,32-42',
         titulo: 'Un lugar real y una experiencia cercana',
-        vista: { rumbo: 100, incl: -8, dist: 80, gira: true, vel: 3 },
         parrafos: [
           'Al pie del monte de los Olivos, en Jerusalén, el huerto de Getsemaní y la basílica de la Agonía recuerdan la oración de Jesús antes de su pasión. La basílica también recibe el nombre de iglesia de las Naciones. Es uno de los lugares donde el peregrino puede detenerse a contemplar la humanidad de Jesús.',
           'Allí, el Evangelio de Marcos muestra a Jesús angustiado. Busca la compañía de Pedro, Santiago y Juan, les pide que permanezcan despiertos y se dirige al Padre. Desea que se aparte de él aquella hora y, al mismo tiempo, se entrega a su voluntad (Mc 14,32-42).'
@@ -51,7 +46,6 @@ window.LUGARES = [
         id: 'tal-como-estas',
         cita: 'Mc 14,36',
         titulo: 'Puedes acercarte a Dios tal como estás',
-        vista: { rumbo: 150, incl: -28, dist: 110 },
         parrafos: [
           'Al contemplar esta escena, podemos reconocer algo que consuela: sentir miedo no significa haber perdido la fe.',
           'Podemos rezar con la voz temblando. Podemos estar cansados, tener preguntas y desear que las cosas sean distintas. La oración puede comenzar precisamente ahí, donde ya no sabemos qué decir.',
@@ -62,7 +56,6 @@ window.LUGARES = [
         id: 'compania',
         cita: 'Mc 14,33-34',
         titulo: 'También necesitamos compañía',
-        vista: { rumbo: 30, incl: -14, dist: 200 },
         parrafos: [
           'Jesús pide a sus amigos que permanezcan cerca. Ese gesto nos recuerda que necesitar a los demás forma parte de nuestra humanidad.',
           'A veces, acompañar a quien sufre consiste en sentarse a su lado, escuchar sin apresurarse a dar respuestas o llamar cuando han pasado los primeros días y casi todos han vuelto a sus ocupaciones.',
@@ -73,8 +66,6 @@ window.LUGARES = [
         id: 'vida',
         cita: 'Mc 14,41-42',
         titulo: 'Llevar Getsemaní a nuestra vida',
-        // desde el huerto, mirando hacia la ciudad vieja
-        vista: { rumbo: 255, incl: -14, dist: 260 },
         parrafos: [
           'Quizá hoy tu oración no termine con una gran sensación de paz. Puedes, aun así, haber dado un paso de confianza al compartir con Dios lo que te pesa.',
           'Confiar también puede tomar la forma de pedir ayuda, aceptar compañía y dejarte cuidar.'
@@ -82,7 +73,11 @@ window.LUGARES = [
       }
     ],
     guardar: 'Puedes tener miedo y seguir confiando en Dios.',
-    vistaGuardar: { rumbo: 95, incl: -10, dist: 260, gira: true, vel: 2 },
+    imagenes: {
+      '00': { foco: '50% 55%', zoom: 1.12 },
+      '02': { foco: '50% 40%', zoom: 1.10 },
+      '05': { foco: '60% 45%', zoom: 1.10 }
+    },
     oracion: [
       'Padre, tú conoces lo que hoy me preocupa.',
       'Ayúdame a hablarte con sinceridad,',

@@ -1,11 +1,9 @@
-// Peregrinar por dentro · plantilla de un lugar con mapa 3D gratuito (MapLibre)
+// Peregrinar por dentro · plantilla de un lugar: imágenes IA con cine lento, mapa ilustrado y voz
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const estrecho = () => innerWidth <= 760;
-const MAPLIBRE = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/';
-const CESIUM = 'https://cdn.jsdelivr.net/npm/cesium@1.145.0/Build/Cesium/';
 
 // ---------- qué lugar se muestra: ?l=getsemani (por defecto, el último) ----------
 const LUGARES = [...(window.LUGARES || [])].sort((a, b) => a.numero - b.numero);
@@ -26,7 +24,7 @@ $('#titulo').textContent = L.titulo; $('#titulo').classList.add('revela'); $('#t
 $('#entradilla').textContent = L.entradilla; $('#entradilla').classList.add('revela'); $('#entradilla').style.setProperty('--i', 6);
 $('#inicio .acciones').classList.add('revela'); $('#inicio .acciones').style.setProperty('--i', 8);
 $('#reflexion').innerHTML = L.secciones.map((s, i) => `
-  <section class="paso ${i % 2 ? 'derecha' : ''}" id="${esc(s.id)}" data-vista="${i}" aria-labelledby="t-${esc(s.id)}">
+  <section class="paso ${i % 2 ? 'derecha' : ''}" id="${esc(s.id)}" data-vista="${String(i + 1).padStart(2, '0')}" aria-labelledby="t-${esc(s.id)}">
     <article class="tarjeta">
       <p class="numeral revela" aria-hidden="true">${romano(i + 1)}</p>
       <h2 id="t-${esc(s.id)}">${lineas(s.titulo || 'Para empezar')}</h2>
@@ -80,16 +78,37 @@ document.addEventListener('click', e => {
   scrollTo({ top: el.getBoundingClientRect().top + scrollY - (el.id === 'inicio' ? 0 : cab.offsetHeight + 8), behavior: reducido ? 'auto' : 'smooth' });
 });
 
-// ---------- vistas de cámara ----------
-const vistaDe = clave => clave === 'inicio' ? L.vistaInicio : clave === 'guardar' ? (L.vistaGuardar || L.vistaInicio) : (L.secciones[clave]?.vista || L.vistaInicio);
-let camara = null;            // se define si el 3D arranca
-let claveActual = 'inicio';
+// ---------- escena: una imagen por apartado, con movimiento de cine lento ----------
+// Imágenes en img/<lugar>/<clave>.webp (horizontal) y, opcional, <clave>-movil.webp (vertical).
+// Claves: 00 portada · 01…05 apartados · 06 frase · 07 oración (las mismas que el audio).
+const CLAVES = ['00', ...L.secciones.map((_, i) => String(i + 1).padStart(2, '0')), String(L.secciones.length + 1).padStart(2, '0'), String(L.secciones.length + 2).padStart(2, '0')];
+const ajustes = L.imagenes || {};
+const escena = $('#escena');
+escena.innerHTML = CLAVES.map((c, i) => {
+  const a = ajustes[c] || {};
+  return `<figure class="plano ${i % 2 ? 'kb-b' : 'kb-a'}" data-clave="${c}" style="--foco:${a.foco || '50% 50%'};--zoom:${a.zoom || 1.12}"><img alt="" decoding="async"></figure>`;
+}).join('');
+const figura = c => escena.querySelector(`[data-clave="${c}"]`);
+function cargarImagen(c) {
+  const f = figura(c); if (!f || f.dataset.cargada) return; f.dataset.cargada = '1';
+  const img = f.querySelector('img'), base = `img/${L.id}/${c}`;
+  const ancho = () => { img.onerror = () => f.classList.add('vacia'); img.src = base + '.webp'; };
+  img.onload = () => f.classList.add('lista');
+  if (estrecho()) { img.onerror = ancho; img.src = base + '-movil.webp'; } else ancho();
+}
+let claveActual = null;
+function mostrar(c) {
+  if (c === claveActual) return; claveActual = c;
+  $$('.plano', escena).forEach(f => f.classList.toggle('activo', f.dataset.clave === c));
+  const i = CLAVES.indexOf(c);
+  [i, i + 1, i - 1].forEach(k => CLAVES[k] && cargarImagen(CLAVES[k]));
+}
 
 function espiar() {
   const centro = innerHeight * 0.55;
-  let clave = 'inicio';
+  let clave = '00';
   for (const s of $$('[data-vista]')) { const r = s.getBoundingClientRect(); if (r.top <= centro) clave = s.dataset.vista; }
-  if (clave !== claveActual) { claveActual = clave; camara?.ir(vistaDe(clave)); }
+  mostrar(clave);
   cab.classList.toggle('solida', scrollY > 40);
   const ids = ['inicio', 'reflexion', 'oracion', 'compartir'];
   let act = 'inicio';
@@ -99,192 +118,33 @@ function espiar() {
 }
 addEventListener('scroll', espiar, { passive: true });
 espiar();
+// cuando la portada ya está, se van cargando las demás sin prisa
+addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.length) { cargarImagen(CLAVES[k++]); setTimeout(sig, 700); } }; setTimeout(sig, 1200); });
 
-$('#volar').addEventListener('click', () => {
-  if (camara) { camara.saltar(VISTA_LEJOS); setTimeout(() => camara.ir(L.vistaInicio, true), 300); }
-  else avisar('Este equipo no puede mostrar el mapa en 3D; ves el mapa plano.');
-});
-
-// ---------- mapa 3D gratuito y sin claves ----------
-// Relieve: Terrain Tiles de AWS (datos abiertos) · Foto aérea: Esri World Imagery
-// Sin edificios en volumen (los cubos de OSM se veían falsos) · Motor: MapLibre GL JS (licencia BSD)
-const ATRIB = 'Foto aérea: <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics · Relieve: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, AWS)';
-
-function mapaPlano(motivo) {
-  document.body.classList.add('modo-2d');
-  const [la, lo] = L.coord, d = 0.004;
-  $('#mapa').innerHTML = `<iframe title="Mapa de ${esc(L.nombre)}" loading="lazy"
-    src="https://www.openstreetmap.org/export/embed.html?bbox=${lo - d},${la - d * .8},${lo + d},${la + d * .8}&layer=mapnik&marker=${la},${lo}"></iframe>`;
-  $('#pieMapa').innerHTML = 'Mapa: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>.';
-  if (motivo) console.info('[peregrinar] mapa plano:', motivo);
-}
-const cargar = (tag, attrs) => new Promise((ok, mal) => { const e = Object.assign(document.createElement(tag), attrs); e.onload = ok; e.onerror = mal; document.head.append(e); });
-
-// distancia en metros (como en lugares.js) → nivel de zoom de MapLibre
-const zoomDe = (dist, la) => Math.log2(1.5 * innerHeight * 40075016 * Math.cos(la * Math.PI / 180) / (512 * dist));
-const VISTA_LEJOS = { rumbo: 0, incl: -88, dist: 2600000 };
-
-async function arrancarMapLibre() {
-  await Promise.all([cargar('script', { src: MAPLIBRE + 'maplibre-gl.js' }), cargar('link', { rel: 'stylesheet', href: MAPLIBRE + 'maplibre-gl.css' })]);
-  const ml = window.maplibregl;
-  const [la, lo] = L.coord;
-  const camaraDe = v => ({ center: [lo, la], zoom: zoomDe(v.dist, la), pitch: Math.max(0, Math.min(80, 90 + v.incl)), bearing: v.rumbo });
-  const map = new ml.Map({
-    container: 'mapa', interactive: false, attributionControl: false, maxPitch: 85, fadeDuration: 0,
-    pixelRatio: Math.min(devicePixelRatio, 2.5), maxTileCacheSize: 600,
-    style: {
-      version: 8,
-      projection: { type: 'globe' },
-      sky: { 'sky-color': '#7fa6c9', 'horizon-color': '#e9d3a6', 'fog-color': '#d8c39a', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.4, 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 8, 0.6, 12, 0] },
-      sources: {
-        foto: { type: 'raster', tileSize: 256, maxzoom: 19, tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'] },
-        relieve: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15, tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'] }
-      },
-      layers: [
-        { id: 'fondo', type: 'background', paint: { 'background-color': '#140f0b' } },
-        { id: 'foto', type: 'raster', source: 'foto', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.08, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } }
-      ],
-      terrain: { source: 'relieve', exaggeration: 1.1 }
-    },
-    ...camaraDe(VISTA_LEJOS)
-  });
-  map.on('error', e => console.warn('[peregrinar] mapa:', e?.error?.message || e));
-
-  // marcas de todos los lugares de la serie
-  LUGARES.forEach(x => {
-    const el = document.createElement('div');
-    el.className = 'marca-lugar' + (x.id === L.id ? ' actual' : '');
-    el.innerHTML = `<i></i><span>${x.numero} · ${esc(x.nombre)}</span>`;
-    new ml.Marker({ element: el, anchor: 'bottom' }).setLngLat([x.coord[1], x.coord[0]]).addTo(map);
-  });
-  map.on('zoom', () => document.body.classList.toggle('cerca', map.getZoom() > 15.2));
-
-  // cámara: vuelos entre vistas y giro lento alrededor del lugar
-  let meta = L.vistaInicio, girando = false, ant = 0;
-  const giro = t => {
-    if (girando && meta.gira && !reducido && !map.isMoving()) map.setBearing(map.getBearing() + Math.min(0.05, (t - ant) / 1000) * (meta.vel || 3));
-    ant = t; requestAnimationFrame(giro);
-  };
-  requestAnimationFrame(giro);
-  map.on('moveend', () => { girando = true; });
-  camara = {
-    ir(v, vuelo = false) {
-      meta = v; girando = false;
-      const c = camaraDe(v);
-      if (reducido) map.jumpTo(c);
-      else map.flyTo({ ...c, duration: vuelo ? 16000 : 5000, curve: vuelo ? 1.3 : 1.1, essential: true });
-    },
-    saltar(v) { girando = false; map.jumpTo(camaraDe(v)); }
-  };
-  // primer vuelo: de lejos al lugar (no espera a que carguen todas las teselas)
-  let volado = false;
-  const volar = () => { if (!volado) { volado = true; camara.ir(vistaDe(claveActual), true); } };
-  map.once('load', () => setTimeout(volar, reducido ? 0 : 900));
-  setTimeout(volar, 4500);
-  $('#pieMapa').innerHTML = 'Mapa 3D gratuito: ' + ATRIB + ' · <a href="https://maplibre.org/" target="_blank" rel="noopener">MapLibre</a>.';
-  $('#creditos').innerHTML = ATRIB;
-  document.body.classList.add('modo-3d');
-}
-
-// ---------- 3D fotorrealista (edificios y olivos reales) con la cuenta gratuita de Cesium ion ----------
-// Google Photorealistic 3D Tiles a través de Cesium ion (plan Community: gratis, uso no comercial,
-// unas 1.000 visitas al mes). Si falla o se agota, la web pasa sola al mapa gratuito de MapLibre.
-async function arrancarCesium(token) {
-  window.CESIUM_BASE_URL = CESIUM;
-  await Promise.all([cargar('script', { src: CESIUM + 'Cesium.js' }), cargar('link', { rel: 'stylesheet', href: CESIUM + 'Widgets/widgets.css' })]);
-  const C = window.Cesium;
-  C.Ion.defaultAccessToken = token;
-  const tiles = await C.Cesium3DTileset.fromIonAssetId(2275207, { maximumScreenSpaceError: estrecho() ? 10 : 5, skipLevelOfDetail: true, preferLeaves: true });
-  const viewer = new C.Viewer('mapa', {
-    globe: false, baseLayer: false, baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
-    navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false, infoBox: false,
-    selectionIndicator: false, creditContainer: 'creditos', msaaSamples: estrecho() ? 1 : 4, useBrowserRecommendedResolution: false
-  });
-  viewer.resolutionScale = Math.min(devicePixelRatio, estrecho() ? 2 : 1.5);
-  const escena = viewer.scene;
-  escena.screenSpaceCameraController.enableInputs = false;
-  escena.skyAtmosphere.show = true;
-  escena.backgroundColor = C.Color.fromCssColorString('#140f0b');
-  escena.primitives.add(tiles);
-
-  const [la, lo] = L.coord;
-  const GEOIDE = 20; // en Jerusalén el elipsoide queda unos 20 m por debajo del nivel del mar
-  let objetivo = C.Cartesian3.fromDegrees(lo, la, L.altura + GEOIDE);
-  setTimeout(async () => {
-    try {
-      const [p] = await escena.sampleHeightMostDetailed([C.Cartographic.fromDegrees(lo, la)]);
-      if (p && Number.isFinite(p.height)) objetivo = C.Cartesian3.fromDegrees(lo, la, p.height + 6);
-    } catch {}
-  }, 6000);
-
-  LUGARES.forEach(x => viewer.entities.add({
-    position: C.Cartesian3.fromDegrees(x.coord[1], x.coord[0], x.altura + GEOIDE),
-    point: { pixelSize: x.id === L.id ? 14 : 9, color: C.Color.fromCssColorString('#d9b26a'), outlineColor: C.Color.fromCssColorString('#140f0b'), outlineWidth: 3, disableDepthTestDistance: Number.POSITIVE_INFINITY,
-      translucencyByDistance: new C.NearFarScalar(1500, 0, 6000, 1) },
-    label: { text: `${x.numero} · ${x.nombre}`, font: '600 15px Inter, sans-serif', fillColor: C.Color.fromCssColorString('#f4ead8'),
-      showBackground: true, backgroundColor: C.Color.fromCssColorString('rgba(20,15,11,.78)'), backgroundPadding: new C.Cartesian2(10, 6),
-      pixelOffset: new C.Cartesian2(0, -26), disableDepthTestDistance: Number.POSITIVE_INFINITY,
-      translucencyByDistance: new C.NearFarScalar(1500, 0, 6000, 1) }
-  }));
-
-  // cámara: rumbo/inclinación/distancia. Dos movimientos:
-  //  · vuelo: descenso lento y suave (curva de aceleración) desde muy alto hasta el lugar
-  //  · dron: giro continuo alrededor del lugar, con un leve vaivén de altura
-  const rad = C.Math.toRadians;
-  const est = { h: VISTA_LEJOS.rumbo, p: VISTA_LEJOS.incl, ld: Math.log(VISTA_LEJOS.dist) };
-  let meta = { ...VISTA_LEJOS }, giro = 0, vuelo = null, ajusteP = 0, tDron = 0;
-  const suave = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; // ease-in-out cúbica
-  camara = {
-    ir(v, largo = false) {
-      meta = { ...v }; giro = 0;
-      // el descenso inicial dura ~16 s; los cambios entre apartados, 5 s
-      vuelo = { t0: performance.now(), dur: reducido ? 1 : (largo ? 16000 : 5000), h: est.h, p: est.p, ld: est.ld };
-    },
-    saltar(v) { est.h = v.rumbo; est.p = v.incl; est.ld = Math.log(v.dist); meta = { ...v }; giro = 0; vuelo = null; }
-  };
-  let ant = performance.now(), cuadro = 0;
-  escena.preRender.addEventListener(() => {
-    const ahora = performance.now(), dt = Math.min(0.1, (ahora - ant) / 1000); ant = ahora;
-    const pObj = Math.max(-80, meta.incl + ajusteP);
-    if (vuelo) {
-      const x = Math.min(1, (ahora - vuelo.t0) / vuelo.dur), e = suave(x);
-      // la distancia baja «en logaritmo»: se ve caer a velocidad constante aparente
-      // la inclinación se endereza al final, como un dron que llega y levanta la vista
-      const eP = suave(Math.min(1, Math.max(0, (x - 0.35) / 0.65)));
-      const dh = ((meta.rumbo - vuelo.h) % 360 + 540) % 360 - 180;
-      est.h = vuelo.h + dh * e; est.p = vuelo.p + (pObj - vuelo.p) * eP; est.ld = vuelo.ld + (Math.log(meta.dist) - vuelo.ld) * e;
-      if (x >= 1) { vuelo = null; giro = 0; }
-    } else {
-      if (meta.gira && !reducido) { giro += dt * (meta.vel || 3); tDron += dt; }
-      const k = 1 - Math.exp(-dt * 1.2);
-      const dh = ((meta.rumbo + giro - est.h) % 360 + 540) % 360 - 180;
-      const vaiven = meta.gira && !reducido ? Math.sin(tDron * 0.25) * 0.06 : 0; // ±6 % de distancia
-      est.h += dh * k; est.p += (pObj - est.p) * k; est.ld += (Math.log(meta.dist) + vaiven - est.ld) * k;
-    }
-    viewer.camera.lookAt(objetivo, new C.HeadingPitchRange(rad(est.h), rad(est.p), Math.exp(est.ld)));
-    // que el dron nunca se meta en el monte, los árboles o un edificio: si va bajo, sube la mirada un poco
-    if (++cuadro % 6 === 0 && Math.exp(est.ld) < 2500) {
-      try {
-        const cc = C.Cartographic.fromCartesian(viewer.camera.positionWC), suelo = escena.sampleHeight(cc);
-        if (Number.isFinite(suelo) && cc.height < suelo + 22) ajusteP = Math.max(-40, ajusteP - 1.2);
-        else ajusteP *= 0.985;
-      } catch {}
-    }
-  });
-  setTimeout(() => camara.ir(vistaDe(claveActual), true), reducido ? 0 : 1800);
-  $('#pieMapa').innerHTML = 'Mapa 3D: Google Photorealistic 3D Tiles, servidos por <a href="https://cesium.com/platform/cesium-ion/" target="_blank" rel="noopener">Cesium ion</a> y mostrados con CesiumJS.';
-  document.body.classList.add('modo-3d', 'modo-real');
-}
-
-const webgl = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } })();
-const tokenCesium = (window.CONFIG?.tokenCesium || '').trim();
-const conMapLibre = () => arrancarMapLibre().catch(e => { console.warn(e); $('#mapa').innerHTML = ''; mapaPlano('error 3D'); });
-if (!webgl) mapaPlano('sin WebGL');
-else if (tokenCesium) arrancarCesium(tokenCesium).catch(e => {
-  console.warn('[peregrinar] Cesium ion no disponible, paso al mapa gratuito:', e);
-  $('#mapa').innerHTML = ''; $('#creditos').innerHTML = ''; conMapLibre();
-});
-else conMapLibre();
+// ---------- mapa ilustrado de situación (estático, dibujado en SVG) ----------
+(() => {
+  const caja = $('#situacion'); if (!caja) return;
+  const LAT = [30.95, 33.35], LON = [34.2, 36.0], K = Math.cos(32 * Math.PI / 180), ESC = 100;
+  const x = lo => ((lo - LON[0]) * K * ESC).toFixed(1), y = la => ((LAT[1] - la) * ESC).toFixed(1);
+  const W = ((LON[1] - LON[0]) * K * ESC).toFixed(0), H = ((LAT[1] - LAT[0]) * ESC).toFixed(0);
+  const linea = pts => pts.map(([la, lo], i) => `${i ? 'L' : 'M'}${x(lo)} ${y(la)}`).join(' ');
+  const costa = [[31.0, 34.2], [31.25, 34.25], [31.5, 34.43], [31.8, 34.64], [32.08, 34.76], [32.5, 34.89], [32.82, 34.96], [32.83, 35.06], [32.93, 35.08], [33.1, 35.11], [33.35, 35.2]];
+  const mar = linea(costa) + ` L${x(34.2)} ${y(33.35)} L${x(34.2)} ${y(31.0)} Z`;
+  const galilea = linea([[32.89, 35.6], [32.85, 35.65], [32.75, 35.645], [32.7, 35.59], [32.76, 35.53], [32.85, 35.535]]) + ' Z';
+  const muerto = linea([[31.77, 35.53], [31.6, 35.47], [31.35, 35.41], [31.1, 35.39], [30.97, 35.43], [31.05, 35.51], [31.35, 35.56], [31.6, 35.58], [31.77, 35.57]]) + ' Z';
+  const jordan = linea([[33.25, 35.62], [33.05, 35.61], [32.9, 35.6]]) + ' ' + linea([[32.7, 35.57], [32.5, 35.56], [32.25, 35.53], [32.0, 35.54], [31.77, 35.55]]);
+  const ciudades = [['Jerusalén', 31.778, 35.235, 'i', -2], ['Belén', 31.705, 35.2, 'i', 6], ['Nazaret', 32.70, 35.30, 'i', 3], ['Jericó', 31.86, 35.46, 'd', 0]];
+  const lugares = LUGARES.map(l => `<g class="${l.id === L.id ? 'sit-actual' : 'sit-otro'}"><circle cx="${x(l.coord[1])}" cy="${y(l.coord[0])}" r="${l.id === L.id ? 5 : 3.5}"/>${l.id === L.id ? `<circle class="sit-pulso" cx="${x(l.coord[1])}" cy="${y(l.coord[0])}" r="5"/>` : ''}</g>`).join('');
+  caja.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mapa de Tierra Santa: ${esc(L.nombre)}, junto a Jerusalén">
+    <path class="sit-mar" d="${mar}"/><path class="sit-costa" d="${linea(costa)}"/>
+    <path class="sit-agua" d="${galilea}"/><path class="sit-agua" d="${muerto}"/><path class="sit-rio" d="${jordan}"/>
+    <text class="sit-rotulo mar" x="${x(34.33)}" y="${y(32.2)}" transform="rotate(-62 ${x(34.33)} ${y(32.2)})">Mar Mediterráneo</text>
+    <text class="sit-rotulo agua" x="${x(35.66)}" y="${y(32.82)}">Galilea</text>
+    <text class="sit-rotulo agua" x="${x(35.58)}" y="${y(31.35)}">Mar Muerto</text>
+    ${ciudades.map(([n, la, lo, lado, dy]) => `<circle class="sit-ciudad" cx="${x(lo)}" cy="${y(la)}" r="1.8"/><text class="sit-rotulo" x="${(+x(lo) + (lado === 'd' ? 5 : -7)).toFixed(1)}" y="${(+y(la) + 2.5 + dy).toFixed(1)}" text-anchor="${lado === 'd' ? 'start' : 'end'}">${n}</text>`).join('')}
+    ${lugares}
+  </svg><p>${romano(L.numero)} · ${esc(L.nombre)}</p>`;
+})();
 
 // ================= Voz =================
 // 1) Si existen audio/<lugar>/00.mp3… se usan esos MP3 (voz gratuita de Microsoft o ElevenLabs).
