@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="estilo.css?v=2">
+<link rel="stylesheet" href="estilo.css?v=3">
 </head>
 <body>
 
@@ -43,6 +43,10 @@
       <p class="lema" id="entradilla"></p>
       <div class="acciones">
         <a class="btn oro" href="#reflexion">Empezar a rezar</a>
+        <button class="btn vidrio" type="button" id="escucharTodo" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>
+          <span>Escuchar todo</span>
+        </button>
         <button class="btn vidrio" type="button" id="volar">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
           <span>Volar de nuevo al lugar</span>
@@ -98,7 +102,19 @@
 
 <div class="aviso" id="aviso" role="status" hidden></div>
 
+<div class="reproductor" id="reproductor" hidden>
+  <button type="button" class="rp-boton" id="rpPausa" aria-label="Pausar">
+    <svg class="ic-pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>
+    <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+  </button>
+  <div class="rp-info"><small id="rpModo">Escuchando</small><b id="rpTitulo"></b><i class="rp-barra"><span id="rpBarra"></span></i></div>
+  <button type="button" class="rp-boton" id="rpSiguiente" aria-label="Siguiente apartado"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 8 6-8 6zM17 6v12"/></svg></button>
+  <button type="button" class="rp-boton" id="rpCerrar" aria-label="Parar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+</div>
+
+<script src="config.js?v=3"></script>
 <script src="lugares.js?v=1"></script>
-<script type="module" src="app.js?v=2"></script>
+<script src="voz.js?v=1"></script>
+<script type="module" src="app.js?v=3"></script>
 </body>
 </html>

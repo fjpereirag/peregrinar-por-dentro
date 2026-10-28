@@ -5,6 +5,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const estrecho = () => innerWidth <= 760;
 const MAPLIBRE = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/';
+const CESIUM = 'https://cdn.jsdelivr.net/npm/cesium@1.145.0/Build/Cesium/';
 
 // ---------- qué lugar se muestra: ?l=getsemani (por defecto, el último) ----------
 const LUGARES = [...(window.LUGARES || [])].sort((a, b) => a.numero - b.numero);
@@ -107,14 +108,14 @@ const cargar = (tag, attrs) => new Promise((ok, mal) => { const e = Object.assig
 const zoomDe = (dist, la) => Math.log2(1.5 * innerHeight * 40075016 * Math.cos(la * Math.PI / 180) / (512 * dist));
 const VISTA_LEJOS = { rumbo: 0, incl: -88, dist: 2600000 };
 
-async function arrancar3D() {
+async function arrancarMapLibre() {
   await Promise.all([cargar('script', { src: MAPLIBRE + 'maplibre-gl.js' }), cargar('link', { rel: 'stylesheet', href: MAPLIBRE + 'maplibre-gl.css' })]);
   const ml = window.maplibregl;
   const [la, lo] = L.coord;
   const camaraDe = v => ({ center: [lo, la], zoom: zoomDe(v.dist, la), pitch: Math.max(0, Math.min(80, 90 + v.incl)), bearing: v.rumbo });
   const map = new ml.Map({
     container: 'mapa', interactive: false, attributionControl: false, maxPitch: 85, fadeDuration: 0,
-    pixelRatio: Math.min(devicePixelRatio, estrecho() ? 1.5 : 2),
+    pixelRatio: Math.min(devicePixelRatio, 2.5), maxTileCacheSize: 600,
     style: {
       version: 8,
       projection: { type: 'globe' },
@@ -126,12 +127,14 @@ async function arrancar3D() {
       },
       layers: [
         { id: 'fondo', type: 'background', paint: { 'background-color': '#140f0b' } },
-        { id: 'foto', type: 'raster', source: 'foto', paint: { 'raster-saturation': -0.08, 'raster-contrast': 0.06 } },
-        { id: 'edificios', type: 'fill-extrusion', source: 'osm', 'source-layer': 'building', minzoom: 15,
-          paint: { 'fill-extrusion-color': '#e8d6b4', 'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 6], 'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
-            'fill-extrusion-opacity': ['interpolate', ['linear'], ['zoom'], 15, 0, 16.5, 0.55] } }
+        { id: 'foto', type: 'raster', source: 'foto', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.08, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } },
+        { id: 'edificios', type: 'fill-extrusion', source: 'osm', 'source-layer': 'building', minzoom: 14.5,
+          paint: { 'fill-extrusion-color': ['interpolate', ['linear'], ['coalesce', ['get', 'render_height'], 6], 0, '#cdb892', 20, '#e6d5b2', 40, '#f2e6cc'],
+            'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 7], 'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+            'fill-extrusion-vertical-gradient': true,
+            'fill-extrusion-opacity': ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.5, 0.92] } }
       ],
-      terrain: { source: 'relieve', exaggeration: 1.15 }
+      terrain: { source: 'relieve', exaggeration: 1.1 }
     },
     ...camaraDe(VISTA_LEJOS)
   });
@@ -173,6 +176,136 @@ async function arrancar3D() {
   document.body.classList.add('modo-3d');
 }
 
+// ---------- 3D fotorrealista (edificios y olivos reales) con la cuenta gratuita de Cesium ion ----------
+// Google Photorealistic 3D Tiles a través de Cesium ion (plan Community: gratis, uso no comercial,
+// unas 1.000 visitas al mes). Si falla o se agota, la web pasa sola al mapa gratuito de MapLibre.
+async function arrancarCesium(token) {
+  window.CESIUM_BASE_URL = CESIUM;
+  await Promise.all([cargar('script', { src: CESIUM + 'Cesium.js' }), cargar('link', { rel: 'stylesheet', href: CESIUM + 'Widgets/widgets.css' })]);
+  const C = window.Cesium;
+  C.Ion.defaultAccessToken = token;
+  const tiles = await C.Cesium3DTileset.fromIonAssetId(2275207, { maximumScreenSpaceError: estrecho() ? 16 : 8, skipLevelOfDetail: true, preferLeaves: true });
+  const viewer = new C.Viewer('mapa', {
+    globe: false, baseLayer: false, baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
+    navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false, infoBox: false,
+    selectionIndicator: false, creditContainer: 'creditos', msaaSamples: estrecho() ? 1 : 4, useBrowserRecommendedResolution: false
+  });
+  viewer.resolutionScale = Math.min(devicePixelRatio, estrecho() ? 2 : 1.5);
+  const escena = viewer.scene;
+  escena.screenSpaceCameraController.enableInputs = false;
+  escena.skyAtmosphere.show = true;
+  escena.backgroundColor = C.Color.fromCssColorString('#140f0b');
+  escena.primitives.add(tiles);
+
+  const [la, lo] = L.coord;
+  const GEOIDE = 20; // en Jerusalén el elipsoide queda unos 20 m por debajo del nivel del mar
+  let objetivo = C.Cartesian3.fromDegrees(lo, la, L.altura + GEOIDE);
+  setTimeout(async () => {
+    try {
+      const [p] = await escena.sampleHeightMostDetailed([C.Cartographic.fromDegrees(lo, la)]);
+      if (p && Number.isFinite(p.height)) objetivo = C.Cartesian3.fromDegrees(lo, la, p.height + 6);
+    } catch {}
+  }, 6000);
+
+  LUGARES.forEach(x => viewer.entities.add({
+    position: C.Cartesian3.fromDegrees(x.coord[1], x.coord[0], x.altura + GEOIDE),
+    point: { pixelSize: x.id === L.id ? 14 : 9, color: C.Color.fromCssColorString('#d9b26a'), outlineColor: C.Color.fromCssColorString('#140f0b'), outlineWidth: 3, disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      translucencyByDistance: new C.NearFarScalar(1500, 0, 6000, 1) },
+    label: { text: `${x.numero} · ${x.nombre}`, font: '600 15px Inter, sans-serif', fillColor: C.Color.fromCssColorString('#f4ead8'),
+      showBackground: true, backgroundColor: C.Color.fromCssColorString('rgba(20,15,11,.78)'), backgroundPadding: new C.Cartesian2(10, 6),
+      pixelOffset: new C.Cartesian2(0, -26), disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      translucencyByDistance: new C.NearFarScalar(1500, 0, 6000, 1) }
+  }));
+
+  // cámara: rumbo/inclinación/distancia que se acercan suavemente a la vista pedida
+  const rad = C.Math.toRadians;
+  const est = { h: VISTA_LEJOS.rumbo, p: VISTA_LEJOS.incl, ld: Math.log(VISTA_LEJOS.dist) };
+  let meta = { ...VISTA_LEJOS }, lento = false, giro = 0;
+  camara = {
+    ir(v, vuelo = false) { meta = { ...v }; lento = vuelo; giro = 0; },
+    saltar(v) { est.h = v.rumbo; est.p = v.incl; est.ld = Math.log(v.dist); meta = { ...v }; giro = 0; }
+  };
+  let ant = performance.now();
+  escena.preRender.addEventListener(() => {
+    const ahora = performance.now(), dt = Math.min(0.1, (ahora - ant) / 1000); ant = ahora;
+    const k = 1 - Math.exp(-dt * (lento ? 0.5 : 1.0));
+    if (meta.gira && !reducido) giro += dt * 2.2;
+    const dh = ((meta.rumbo + giro - est.h) % 360 + 540) % 360 - 180;
+    est.h += dh * k; est.p += (meta.incl - est.p) * k; est.ld += (Math.log(meta.dist) - est.ld) * k;
+    if (lento && Math.abs(est.ld - Math.log(meta.dist)) < 0.05) lento = false;
+    viewer.camera.lookAt(objetivo, new C.HeadingPitchRange(rad(est.h), rad(est.p), Math.exp(est.ld)));
+  });
+  setTimeout(() => camara.ir(vistaDe(claveActual), true), reducido ? 0 : 1600);
+  $('#pieMapa').innerHTML = 'Mapa 3D: Google Photorealistic 3D Tiles, servidos por <a href="https://cesium.com/platform/cesium-ion/" target="_blank" rel="noopener">Cesium ion</a> y mostrados con CesiumJS.';
+  document.body.classList.add('modo-3d', 'modo-real');
+}
+
 const webgl = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } })();
+const tokenCesium = (window.CONFIG?.tokenCesium || '').trim();
+const conMapLibre = () => arrancarMapLibre().catch(e => { console.warn(e); $('#mapa').innerHTML = ''; mapaPlano('error 3D'); });
 if (!webgl) mapaPlano('sin WebGL');
-else arrancar3D().catch(e => { console.warn(e); $('#mapa').innerHTML = ''; mapaPlano('error 3D'); });
+else if (tokenCesium) arrancarCesium(tokenCesium).catch(e => {
+  console.warn('[peregrinar] Cesium ion no disponible, paso al mapa gratuito:', e);
+  $('#mapa').innerHTML = ''; $('#creditos').innerHTML = ''; conMapLibre();
+});
+else conMapLibre();
+
+// ================= Voz (MP3 de ElevenLabs en audio/<lugar>/) =================
+(async () => {
+  if (!window.guionVoz) return;
+  const trozos = guionVoz(L).map(t => ({ ...t, url: `audio/${L.id}/${t.clave}.mp3` }));
+  try { const r = await fetch(trozos[0].url, { method: 'HEAD', cache: 'no-store' }); if (!r.ok) return; } catch { return; }
+
+  const audio = new Audio(); audio.preload = 'none';
+  const rp = $('#reproductor'), btnPausa = $('#rpPausa');
+  let actual = -1, seguido = false;
+  const destino = t => document.getElementById(t.destino);
+  const botonDe = i => $(`.btn-oir[data-i="${i}"]`);
+
+  // botón en cada tarjeta
+  trozos.forEach((t, i) => {
+    const el = destino(t); if (!el) return;
+    const sitio = el.querySelector('.tarjeta, .guardar-in, .portada-in .acciones') || el;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn-oir'; b.dataset.i = i;
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span>Escuchar</span>';
+    if (t.destino === 'inicio') return; // en la portada está «Escuchar todo»
+    sitio.append(b);
+  });
+  $('#escucharTodo').hidden = false;
+
+  const pintar = () => {
+    $$('.btn-oir').forEach(b => { const si = Number(b.dataset.i) === actual && !audio.paused; b.classList.toggle('sonando', si); b.querySelector('span').textContent = si ? 'Pausar' : 'Escuchar'; });
+    rp.classList.toggle('en-pausa', audio.paused);
+    btnPausa.setAttribute('aria-label', audio.paused ? 'Seguir' : 'Pausar');
+  };
+  const irA = el => {
+    if (el.id === 'inicio') return scrollTo({ top: 0, behavior: reducido ? 'auto' : 'smooth' });
+    const t = el.querySelector('.tarjeta, blockquote') || el, r = t.getBoundingClientRect();
+    scrollTo({ top: r.top + scrollY - Math.max(80, (innerHeight - r.height) / 2), behavior: reducido ? 'auto' : 'smooth' });
+  };
+  function tocar(i, desplazar) {
+    if (i < 0 || i >= trozos.length) { parar(); return; }
+    actual = i; const t = trozos[i];
+    audio.src = t.url; audio.play().catch(() => avisar('Pulsa de nuevo para escuchar.'));
+    rp.hidden = false; $('#rpTitulo').textContent = t.nombre; $('#rpModo').textContent = seguido ? `Escuchando · ${i + 1} de ${trozos.length}` : 'Escuchando';
+    if (desplazar) { const el = destino(t); if (el) irA(el); }
+    pintar();
+  }
+  function parar() { audio.pause(); audio.removeAttribute('src'); actual = -1; seguido = false; rp.hidden = true; pintar(); }
+
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.btn-oir'); if (!b) return;
+    const i = Number(b.dataset.i);
+    if (i === actual) { audio.paused ? audio.play() : audio.pause(); pintar(); return; }
+    seguido = false; tocar(i, false);
+  });
+  $('#escucharTodo').addEventListener('click', () => { seguido = true; tocar(0, true); });
+  btnPausa.addEventListener('click', () => { audio.paused ? audio.play() : audio.pause(); pintar(); });
+  $('#rpSiguiente').addEventListener('click', () => tocar(actual + 1, seguido));
+  $('#rpCerrar').addEventListener('click', parar);
+  audio.addEventListener('ended', () => { if (seguido) setTimeout(() => tocar(actual + 1, true), 900); else { actual = -1; rp.hidden = true; pintar(); } });
+  audio.addEventListener('timeupdate', () => { $('#rpBarra').style.width = (audio.duration ? audio.currentTime / audio.duration * 100 : 0) + '%'; });
+  audio.addEventListener('play', pintar); audio.addEventListener('pause', pintar);
+  audio.addEventListener('error', () => { if (actual >= 0) { avisar('No se encuentra el audio de este apartado.'); if (seguido) tocar(actual + 1, true); else parar(); } });
+})();

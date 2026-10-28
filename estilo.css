@@ -151,3 +151,27 @@ body.modo-2d #velo{background:linear-gradient(90deg,rgba(13,9,7,.8) 0%,rgba(13,9
 .marca-lugar:not(.actual) i{width:10px;height:10px}
 body.cerca .marca-lugar>*{opacity:0;transition:opacity .6s}
 #mapa .maplibregl-canvas{outline:none}
+
+/* ---------- voz ---------- */
+.btn-oir{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:9px 16px 9px 12px;border-radius:999px;border:1px solid rgba(240,211,148,.35);
+  background:rgba(240,211,148,.08);color:var(--oro-2);font:600 14px var(--sans)}
+.btn-oir svg{width:16px;height:16px;fill:currentColor;stroke:none}
+.btn-oir:hover{background:rgba(240,211,148,.16)}
+.btn-oir.sonando{background:var(--oro);color:var(--noche);border-color:var(--oro)}
+.guardar-in .btn-oir{margin-top:30px}
+.reproductor{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:8px;width:min(560px,calc(100vw - 24px));
+  padding:8px 10px;border-radius:999px;background:rgba(20,15,11,.94);border:1px solid var(--vidrio-borde);box-shadow:var(--sombra);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.rp-boton{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:rgba(240,211,148,.1);color:var(--marfil);display:grid;place-items:center}
+.rp-boton:first-child{background:var(--oro);color:var(--noche)}
+.rp-boton svg{width:20px;height:20px}
+.rp-boton:first-child svg{fill:currentColor}
+.reproductor .ic-play{display:none}
+.reproductor.en-pausa .ic-play{display:block}
+.reproductor.en-pausa .ic-pausa{display:none}
+.rp-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.rp-info small{font:600 10.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--oro)}
+.rp-info b{font:600 14.5px var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp-barra{display:block;height:3px;border-radius:3px;background:rgba(255,255,255,.12);margin-top:5px;overflow:hidden}
+.rp-barra span{display:block;height:100%;width:0;background:var(--oro)}
+body:has(.reproductor:not([hidden])) .creditos{bottom:84px}
+@media (max-width:760px){ .reproductor{bottom:12px} .btn-oir{margin-top:16px} }
