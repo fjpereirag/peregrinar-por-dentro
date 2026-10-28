@@ -14,17 +14,25 @@ const L = LUGARES.find(x => x.id === pedido) || LUGARES[LUGARES.length - 1];
 const urlLugar = id => `${location.pathname}?l=${encodeURIComponent(id)}`;
 
 // ---------- texto ----------
+const romano = n => { const t = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']]; let r = ''; for (const [v, l] of t) while (n >= v) { r += l; n -= v; } return r; };
+const lineas = t => `<span class="linea"><span>${esc(t)}</span></span>`;
 document.title = `${L.nombre} · Peregrinar por dentro`;
-$('#marcaLugar').textContent = `${L.numero} · ${L.nombre}`;
-$('#serie').textContent = `Lugar ${L.numero} · ${L.ubicacion}`;
-$('#nombre').textContent = L.nombre;
-$('#titulo').textContent = L.titulo;
-$('#entradilla').textContent = L.entradilla;
+$('meta[name="description"]')?.setAttribute('content', `${L.nombre}: ${L.titulo}. Una serie para rezar desde los lugares de Tierra Santa.`);
+$('#marcaLugar').textContent = `${romano(L.numero)} · ${L.nombre}`;
+$('#serie').textContent = `Lugar ${romano(L.numero)} · ${L.ubicacion}`;
+$('#serie').classList.add('revela');
+$('#nombre').innerHTML = lineas(L.nombre);
+$('#titulo').textContent = L.titulo; $('#titulo').classList.add('revela'); $('#titulo').style.setProperty('--i', 4);
+$('#entradilla').textContent = L.entradilla; $('#entradilla').classList.add('revela'); $('#entradilla').style.setProperty('--i', 6);
+$('#inicio .acciones').classList.add('revela'); $('#inicio .acciones').style.setProperty('--i', 8);
 $('#reflexion').innerHTML = L.secciones.map((s, i) => `
-  <section class="paso ${i % 2 ? 'derecha' : ''}" id="${esc(s.id)}" data-vista="${i}">
+  <section class="paso ${i % 2 ? 'derecha' : ''}" id="${esc(s.id)}" data-vista="${i}" aria-labelledby="t-${esc(s.id)}">
     <article class="tarjeta">
-      ${s.titulo ? `<h2>${esc(s.titulo)}</h2>` : `<p class="antetitulo">${esc(L.nombre)}</p>`}
-      ${s.parrafos.map(p => `<p>${esc(p)}</p>`).join('')}
+      <p class="numeral revela" aria-hidden="true">${romano(i + 1)}</p>
+      <h2 id="t-${esc(s.id)}">${lineas(s.titulo || 'Para empezar')}</h2>
+      ${s.cita ? `<p class="cita revela" style="--i:2">${esc(s.cita)}</p>` : ''}
+      <div class="cuerpo">${s.parrafos.map((p, k) => `<p class="revela" style="--i:${k + 3}">${esc(p)}</p>`).join('')}</div>
+      <p class="pausa revela" style="--i:${s.parrafos.length + 4}" aria-hidden="true">pausa</p>
     </article>
   </section>`).join('');
 $('#frase').textContent = L.guardar;
@@ -49,6 +57,14 @@ let tAviso;
 function avisar(t, ms = 3800) {
   const a = $('#aviso'); a.textContent = t; a.hidden = false;
   clearTimeout(tAviso); if (ms) tAviso = setTimeout(() => { a.hidden = true; }, ms);
+}
+
+// ---------- revelados al entrar en pantalla (solo transform/opacity) ----------
+if (reducido || !('IntersectionObserver' in window)) document.documentElement.classList.add('sin-motion');
+else {
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visto'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
+  $$('.portada-in, .paso .tarjeta, .guardar-in, .oracion-in, .compartir-in, .serie-lista').forEach(el => io.observe(el));
+  $$('.oracion-in, .compartir-in').forEach(el => el.classList.add('revela'));
 }
 
 // ---------- menú móvil ----------
@@ -294,7 +310,7 @@ else conMapLibre();
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'btn-oir'; b.dataset.i = i;
     b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span>Escuchar</span>';
-    sitio.append(b);
+    const pausa = sitio.querySelector('.pausa'); pausa ? sitio.insertBefore(b, pausa) : sitio.append(b);
   });
   $('#escucharTodo').hidden = false;
 

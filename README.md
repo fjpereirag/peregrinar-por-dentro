@@ -17,6 +17,7 @@ Cada lugar empieza con un vuelo sobre un mapa 3D gratuito, desde Tierra Santa en
 | `config.js` | El token gratuito de Cesium para los edificios en 3D real |
 | `voz.js` | Cómo se reparte el texto en audios y dónde van las pausas |
 | `audio/<lugar>/` | Los MP3 de la voz (00.mp3, 01.mp3…) |
+| `favicon.svg`, `og.jpg`, `404.html` | Icono, imagen al compartir el enlace (1200×630) y página de error con el mismo estilo |
 | `herramienta-voz/` | Herramientas para crear los MP3 en tu ordenador: voz gratuita (`voz-gratis.bat`) o ElevenLabs (`generar-voz.html`) |
 
 ## Añadir un lugar nuevo
@@ -62,3 +63,12 @@ La web tiene tres formas de leer el texto en voz alta, de mejor a más sencilla:
 3. **Sin MP3.** Si no hay audios subidos, la web usa la voz del propio móvil u ordenador: gratis, pero la calidad depende del equipo. En Edge, en Windows, suena con la voz natural de Álvaro.
 
 En los tres casos aparecen el botón «Escuchar todo» en la portada y «Escuchar» en cada tarjeta.
+
+## Diseño
+
+La web sigue la variante **pastoral** de las especificaciones Awwwards: «noche, oro y silencio».
+
+- **Fuentes:** dos familias, Cormorant Garamond para los titulares y Source Serif 4 para el texto.
+- **Color:** un solo acento oro (`#C9A35B`) sobre noche (`#0B0A08`).
+- **Apartados:** cada uno lleva número romano, título que se revela línea a línea, cita bíblica en versalitas, capitular en oro y una pausa final.
+- **Valores:** todos salen de las variables de `:root` en `estilo.css`.

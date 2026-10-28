@@ -11,6 +11,7 @@
 //            rumbo   0 = mirando al norte, 90 = este, 180 = sur, 270 = oeste
 //            incl    inclinación hacia abajo (-10 casi horizontal, -60 muy cenital)
 //            dist    distancia en metros al punto
+// cita:    referencia bíblica de cada apartado (sale en versalitas bajo el título)
 //            gira    true = vuelo de dron en círculo alrededor del lugar
 //            vel     velocidad del giro en grados por segundo (4 = una vuelta cada 90 s)
 // ---------------------------------------------------------------
@@ -28,6 +29,7 @@ window.LUGARES = [
     secciones: [
       {
         id: 'pregunta',
+        cita: 'Mc 14,34',
         vista: { rumbo: 70, incl: -22, dist: 320 },
         parrafos: [
           '¿Alguna vez has rezado y el miedo seguía ahí? Has pedido por alguien, por una situación que no sabes resolver, por una noticia que temes recibir. Y, al terminar, la preocupación continuaba.',
@@ -37,6 +39,7 @@ window.LUGARES = [
       },
       {
         id: 'lugar',
+        cita: 'Mc 14,32-42',
         titulo: 'Un lugar real y una experiencia cercana',
         vista: { rumbo: 100, incl: -8, dist: 80, gira: true, vel: 3 },
         parrafos: [
@@ -46,6 +49,7 @@ window.LUGARES = [
       },
       {
         id: 'tal-como-estas',
+        cita: 'Mc 14,36',
         titulo: 'Puedes acercarte a Dios tal como estás',
         vista: { rumbo: 150, incl: -28, dist: 110 },
         parrafos: [
@@ -56,6 +60,7 @@ window.LUGARES = [
       },
       {
         id: 'compania',
+        cita: 'Mc 14,33-34',
         titulo: 'También necesitamos compañía',
         vista: { rumbo: 30, incl: -14, dist: 200 },
         parrafos: [
@@ -66,6 +71,7 @@ window.LUGARES = [
       },
       {
         id: 'vida',
+        cita: 'Mc 14,41-42',
         titulo: 'Llevar Getsemaní a nuestra vida',
         // desde el huerto, mirando hacia la ciudad vieja
         vista: { rumbo: 255, incl: -14, dist: 260 },
