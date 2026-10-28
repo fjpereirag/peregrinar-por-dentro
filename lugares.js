@@ -23,11 +23,11 @@ window.LUGARES = [
     ubicacion: 'Monte de los Olivos · Jerusalén',
     coord: [31.77945, 35.23975],
     altura: 700,
-    vistaInicio: { rumbo: 95, incl: -22, dist: 520, gira: true },
+    vistaInicio: { rumbo: 95, incl: -16, dist: 230, gira: true },
     secciones: [
       {
         id: 'pregunta',
-        vista: { rumbo: 80, incl: -30, dist: 900 },
+        vista: { rumbo: 70, incl: -22, dist: 320 },
         parrafos: [
           '¿Alguna vez has rezado y el miedo seguía ahí? Has pedido por alguien, por una situación que no sabes resolver, por una noticia que temes recibir. Y, al terminar, la preocupación continuaba.',
           'Quizá entonces te preguntaste si estabas rezando mal.',
@@ -37,7 +37,7 @@ window.LUGARES = [
       {
         id: 'lugar',
         titulo: 'Un lugar real y una experiencia cercana',
-        vista: { rumbo: 100, incl: -18, dist: 380, gira: true },
+        vista: { rumbo: 100, incl: -9, dist: 140, gira: true },
         parrafos: [
           'Al pie del monte de los Olivos, en Jerusalén, el huerto de Getsemaní y la basílica de la Agonía recuerdan la oración de Jesús antes de su pasión. La basílica también recibe el nombre de iglesia de las Naciones. Es uno de los lugares donde el peregrino puede detenerse a contemplar la humanidad de Jesús.',
           'Allí, el Evangelio de Marcos muestra a Jesús angustiado. Busca la compañía de Pedro, Santiago y Juan, les pide que permanezcan despiertos y se dirige al Padre. Desea que se aparte de él aquella hora y, al mismo tiempo, se entrega a su voluntad (Mc 14,32-42).'
@@ -46,7 +46,7 @@ window.LUGARES = [
       {
         id: 'tal-como-estas',
         titulo: 'Puedes acercarte a Dios tal como estás',
-        vista: { rumbo: 140, incl: -38, dist: 260 },
+        vista: { rumbo: 150, incl: -28, dist: 110 },
         parrafos: [
           'Al contemplar esta escena, podemos reconocer algo que consuela: sentir miedo no significa haber perdido la fe.',
           'Podemos rezar con la voz temblando. Podemos estar cansados, tener preguntas y desear que las cosas sean distintas. La oración puede comenzar precisamente ahí, donde ya no sabemos qué decir.',
@@ -56,7 +56,7 @@ window.LUGARES = [
       {
         id: 'compania',
         titulo: 'También necesitamos compañía',
-        vista: { rumbo: 40, incl: -28, dist: 700 },
+        vista: { rumbo: 30, incl: -14, dist: 200 },
         parrafos: [
           'Jesús pide a sus amigos que permanezcan cerca. Ese gesto nos recuerda que necesitar a los demás forma parte de nuestra humanidad.',
           'A veces, acompañar a quien sufre consiste en sentarse a su lado, escuchar sin apresurarse a dar respuestas o llamar cuando han pasado los primeros días y casi todos han vuelto a sus ocupaciones.',
@@ -67,7 +67,7 @@ window.LUGARES = [
         id: 'vida',
         titulo: 'Llevar Getsemaní a nuestra vida',
         // desde el huerto, mirando hacia la ciudad vieja
-        vista: { rumbo: 255, incl: -14, dist: 650 },
+        vista: { rumbo: 255, incl: -14, dist: 260 },
         parrafos: [
           'Quizá hoy tu oración no termine con una gran sensación de paz. Puedes, aun así, haber dado un paso de confianza al compartir con Dios lo que te pesa.',
           'Confiar también puede tomar la forma de pedir ayuda, aceptar compañía y dejarte cuidar.'
@@ -75,7 +75,7 @@ window.LUGARES = [
       }
     ],
     guardar: 'Puedes tener miedo y seguir confiando en Dios.',
-    vistaGuardar: { rumbo: 95, incl: -12, dist: 1400, gira: true },
+    vistaGuardar: { rumbo: 95, incl: -10, dist: 520, gira: true },
     oracion: [
       'Padre, tú conoces lo que hoy me preocupa.',
       'Ayúdame a hablarte con sinceridad,',

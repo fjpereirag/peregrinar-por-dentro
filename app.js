@@ -219,7 +219,7 @@ async function arrancarCesium(token) {
     ir(v, vuelo = false) { meta = { ...v }; lento = vuelo; giro = 0; },
     saltar(v) { est.h = v.rumbo; est.p = v.incl; est.ld = Math.log(v.dist); meta = { ...v }; giro = 0; }
   };
-  let ant = performance.now();
+  let ant = performance.now(), cuadro = 0;
   escena.preRender.addEventListener(() => {
     const ahora = performance.now(), dt = Math.min(0.1, (ahora - ant) / 1000); ant = ahora;
     const k = 1 - Math.exp(-dt * (lento ? 0.5 : 1.0));
@@ -228,6 +228,13 @@ async function arrancarCesium(token) {
     est.h += dh * k; est.p += (meta.incl - est.p) * k; est.ld += (Math.log(meta.dist) - est.ld) * k;
     if (lento && Math.abs(est.ld - Math.log(meta.dist)) < 0.05) lento = false;
     viewer.camera.lookAt(objetivo, new C.HeadingPitchRange(rad(est.h), rad(est.p), Math.exp(est.ld)));
+    // que la cámara nunca se meta dentro del monte o de un edificio: si va baja, inclina más hacia abajo
+    if (++cuadro % 8 === 0 && Math.exp(est.ld) < 2000) {
+      try {
+        const cc = C.Cartographic.fromCartesian(viewer.camera.positionWC), suelo = escena.sampleHeight(cc);
+        if (Number.isFinite(suelo) && cc.height < suelo + 30) { est.p = Math.max(-75, est.p - 1.5); meta.incl = Math.min(meta.incl, est.p); }
+      } catch {}
+    }
   });
   setTimeout(() => camara.ir(vistaDe(claveActual), true), reducido ? 0 : 1600);
   $('#pieMapa').innerHTML = 'Mapa 3D: Google Photorealistic 3D Tiles, servidos por <a href="https://cesium.com/platform/cesium-ion/" target="_blank" rel="noopener">Cesium ion</a> y mostrados con CesiumJS.';
