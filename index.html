@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="estilo.css?v=7">
+<link rel="stylesheet" href="estilo.css?v=11">
 </head>
 <body>
 <a class="salto" href="#reflexion">Saltar a la reflexión</a>
@@ -48,16 +48,13 @@
 <main id="contenido">
   <section id="inicio" class="portada" data-vista="00">
     <div class="portada-in">
+      <a class="sello sello-portada revela" href="https://revistatierrasanta.com/" target="_blank" rel="noopener" aria-label="Con la Revista Tierra Santa"><span>Con la</span><img src="logo-revista-tierra-santa.png" width="225" height="98" alt="Revista Tierra Santa"></a>
       <p class="antetitulo" id="serie"></p>
       <h1 id="nombre"></h1>
       <p class="titulo" id="titulo"></p>
       <p class="lema" id="entradilla"></p>
       <div class="acciones">
         <a class="btn oro" href="#reflexion">Empezar a rezar</a>
-        <button class="btn" type="button" id="escucharTodo" hidden>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>
-          <span>Escuchar todo</span>
-        </button>
       </div>
     </div>
     <aside class="situacion" id="situacion" aria-label="Dónde está"></aside>
@@ -83,8 +80,8 @@
 
   <section id="compartir" class="compartir" data-vista="07">
     <div class="tarjeta compartir-in revela">
-      <p class="antetitulo">Versión para compartir</p>
-      <h2>Mensaje para WhatsApp</h2>
+      <p class="antetitulo">Compártelo</p>
+      <h2>Envíaselo a quien lo necesite</h2>
       <pre class="mensaje" id="mensaje"></pre>
       <div class="acciones">
         <a class="btn whatsapp" id="btnWhatsapp" target="_blank" rel="noopener">
@@ -96,6 +93,23 @@
     </div>
   </section>
 
+  <section id="seguir" class="seguir" data-vista="07">
+    <div class="seguir-in revela">
+      <a class="sello" href="https://revistatierrasanta.com/" target="_blank" rel="noopener" aria-label="Revista Tierra Santa">
+        <img src="logo-revista-tierra-santa.png" width="225" height="98" alt="Revista Tierra Santa">
+      </a>
+      <div>
+        <p class="antetitulo">Sigue peregrinando</p>
+        <h2>Tierra Santa, más de cerca</h2>
+        <p>La Revista Tierra Santa, de la Custodia Franciscana, cuenta desde 1921 la vida de los Santos Lugares. Y en Huellas franciscanas puedes recorrerlos en un mapa 3D y buscar en cien años de la revista.</p>
+        <div class="acciones">
+          <a class="btn oro" href="https://revistatierrasanta.com/" target="_blank" rel="noopener">Revista Tierra Santa ↗</a>
+          <a class="btn" href="https://fjpereirag.github.io/tierra-santa-web/" target="_blank" rel="noopener">Huellas franciscanas · Tierra Santa 3D ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="serieLista" class="serie-lista" hidden>
     <p class="antetitulo">La serie</p>
     <h2>Otros lugares para peregrinar por dentro</h2>
@@ -103,6 +117,7 @@
   </section>
 
   <footer class="pie">
+    <a class="sello sello-pie" href="https://revistatierrasanta.com/" target="_blank" rel="noopener"><img src="logo-revista-tierra-santa.png" width="225" height="98" alt="Revista Tierra Santa"></a>
     <p><b>Peregrinar por dentro</b> · Una mirada a Tierra Santa para rezar desde lo que vivimos.</p>
     <p class="pie-nota">Imágenes creadas con IA: recreaciones para orar, no fotografías documentales.</p>
   </footer>
@@ -110,18 +125,8 @@
 
 <div class="aviso" id="aviso" role="status" hidden></div>
 
-<div class="reproductor" id="reproductor" hidden>
-  <button type="button" class="rp-boton" id="rpPausa" aria-label="Pausar">
-    <svg class="ic-pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>
-    <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-  </button>
-  <div class="rp-info"><small id="rpModo">Escuchando</small><b id="rpTitulo"></b><i class="rp-barra"><span id="rpBarra"></span></i></div>
-  <button type="button" class="rp-boton" id="rpSiguiente" aria-label="Siguiente apartado"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 8 6-8 6zM17 6v12"/></svg></button>
-  <button type="button" class="rp-boton" id="rpCerrar" aria-label="Parar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-</div>
 
 <script src="lugares.js?v=5"></script>
-<script src="voz.js?v=1"></script>
-<script type="module" src="app.js?v=10"></script>
+<script type="module" src="app.js?v=14"></script>
 </body>
 </html>

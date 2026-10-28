@@ -1,4 +1,4 @@
-// Peregrinar por dentro · plantilla de un lugar: imágenes IA con cine lento, mapa ilustrado y voz
+// Peregrinar por dentro · plantilla de un lugar: imágenes IA con cine lento y mapa ilustrado
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -10,6 +10,8 @@ const LUGARES = [...(window.LUGARES || [])].sort((a, b) => a.numero - b.numero);
 const pedido = new URLSearchParams(location.search).get('l');
 const L = LUGARES.find(x => x.id === pedido) || LUGARES[LUGARES.length - 1];
 const urlLugar = id => `${location.pathname}?l=${encodeURIComponent(id)}`;
+const WEB = 'https://fjpereirag.github.io/peregrinar-por-dentro/';
+const enlaceLugar = id => `${WEB}?l=${encodeURIComponent(id)}`;
 
 // ---------- texto ----------
 const romano = n => { const t = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']]; let r = ''; for (const [v, l] of t) while (n >= v) { r += l; n -= v; } return r; };
@@ -30,15 +32,14 @@ $('#reflexion').innerHTML = L.secciones.map((s, i) => `
       <h2 id="t-${esc(s.id)}">${lineas(s.titulo || 'Para empezar')}</h2>
       ${s.cita ? `<p class="cita revela" style="--i:2">${esc(s.cita)}</p>` : ''}
       <div class="cuerpo">${s.parrafos.map((p, k) => `<p class="revela" style="--i:${k + 3}">${esc(p)}</p>`).join('')}</div>
-      <p class="pausa revela" style="--i:${s.parrafos.length + 4}" aria-hidden="true">pausa</p>
     </article>
   </section>`).join('');
 $('#frase').textContent = L.guardar;
 $('#versos').innerHTML = L.oracion.map(esc).join('<br>');
 $('#lectura').href = L.lectura.url;
 $('#lectura').innerHTML = `Para leer despacio: <b>${esc(L.lectura.cita)}</b> ↗`;
-$('#mensaje').textContent = L.whatsapp;
-const textoCompartir = () => `${L.whatsapp}\n\n${location.origin}${urlLugar(L.id)}`;
+const textoCompartir = () => `${L.whatsapp}\n\nLéelo y escúchalo aquí:\n${enlaceLugar(L.id)}`;
+$('#mensaje').textContent = textoCompartir();
 $('#btnWhatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(textoCompartir());
 $('#btnCopiar').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(textoCompartir()); avisar('Mensaje copiado. Ya puedes pegarlo donde quieras.'); }
@@ -61,7 +62,7 @@ function avisar(t, ms = 3800) {
 if (reducido || !('IntersectionObserver' in window)) document.documentElement.classList.add('sin-motion');
 else {
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visto'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
-  $$('.portada-in, .paso .tarjeta, .guardar-in, .oracion-in, .compartir-in, .serie-lista').forEach(el => io.observe(el));
+  $$('.portada-in, .paso .tarjeta, .guardar-in, .oracion-in, .compartir-in, .seguir-in, .serie-lista').forEach(el => io.observe(el));
   $$('.oracion-in, .compartir-in').forEach(el => el.classList.add('revela'));
 }
 
@@ -80,7 +81,7 @@ document.addEventListener('click', e => {
 
 // ---------- escena: una imagen por apartado, con movimiento de cine lento ----------
 // Imágenes en img/<lugar>/<clave>.webp (horizontal) y, opcional, <clave>-movil.webp (vertical).
-// Claves: 00 portada · 01…05 apartados · 06 frase · 07 oración (las mismas que el audio).
+// Claves: 00 portada · 01…05 apartados · 06 frase · 07 oración.
 const CLAVES = ['00', ...L.secciones.map((_, i) => String(i + 1).padStart(2, '0')), String(L.secciones.length + 1).padStart(2, '0'), String(L.secciones.length + 2).padStart(2, '0')];
 const ajustes = L.imagenes || {};
 const escena = $('#escena');
@@ -144,135 +145,4 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
     ${ciudades.map(([n, la, lo, lado, dy]) => `<circle class="sit-ciudad" cx="${x(lo)}" cy="${y(la)}" r="1.8"/><text class="sit-rotulo" x="${(+x(lo) + (lado === 'd' ? 5 : -7)).toFixed(1)}" y="${(+y(la) + 2.5 + dy).toFixed(1)}" text-anchor="${lado === 'd' ? 'start' : 'end'}">${n}</text>`).join('')}
     ${lugares}
   </svg><p>${romano(L.numero)} · ${esc(L.nombre)}</p>`;
-})();
-
-// ================= Voz =================
-// 1) Si existen audio/<lugar>/00.mp3… se usan esos MP3 (voz gratuita de Microsoft o ElevenLabs).
-// 2) Si no, se usa la voz del propio dispositivo (gratis, calidad según el equipo).
-(async () => {
-  if (!window.guionVoz) return;
-  const trozos = guionVoz(L).map(t => ({ ...t, url: `audio/${L.id}/${t.clave}.mp3` }));
-  let hayMp3 = false;
-  try { hayMp3 = (await fetch(trozos[0].url, { method: 'HEAD', cache: 'no-store' })).ok; } catch {}
-
-  // --- motor: MP3 o voz del navegador, con la misma interfaz ---
-  const motor = hayMp3 ? motorMp3() : await motorNavegador();
-  if (!motor) return;
-
-  const rp = $('#reproductor'), btnPausa = $('#rpPausa');
-  let actual = -1, seguido = false;
-  const destino = t => document.getElementById(t.destino);
-
-  trozos.forEach((t, i) => {
-    if (t.destino === 'inicio') return; // en la portada está «Escuchar todo»
-    const el = destino(t); if (!el) return;
-    const sitio = el.querySelector('.tarjeta, .guardar-in') || el;
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'btn-oir'; b.dataset.i = i;
-    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span>Escuchar</span>';
-    const pausa = sitio.querySelector('.pausa'); pausa ? sitio.insertBefore(b, pausa) : sitio.append(b);
-  });
-  $('#escucharTodo').hidden = false;
-
-  const pintar = () => {
-    const pausado = !motor.sonando();
-    $$('.btn-oir').forEach(b => { const si = Number(b.dataset.i) === actual && !pausado; b.classList.toggle('sonando', si); b.querySelector('span').textContent = si ? 'Pausar' : 'Escuchar'; });
-    rp.classList.toggle('en-pausa', pausado);
-    btnPausa.setAttribute('aria-label', pausado ? 'Seguir' : 'Pausar');
-  };
-  const irA = el => {
-    if (el.id === 'inicio') return scrollTo({ top: 0, behavior: reducido ? 'auto' : 'smooth' });
-    const t = el.querySelector('.tarjeta, blockquote') || el, r = t.getBoundingClientRect();
-    scrollTo({ top: r.top + scrollY - Math.max(80, (innerHeight - r.height) / 2), behavior: reducido ? 'auto' : 'smooth' });
-  };
-  function tocar(i, desplazar) {
-    if (i < 0 || i >= trozos.length) { parar(); return; }
-    actual = i; const t = trozos[i];
-    motor.tocar(t);
-    rp.hidden = false; $('#rpTitulo').textContent = t.nombre;
-    $('#rpModo').textContent = (seguido ? `Escuchando · ${i + 1} de ${trozos.length}` : 'Escuchando');
-    if (desplazar) { const el = destino(t); if (el) irA(el); }
-    pintar();
-  }
-  function parar() { motor.parar(); actual = -1; seguido = false; rp.hidden = true; pintar(); }
-  motor.alAcabar = () => { if (seguido) setTimeout(() => tocar(actual + 1, true), 900); else { actual = -1; rp.hidden = true; } pintar(); };
-  motor.alCambiar = pintar;
-  motor.alAvanzar = f => { $('#rpBarra').style.width = (f * 100).toFixed(1) + '%'; };
-  motor.alFallar = () => { avisar('No se ha podido reproducir este apartado.'); if (seguido) tocar(actual + 1, true); else parar(); };
-
-  document.addEventListener('click', e => {
-    const b = e.target.closest('.btn-oir'); if (!b) return;
-    const i = Number(b.dataset.i);
-    if (i === actual) { motor.alternar(); pintar(); return; }
-    seguido = false; tocar(i, false);
-  });
-  $('#escucharTodo').addEventListener('click', () => { seguido = true; tocar(0, true); });
-  btnPausa.addEventListener('click', () => { motor.alternar(); pintar(); });
-  $('#rpSiguiente').addEventListener('click', () => tocar(actual + 1, seguido));
-  $('#rpCerrar').addEventListener('click', parar);
-  addEventListener('pagehide', () => motor.parar());
-
-  function motorMp3() {
-    const a = new Audio(); a.preload = 'none';
-    const m = {
-      tocar(t) { a.src = t.url; a.play().catch(() => avisar('Pulsa de nuevo para escuchar.')); },
-      parar() { a.pause(); a.removeAttribute('src'); },
-      alternar() { a.paused ? a.play() : a.pause(); },
-      sonando: () => !a.paused
-    };
-    a.addEventListener('ended', () => m.alAcabar());
-    a.addEventListener('timeupdate', () => m.alAvanzar(a.duration ? a.currentTime / a.duration : 0));
-    a.addEventListener('play', () => m.alCambiar()); a.addEventListener('pause', () => m.alCambiar());
-    a.addEventListener('error', () => { if (a.getAttribute('src')) m.alFallar(); });
-    return m;
-  }
-
-  async function motorNavegador() {
-    const ss = window.speechSynthesis; if (!ss) return null;
-    let voces = ss.getVoices();
-    if (!voces.length) voces = await new Promise(ok => { ss.addEventListener('voiceschanged', () => ok(ss.getVoices()), { once: true }); setTimeout(() => ok(ss.getVoices()), 1500); });
-    const es = voces.filter(v => /^es([-_]|$)/i.test(v.lang)); if (!es.length) return null;
-    // preferencia: hombre de España con voz neuronal; luego cualquier hombre en español
-    const HOMBRES = /alvaro|álvaro|pablo|jorge|enrique|diego|carlos|juan|raul|raúl|arnau|dario|darío|tomas|tomás|antonio|male|hombre/i;
-    const punt = v => (HOMBRES.test(v.name) ? 8 : 0) + (/es[-_]ES/i.test(v.lang) ? 4 : 0) + (/natural|neural|online|premium|enhanced|mejorad/i.test(v.name) ? 3 : 0) + (v.localService ? 0 : 1);
-    const voz = es.sort((a, b) => punt(b) - punt(a))[0];
-    const esHombre = HOMBRES.test(voz.name);
-    const MARCA = /<break time="([\d.]+)s"\s*\/>/g;
-    let cola = [], pos = 0, total = 0, hecho = 0, activo = false, pausado = false, espera = null, gen = 0;
-    const m = {
-      tocar(t) {
-        m.parar(); gen++; activo = true; pausado = false;
-        cola = []; let ult = 0, r;
-        MARCA.lastIndex = 0;
-        while ((r = MARCA.exec(t.texto))) { cola.push({ f: t.texto.slice(ult, r.index), p: +r[1] }); ult = MARCA.lastIndex; }
-        cola.push({ f: t.texto.slice(ult), p: 0 });
-        cola = cola.map(c => ({ f: c.f.replace(/\s+/g, ' ').trim(), p: c.p })).filter(c => c.f || c.p);
-        total = cola.reduce((s, c) => s + c.f.length, 0) || 1; hecho = 0; pos = 0;
-        siguiente(gen);
-      },
-      parar() { gen++; activo = false; pausado = false; clearTimeout(espera); ss.cancel(); },
-      alternar() {
-        if (!activo) return;
-        if (pausado) { pausado = false; ss.paused ? ss.resume() : siguiente(gen); }
-        else { pausado = true; ss.speaking ? ss.pause() : clearTimeout(espera); }
-        m.alCambiar();
-      },
-      sonando: () => activo && !pausado
-    };
-    function siguiente(g) {
-      if (g !== gen || pausado) return;
-      if (pos >= cola.length) { activo = false; m.alAvanzar(1); m.alAcabar(); return; }
-      const c = cola[pos];
-      if (!c.f) { pos++; espera = setTimeout(() => siguiente(g), c.p * 1000); return; }
-      const u = new SpeechSynthesisUtterance(c.f);
-      u.voice = voz; u.lang = voz.lang; u.rate = 0.86; u.pitch = esHombre ? 0.92 : 0.8;
-      u.onend = () => { if (g !== gen) return; hecho += c.f.length; m.alAvanzar(hecho / total); pos++; espera = setTimeout(() => siguiente(g), c.p * 1000 + 150); };
-      u.onerror = e => { if (g === gen && e.error !== 'interrupted' && e.error !== 'canceled') { activo = false; m.alFallar(); } };
-      ss.speak(u);
-    }
-    // Chrome corta frases largas tras ~15 s si no se «despierta» de vez en cuando
-    setInterval(() => { if (activo && !pausado && ss.speaking) { ss.pause(); ss.resume(); } }, 12000);
-    console.info('[peregrinar] voz del navegador:', voz.name, voz.lang);
-    return m;
-  }
 })();

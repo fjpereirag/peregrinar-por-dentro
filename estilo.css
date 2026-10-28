@@ -51,9 +51,9 @@ h1,h2,h3{font-family:var(--font-display);font-weight:500;margin:0}
 .plano.vacia{background:radial-gradient(90% 70% at 70% 35%,color-mix(in srgb,var(--accent) 14%,transparent),transparent 70%)}
 @media (prefers-reduced-motion:reduce){.plano.activo img{animation:none!important}.plano{transition-duration:150ms}}
 #velo{position:fixed;inset:0;z-index:1;pointer-events:none;transition:opacity var(--dur-reveal) var(--ease-out);
-  background:linear-gradient(90deg,color-mix(in srgb,var(--bg) 80%,transparent) 0%,color-mix(in srgb,var(--bg) 30%,transparent) 48%,transparent 70%),
-             linear-gradient(0deg,color-mix(in srgb,var(--bg) 75%,transparent),transparent 36%)}
-#velo.lectura{opacity:.85}
+  background:linear-gradient(90deg,color-mix(in srgb,var(--bg) 62%,transparent) 0%,color-mix(in srgb,var(--bg) 15%,transparent) 42%,transparent 62%),
+             linear-gradient(0deg,color-mix(in srgb,var(--bg) 60%,transparent),transparent 30%)}
+#velo.lectura{opacity:.55}
 
 /* ---------- mapa ilustrado de situación ---------- */
 .situacion{position:absolute;right:var(--gutter);bottom:var(--space-5);width:clamp(11rem,15vw,15rem);margin:0;color:var(--muted);padding:var(--space-2);background:var(--panel);border-left:1px solid var(--line-oro)}
@@ -103,7 +103,9 @@ main{position:relative;z-index:3}
 .btn.whatsapp{background:#1d7a4a;border-color:#1d7a4a;color:var(--fg)}
 .btn.whatsapp:hover{background:#21895a}
 .acciones{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-4)}
-.tarjeta{background:var(--panel);border-left:1px solid var(--line-oro)}
+.tarjeta{background:linear-gradient(90deg,color-mix(in srgb,var(--bg) 78%,transparent),color-mix(in srgb,var(--bg) 58%,transparent));border-left:1px solid var(--line-oro)}
+.paso.derecha .tarjeta{background:linear-gradient(270deg,color-mix(in srgb,var(--bg) 78%,transparent),color-mix(in srgb,var(--bg) 58%,transparent))}
+.paso .tarjeta p,.paso .tarjeta h2,.oracion-in .versos{text-shadow:0 1px 14px color-mix(in srgb,var(--bg) 90%,transparent)}
 
 /* revelados (solo transform y opacity) */
 .linea{display:block;overflow:hidden;padding-bottom:.08em}
@@ -126,17 +128,15 @@ main{position:relative;z-index:3}
 
 /* ---------- estancias de la reflexión ---------- */
 .paso{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:repeat(12,1fr);align-items:center;padding:var(--section-y) var(--gutter);column-gap:var(--space-3)}
-.paso .tarjeta{grid-column:1 / span 5;padding:var(--space-4) var(--space-4) var(--space-4) var(--space-4);max-width:none}
-.paso.derecha .tarjeta{grid-column:8 / span 5}
-.numeral{display:flex;align-items:center;gap:var(--space-2);margin:0 0 var(--space-3);color:var(--accent);font:italic 500 2.4rem/1 var(--font-display)}
+.paso .tarjeta{grid-column:1 / span 4;padding:var(--space-3) var(--space-3) var(--space-3) var(--space-3);max-width:none}
+.paso.derecha .tarjeta{grid-column:9 / span 4}
+.numeral{display:flex;align-items:center;gap:var(--space-2);margin:0 0 var(--space-2);color:var(--accent);font:italic 500 2rem/1 var(--font-display)}
 .numeral::after{content:"";flex:1;height:1px;background:var(--line-oro)}
-.paso h2{font-size:var(--step-h2);line-height:1;letter-spacing:-.01em;margin-bottom:var(--space-2)}
+.paso h2{font-size:clamp(1.9rem,3vw,2.8rem);line-height:1;letter-spacing:-.01em;margin-bottom:var(--space-2)}
 .cita{margin:0 0 var(--space-3);color:var(--accent);font-variant:all-small-caps;letter-spacing:.14em;font-size:1rem}
-.paso p{margin:0 0 var(--space-2);color:color-mix(in srgb,var(--fg) 86%,var(--muted));max-width:var(--medida)}
+.paso p{font-size:clamp(.98rem,1vw,1.06rem);margin:0 0 var(--space-2);color:color-mix(in srgb,var(--fg) 86%,var(--muted));max-width:var(--medida)}
 .paso .cuerpo p:first-child{color:var(--fg)}
 .paso .cuerpo p:first-child::first-letter{float:left;font:500 3.6em/.82 var(--font-display);color:var(--accent);margin:.06em .1em 0 0}
-.pausa{display:flex;align-items:center;justify-content:center;gap:var(--space-2);margin:var(--space-4) 0 0;color:var(--muted);font-variant:all-small-caps;letter-spacing:.24em;font-size:.9rem}
-.pausa::before,.pausa::after{content:"";width:2.5rem;height:1px;background:var(--line-oro)}
 
 /* ---------- frase, oración, compartir ---------- */
 .guardar{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:var(--section-y) var(--gutter)}
@@ -144,7 +144,7 @@ main{position:relative;z-index:3}
 .guardar blockquote{margin:0;font:italic 500 clamp(2.6rem,6.4vw,6rem)/1 var(--font-display);letter-spacing:-.015em;color:var(--fg);text-shadow:var(--sombra-texto)}
 .guardar blockquote::first-letter{color:var(--accent)}
 .oracion,.compartir{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--space-3);padding:var(--space-6) var(--gutter)}
-.oracion-in{grid-column:4 / span 6;padding:var(--space-5) var(--space-4);text-align:center;background:var(--panel-fuerte);border-top:1px solid var(--line-oro);border-bottom:1px solid var(--line-oro);border-left:0}
+.oracion-in{grid-column:4 / span 6;padding:var(--space-4) var(--space-3);text-align:center;background:color-mix(in srgb,var(--bg) 62%,transparent);border-top:1px solid var(--line-oro);border-bottom:1px solid var(--line-oro);border-left:0}
 .versos{font:italic 500 clamp(1.5rem,2.4vw,2rem)/1.45 var(--font-display);color:var(--fg);margin:0}
 .lectura{display:inline-block;padding:.7rem 0 .35rem;margin-top:var(--space-3);color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line-oro);font-variant:all-small-caps;letter-spacing:.12em}
 .lectura b{font-weight:600}
@@ -166,34 +166,10 @@ main{position:relative;z-index:3}
 .pie b{color:var(--fg);font-weight:600}
 .aviso{position:fixed;left:50%;bottom:var(--space-4);transform:translateX(-50%);z-index:40;max-width:calc(100vw - 2rem);padding:var(--space-2) var(--space-3);background:var(--panel-fuerte);border:1px solid var(--line-oro);font-size:.98rem}
 
-/* ---------- voz ---------- */
-.btn-oir{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;margin-top:var(--space-3);padding:0 1rem 0 .8rem;border:1px solid var(--line-oro);background:transparent;color:var(--accent);
-  font-variant:all-small-caps;letter-spacing:.12em;font-size:1.02rem;border-radius:var(--radius);transition:background var(--dur-micro),color var(--dur-micro)}
-.btn-oir svg{width:15px;height:15px;fill:currentColor;stroke:none}
-.btn-oir:hover{background:var(--accent-suave)}
-.btn-oir.sonando{background:var(--accent);color:var(--bg);border-color:var(--accent)}
-.guardar-in .btn-oir{margin-top:var(--space-4)}
-.oracion-in .btn-oir{display:flex;margin:var(--space-3) auto 0}
-.reproductor{position:fixed;left:50%;bottom:var(--space-3);transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:var(--space-1);width:min(36rem,calc(100vw - 1.5rem));
-  padding:.5rem;background:var(--panel-fuerte);border:1px solid var(--line-oro)}
-.rp-boton{flex:none;width:44px;height:44px;border:0;background:transparent;color:var(--fg);display:grid;place-items:center;border-radius:var(--radius)}
-.rp-boton:hover{background:var(--accent-suave)}
-.rp-boton:first-child{background:var(--accent);color:var(--bg)}
-.rp-boton svg{width:20px;height:20px}
-.rp-boton:first-child svg{fill:currentColor}
-.reproductor .ic-play{display:none}
-.reproductor.en-pausa .ic-play{display:block}
-.reproductor.en-pausa .ic-pausa{display:none}
-.rp-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2;padding:0 var(--space-1)}
-.rp-info small{font-size:.85rem;font-variant:all-small-caps;letter-spacing:.14em;color:var(--accent)}
-.rp-info b{font:500 1.1rem var(--font-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rp-barra{display:block;height:1px;background:var(--line);margin-top:.35rem;overflow:hidden}
-.rp-barra span{display:block;height:100%;width:0;background:var(--accent)}
-
 /* ---------- tableta ---------- */
 @media (max-width:1100px){
-  .paso .tarjeta{grid-column:1 / span 7}
-  .paso.derecha .tarjeta{grid-column:6 / span 7}
+  .paso .tarjeta{grid-column:1 / span 6}
+  .paso.derecha .tarjeta{grid-column:7 / span 6}
   .oracion-in{grid-column:2 / span 10}
   .compartir-in{grid-column:1 / -1}
 }
@@ -211,7 +187,7 @@ main{position:relative;z-index:3}
   .cabecera.menu-abierto .menu{visibility:visible;opacity:1;transform:none;transition:opacity var(--dur-ui) var(--ease-out),transform var(--dur-ui) var(--ease-out)}
   .menu a{font-size:1.3rem;min-height:52px;border-bottom:1px solid var(--line)}
   .menu a.actual{color:var(--accent);border-bottom-color:var(--line)}
-  #velo{background:linear-gradient(0deg,color-mix(in srgb,var(--bg) 94%,transparent) 0%,color-mix(in srgb,var(--bg) 60%,transparent) 42%,transparent 72%),
+  #velo{background:linear-gradient(0deg,color-mix(in srgb,var(--bg) 80%,transparent) 0%,color-mix(in srgb,var(--bg) 35%,transparent) 40%,transparent 65%),
                     linear-gradient(180deg,color-mix(in srgb,var(--bg) 55%,transparent),transparent 18%)}
   .portada{align-items:flex-end;padding:var(--space-6) var(--gutter) var(--space-5)}
   .portada h1{font-size:clamp(3.6rem,17vw,5rem)}
@@ -220,7 +196,11 @@ main{position:relative;z-index:3}
   .acciones{flex-direction:column;align-items:stretch;margin-top:var(--space-3);gap:var(--space-1)}
   .desliza{display:none}
   .paso,.paso.derecha{display:flex;align-items:flex-end;padding:var(--space-6) var(--gutter) var(--space-4);min-height:92svh}
-  .paso .tarjeta,.paso.derecha .tarjeta{width:100%;padding:var(--space-3) var(--space-3) var(--space-3)}
+  .paso .tarjeta,.paso.derecha .tarjeta{width:100%;padding:var(--space-3) var(--space-2) var(--space-2);border-left:0;border-top:1px solid var(--line-oro);
+    background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 40%,transparent),color-mix(in srgb,var(--bg) 72%,transparent) 22%)}
+  .paso p{font-size:.97rem;line-height:1.5}
+  .paso h2{font-size:1.85rem}
+  .paso{padding-top:45svh}
   .numeral{font-size:2rem;margin-bottom:var(--space-2)}
   .guardar{min-height:80svh;align-items:flex-end;padding:var(--space-6) var(--gutter) var(--space-5)}
   .oracion,.compartir{display:block;padding:var(--space-4) var(--gutter)}
@@ -231,5 +211,30 @@ main{position:relative;z-index:3}
   .situacion{top:5.2rem;bottom:auto;right:var(--gutter);width:5.6rem;padding:.4rem}
   .situacion p{display:none}
   .situacion .sit-rotulo{display:none}
-  .reproductor{bottom:.6rem}
+}
+
+/* ---------- sello de la Revista Tierra Santa (logo sobre pergamino) ---------- */
+.sello{display:inline-flex;align-items:center;gap:.6rem;background:#F3E9D6;padding:.45rem .8rem;border-radius:var(--radius);text-decoration:none;color:#5b2a1c;
+  border:1px solid var(--line-oro);transition:transform var(--dur-micro) var(--ease-out)}
+.sello:hover{transform:translateY(-2px)}
+.sello img{display:block;width:auto;height:2.6rem}
+.sello span{font-variant:all-small-caps;letter-spacing:.14em;font-size:.85rem;color:#7a4a32}
+.sello-portada{margin:0 0 var(--space-3)}
+.sello-portada img{height:2.1rem}
+.sello-pie{flex:none}
+.sello-pie img{height:2.2rem}
+.seguir{padding:var(--space-6) var(--gutter);background:var(--bg);border-top:1px solid var(--line)}
+.seguir-in{display:grid;grid-template-columns:auto 1fr;gap:var(--space-4);align-items:start;max-width:62rem}
+.seguir-in > .sello{padding:1rem 1.3rem}
+.seguir-in > .sello img{height:5rem}
+.seguir h2{font-size:var(--step-h2);line-height:1;margin-bottom:var(--space-2)}
+.seguir p{max-width:var(--medida);margin:0;color:color-mix(in srgb,var(--fg) 86%,var(--muted))}
+.pie{align-items:center}
+@media (max-width:760px){
+  .seguir-in{grid-template-columns:1fr;gap:var(--space-3)}
+  .seguir-in > .sello{justify-self:start}
+  .seguir-in > .sello img{height:3.6rem}
+  .sello-portada{padding:.35rem .6rem}
+  .sello-portada img{height:1.6rem}
+  .sello-portada span{font-size:.75rem}
 }
