@@ -4,6 +4,7 @@
 // (desde la llave { hasta la llave } con coma), pégalo debajo y cambia
 // los textos y las coordenadas. El número 1, 2, 3… marca el orden.
 //
+// whatsapp: invitación breve (2-3 líneas) que se envía junto al enlace del lugar.
 // coord:   latitud y longitud del lugar, para el mapa de situación de la portada
 //          (Google Maps u OpenStreetMap → clic derecho sobre el lugar → copiar las dos cifras).
 // cita:    referencia bíblica de cada apartado (sale en versalitas bajo el título).
@@ -87,19 +88,9 @@ window.LUGARES = [
       'Amén.'
     ],
     lectura: { cita: 'Marcos 14,32-42', url: 'https://www.ewtn.com/es/biblia/53-marcos/14' },
-    whatsapp: `Una mirada a Tierra Santa: Getsemaní
+    whatsapp: `Una mirada a Tierra Santa: *Getsemaní*
 
 ¿Has rezado alguna vez y seguías preocupado?
-
-La oración de Jesús en Getsemaní nos invita a acercarnos a Dios con lo que sentimos, también con nuestros miedos.
-
-Puedes tener miedo y seguir confiando en Dios.
-
-Hoy puedes decirle:
-«Padre, esto es lo que me preocupa. Ayúdame a confiar en ti y a dejarme acompañar».
-
-Y si conoces a alguien que está pasando una noche difícil, quizá una llamada tuya le ayude a sentirse menos solo.
-
-Marcos 14,32-42.`
+Te invito a leer esta breve reflexión desde el huerto de los Olivos.`
   }
 ];

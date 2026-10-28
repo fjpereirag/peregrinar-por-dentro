@@ -38,8 +38,8 @@ $('#frase').textContent = L.guardar;
 $('#versos').innerHTML = L.oracion.map(esc).join('<br>');
 $('#lectura').href = L.lectura.url;
 $('#lectura').innerHTML = `Para leer despacio: <b>${esc(L.lectura.cita)}</b> ↗`;
-const textoCompartir = () => `${L.whatsapp}\n\nLéelo y escúchalo aquí:\n${enlaceLugar(L.id)}`;
-$('#mensaje').textContent = textoCompartir();
+const textoCompartir = () => `${L.whatsapp}\n\n👉 ${enlaceLugar(L.id)}`;
+$('#mensaje').textContent = textoCompartir().replace(/\*/g, '');
 $('#btnWhatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(textoCompartir());
 $('#btnCopiar').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(textoCompartir()); avisar('Mensaje copiado. Ya puedes pegarlo donde quieras.'); }
