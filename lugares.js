@@ -11,7 +11,8 @@
 //            rumbo   0 = mirando al norte, 90 = este, 180 = sur, 270 = oeste
 //            incl    inclinación hacia abajo (-10 casi horizontal, -60 muy cenital)
 //            dist    distancia en metros al punto
-//            gira    true = la cámara rodea despacio el lugar
+//            gira    true = vuelo de dron en círculo alrededor del lugar
+//            vel     velocidad del giro en grados por segundo (4 = una vuelta cada 90 s)
 // ---------------------------------------------------------------
 window.LUGARES = [
   {
@@ -23,7 +24,7 @@ window.LUGARES = [
     ubicacion: 'Monte de los Olivos · Jerusalén',
     coord: [31.77945, 35.23975],
     altura: 700,
-    vistaInicio: { rumbo: 95, incl: -16, dist: 230, gira: true },
+    vistaInicio: { rumbo: 95, incl: -11, dist: 110, gira: true, vel: 4 },
     secciones: [
       {
         id: 'pregunta',
@@ -37,7 +38,7 @@ window.LUGARES = [
       {
         id: 'lugar',
         titulo: 'Un lugar real y una experiencia cercana',
-        vista: { rumbo: 100, incl: -9, dist: 140, gira: true },
+        vista: { rumbo: 100, incl: -8, dist: 80, gira: true, vel: 3 },
         parrafos: [
           'Al pie del monte de los Olivos, en Jerusalén, el huerto de Getsemaní y la basílica de la Agonía recuerdan la oración de Jesús antes de su pasión. La basílica también recibe el nombre de iglesia de las Naciones. Es uno de los lugares donde el peregrino puede detenerse a contemplar la humanidad de Jesús.',
           'Allí, el Evangelio de Marcos muestra a Jesús angustiado. Busca la compañía de Pedro, Santiago y Juan, les pide que permanezcan despiertos y se dirige al Padre. Desea que se aparte de él aquella hora y, al mismo tiempo, se entrega a su voluntad (Mc 14,32-42).'
@@ -75,7 +76,7 @@ window.LUGARES = [
       }
     ],
     guardar: 'Puedes tener miedo y seguir confiando en Dios.',
-    vistaGuardar: { rumbo: 95, incl: -10, dist: 520, gira: true },
+    vistaGuardar: { rumbo: 95, incl: -10, dist: 260, gira: true, vel: 2 },
     oracion: [
       'Padre, tú conoces lo que hoy me preocupa.',
       'Ayúdame a hablarte con sinceridad,',

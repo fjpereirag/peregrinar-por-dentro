@@ -146,7 +146,7 @@ async function arrancarMapLibre() {
   // cámara: vuelos entre vistas y giro lento alrededor del lugar
   let meta = L.vistaInicio, girando = false, ant = 0;
   const giro = t => {
-    if (girando && meta.gira && !reducido && !map.isMoving()) map.setBearing(map.getBearing() + Math.min(0.05, (t - ant) / 1000) * 2.2);
+    if (girando && meta.gira && !reducido && !map.isMoving()) map.setBearing(map.getBearing() + Math.min(0.05, (t - ant) / 1000) * (meta.vel || 3));
     ant = t; requestAnimationFrame(giro);
   };
   requestAnimationFrame(giro);
@@ -156,7 +156,7 @@ async function arrancarMapLibre() {
       meta = v; girando = false;
       const c = camaraDe(v);
       if (reducido) map.jumpTo(c);
-      else map.flyTo({ ...c, duration: vuelo ? 7000 : 2600, curve: vuelo ? 1.6 : 1.2, essential: true });
+      else map.flyTo({ ...c, duration: vuelo ? 16000 : 5000, curve: vuelo ? 1.3 : 1.1, essential: true });
     },
     saltar(v) { girando = false; map.jumpTo(camaraDe(v)); }
   };
@@ -178,7 +178,7 @@ async function arrancarCesium(token) {
   await Promise.all([cargar('script', { src: CESIUM + 'Cesium.js' }), cargar('link', { rel: 'stylesheet', href: CESIUM + 'Widgets/widgets.css' })]);
   const C = window.Cesium;
   C.Ion.defaultAccessToken = token;
-  const tiles = await C.Cesium3DTileset.fromIonAssetId(2275207, { maximumScreenSpaceError: estrecho() ? 16 : 8, skipLevelOfDetail: true, preferLeaves: true });
+  const tiles = await C.Cesium3DTileset.fromIonAssetId(2275207, { maximumScreenSpaceError: estrecho() ? 10 : 5, skipLevelOfDetail: true, preferLeaves: true });
   const viewer = new C.Viewer('mapa', {
     globe: false, baseLayer: false, baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
     navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false, infoBox: false,
@@ -211,32 +211,51 @@ async function arrancarCesium(token) {
       translucencyByDistance: new C.NearFarScalar(1500, 0, 6000, 1) }
   }));
 
-  // cámara: rumbo/inclinación/distancia que se acercan suavemente a la vista pedida
+  // cámara: rumbo/inclinación/distancia. Dos movimientos:
+  //  · vuelo: descenso lento y suave (curva de aceleración) desde muy alto hasta el lugar
+  //  · dron: giro continuo alrededor del lugar, con un leve vaivén de altura
   const rad = C.Math.toRadians;
   const est = { h: VISTA_LEJOS.rumbo, p: VISTA_LEJOS.incl, ld: Math.log(VISTA_LEJOS.dist) };
-  let meta = { ...VISTA_LEJOS }, lento = false, giro = 0;
+  let meta = { ...VISTA_LEJOS }, giro = 0, vuelo = null, ajusteP = 0, tDron = 0;
+  const suave = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; // ease-in-out cúbica
   camara = {
-    ir(v, vuelo = false) { meta = { ...v }; lento = vuelo; giro = 0; },
-    saltar(v) { est.h = v.rumbo; est.p = v.incl; est.ld = Math.log(v.dist); meta = { ...v }; giro = 0; }
+    ir(v, largo = false) {
+      meta = { ...v }; giro = 0;
+      // el descenso inicial dura ~16 s; los cambios entre apartados, 5 s
+      vuelo = { t0: performance.now(), dur: reducido ? 1 : (largo ? 16000 : 5000), h: est.h, p: est.p, ld: est.ld };
+    },
+    saltar(v) { est.h = v.rumbo; est.p = v.incl; est.ld = Math.log(v.dist); meta = { ...v }; giro = 0; vuelo = null; }
   };
   let ant = performance.now(), cuadro = 0;
   escena.preRender.addEventListener(() => {
     const ahora = performance.now(), dt = Math.min(0.1, (ahora - ant) / 1000); ant = ahora;
-    const k = 1 - Math.exp(-dt * (lento ? 0.5 : 1.0));
-    if (meta.gira && !reducido) giro += dt * 2.2;
-    const dh = ((meta.rumbo + giro - est.h) % 360 + 540) % 360 - 180;
-    est.h += dh * k; est.p += (meta.incl - est.p) * k; est.ld += (Math.log(meta.dist) - est.ld) * k;
-    if (lento && Math.abs(est.ld - Math.log(meta.dist)) < 0.05) lento = false;
+    const pObj = Math.max(-80, meta.incl + ajusteP);
+    if (vuelo) {
+      const x = Math.min(1, (ahora - vuelo.t0) / vuelo.dur), e = suave(x);
+      // la distancia baja «en logaritmo»: se ve caer a velocidad constante aparente
+      // la inclinación se endereza al final, como un dron que llega y levanta la vista
+      const eP = suave(Math.min(1, Math.max(0, (x - 0.35) / 0.65)));
+      const dh = ((meta.rumbo - vuelo.h) % 360 + 540) % 360 - 180;
+      est.h = vuelo.h + dh * e; est.p = vuelo.p + (pObj - vuelo.p) * eP; est.ld = vuelo.ld + (Math.log(meta.dist) - vuelo.ld) * e;
+      if (x >= 1) { vuelo = null; giro = 0; }
+    } else {
+      if (meta.gira && !reducido) { giro += dt * (meta.vel || 3); tDron += dt; }
+      const k = 1 - Math.exp(-dt * 1.2);
+      const dh = ((meta.rumbo + giro - est.h) % 360 + 540) % 360 - 180;
+      const vaiven = meta.gira && !reducido ? Math.sin(tDron * 0.25) * 0.06 : 0; // ±6 % de distancia
+      est.h += dh * k; est.p += (pObj - est.p) * k; est.ld += (Math.log(meta.dist) + vaiven - est.ld) * k;
+    }
     viewer.camera.lookAt(objetivo, new C.HeadingPitchRange(rad(est.h), rad(est.p), Math.exp(est.ld)));
-    // que la cámara nunca se meta dentro del monte o de un edificio: si va baja, inclina más hacia abajo
-    if (++cuadro % 8 === 0 && Math.exp(est.ld) < 2000) {
+    // que el dron nunca se meta en el monte, los árboles o un edificio: si va bajo, sube la mirada un poco
+    if (++cuadro % 6 === 0 && Math.exp(est.ld) < 2500) {
       try {
         const cc = C.Cartographic.fromCartesian(viewer.camera.positionWC), suelo = escena.sampleHeight(cc);
-        if (Number.isFinite(suelo) && cc.height < suelo + 30) { est.p = Math.max(-75, est.p - 1.5); meta.incl = Math.min(meta.incl, est.p); }
+        if (Number.isFinite(suelo) && cc.height < suelo + 22) ajusteP = Math.max(-40, ajusteP - 1.2);
+        else ajusteP *= 0.985;
       } catch {}
     }
   });
-  setTimeout(() => camara.ir(vistaDe(claveActual), true), reducido ? 0 : 1600);
+  setTimeout(() => camara.ir(vistaDe(claveActual), true), reducido ? 0 : 1800);
   $('#pieMapa').innerHTML = 'Mapa 3D: Google Photorealistic 3D Tiles, servidos por <a href="https://cesium.com/platform/cesium-ion/" target="_blank" rel="noopener">Cesium ion</a> y mostrados con CesiumJS.';
   document.body.classList.add('modo-3d', 'modo-real');
 }
