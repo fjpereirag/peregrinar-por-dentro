@@ -17,7 +17,7 @@ Cada lugar empieza con un vuelo sobre un mapa 3D gratuito, desde Tierra Santa en
 | `config.js` | El token gratuito de Cesium para los edificios en 3D real |
 | `voz.js` | Cómo se reparte el texto en audios y dónde van las pausas |
 | `audio/<lugar>/` | Los MP3 de la voz (00.mp3, 01.mp3…) |
-| `herramienta-voz/generar-voz.html` | Herramienta para crear los MP3 con ElevenLabs (se usa en tu ordenador) |
+| `herramienta-voz/` | Herramientas para crear los MP3 en tu ordenador: voz gratuita (`voz-gratis.bat`) o ElevenLabs (`generar-voz.html`) |
 
 ## Añadir un lugar nuevo
 
@@ -51,12 +51,14 @@ Con un token gratuito de Cesium se ven los edificios, los olivos y el terreno en
    - En **Allowed URLs**, añade `https://fjpereirag.github.io`.
 4. Copia el token, pégalo en `config.js` entre las comillas de `tokenCesium: ''` y sube ese archivo.
 
-## La voz (ElevenLabs)
+## La voz
 
-1. Abre `herramienta-voz/generar-voz.html` en tu ordenador, con doble clic, dentro de esta misma carpeta.
-2. Pega tu clave de ElevenLabs. Está en elevenlabs.io → tu perfil → API Keys.
-3. Elige el lugar y busca una voz: «Buscar voces de España» muestra hombres de edad madura o mayor. Escucha las muestras y pulsa «Elegir».
-4. Ajusta el ritmo y pulsa «Probar». Cuando te guste, pulsa «Generar todos los apartados» y luego «Descargar ZIP».
-5. Descomprime el ZIP en esta carpeta, se crea `audio/<lugar>/`, y arrastra la carpeta `audio` a GitHub.
+La web tiene tres formas de leer el texto en voz alta, de mejor a más sencilla:
 
-En cuanto los MP3 están subidos, la web muestra sola el botón «Escuchar todo» en la portada y «Escuchar» en cada tarjeta. Mientras no los subas, no aparecen.
+1. **MP3 con voz gratuita de Microsoft (recomendado, sin cuentas).** En la carpeta `herramienta-voz` haz doble clic en **voz-gratis.bat**. Hace falta Python, que se instala gratis desde python.org; al instalarlo, marca «Add Python to PATH». El programa crea `audio/getsemani/00.mp3…07.mp3` con la voz de Álvaro (hombre, España), pausada y grave. Sube la carpeta `audio` a GitHub.
+   - Para un lugar nuevo: abre `generar-voz.html`, elige el lugar, pulsa «Descargar guion del lugar», guarda el archivo en `herramienta-voz` y vuelve a hacer doble clic en voz-gratis.bat.
+   - Ritmo y tono se cambian al principio de `voz-gratis.py` (`RITMO`, `TONO`).
+2. **MP3 con ElevenLabs.** Si algún día tienes cuenta, `generar-voz.html` busca voces, prueba y genera el ZIP con tu clave.
+3. **Sin MP3.** Si no hay audios subidos, la web usa la voz del propio móvil u ordenador: gratis, pero la calidad depende del equipo. En Edge, en Windows, suena con la voz natural de Álvaro.
+
+En los tres casos aparecen el botón «Escuchar todo» en la portada y «Escuchar» en cada tarjeta.
