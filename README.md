@@ -33,7 +33,7 @@ El mapa se monta solo con servicios abiertos y gratuitos, sin registrarse en nad
 
 - **Relieve del terreno:** Terrain Tiles (Mapzen), alojados por AWS como datos abiertos.
 - **Foto aérea:** Esri World Imagery.
-- **Edificios en volumen:** OpenStreetMap, a través de OpenFreeMap (si no hay token de Cesium).
+- **Edificios:** solo con el token de Cesium (3D real). Sin él, se ven el relieve y la foto aérea, sin cubos.
 - **Motor 3D:** MapLibre GL JS, de código abierto.
 
 Si un equipo no puede mostrar 3D, la web enseña el mapa plano de OpenStreetMap. Las autorías salen siempre en la esquina inferior derecha y en el pie de página.

@@ -91,8 +91,8 @@ $('#volar').addEventListener('click', () => {
 
 // ---------- mapa 3D gratuito y sin claves ----------
 // Relieve: Terrain Tiles de AWS (datos abiertos) · Foto aérea: Esri World Imagery
-// Edificios: OpenStreetMap vía OpenFreeMap · Motor: MapLibre GL JS (licencia BSD)
-const ATRIB = 'Foto aérea: <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics · Relieve: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, AWS) · Edificios: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, <a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a>';
+// Sin edificios en volumen (los cubos de OSM se veían falsos) · Motor: MapLibre GL JS (licencia BSD)
+const ATRIB = 'Foto aérea: <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics · Relieve: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, AWS)';
 
 function mapaPlano(motivo) {
   document.body.classList.add('modo-2d');
@@ -122,17 +122,11 @@ async function arrancarMapLibre() {
       sky: { 'sky-color': '#7fa6c9', 'horizon-color': '#e9d3a6', 'fog-color': '#d8c39a', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.4, 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 8, 0.6, 12, 0] },
       sources: {
         foto: { type: 'raster', tileSize: 256, maxzoom: 19, tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'] },
-        relieve: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15, tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'] },
-        osm: { type: 'vector', url: 'https://tiles.openfreemap.org/planet' }
+        relieve: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15, tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'] }
       },
       layers: [
         { id: 'fondo', type: 'background', paint: { 'background-color': '#140f0b' } },
-        { id: 'foto', type: 'raster', source: 'foto', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.08, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } },
-        { id: 'edificios', type: 'fill-extrusion', source: 'osm', 'source-layer': 'building', minzoom: 14.5,
-          paint: { 'fill-extrusion-color': ['interpolate', ['linear'], ['coalesce', ['get', 'render_height'], 6], 0, '#cdb892', 20, '#e6d5b2', 40, '#f2e6cc'],
-            'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 7], 'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
-            'fill-extrusion-vertical-gradient': true,
-            'fill-extrusion-opacity': ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.5, 0.92] } }
+        { id: 'foto', type: 'raster', source: 'foto', paint: { 'raster-saturation': -0.05, 'raster-contrast': 0.08, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } }
       ],
       terrain: { source: 'relieve', exaggeration: 1.1 }
     },
