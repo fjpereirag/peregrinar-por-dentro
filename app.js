@@ -103,6 +103,7 @@ function mostrar(c) {
   $$('.plano', escena).forEach(f => f.classList.toggle('activo', f.dataset.clave === c));
   const i = CLAVES.indexOf(c);
   [i, i + 1, i - 1].forEach(k => CLAVES[k] && cargarImagen(CLAVES[k]));
+  dispatchEvent(new CustomEvent('cambio-plano', { detail: c }));
 }
 
 function espiar() {
@@ -145,4 +146,233 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
     ${ciudades.map(([n, la, lo, lado, dy]) => `<circle class="sit-ciudad" cx="${x(lo)}" cy="${y(la)}" r="1.8"/><text class="sit-rotulo" x="${(+x(lo) + (lado === 'd' ? 5 : -7)).toFixed(1)}" y="${(+y(la) + 2.5 + dy).toFixed(1)}" text-anchor="${lado === 'd' ? 'start' : 'end'}">${n}</text>`).join('')}
     ${lugares}
   </svg><p>${romano(L.numero)} · ${esc(L.nombre)}</p>`;
+})();
+
+// ================= Audio, Texto y Música (tres casillas) =================
+// Audio: lee la reflexión (no la portada, que es solo para leer) y va bajando la página.
+//        Usa audio/<lugar>/01.mp3… si existen; si no, la voz del propio dispositivo.
+// Texto: si se desmarca, solo se ven los títulos.
+// Música: audio/<lugar>/musica.mp3 si existe; si no, una música de fondo serena generada en el navegador.
+//        Con Audio y Música a la vez, la música baja de volumen mientras habla la voz.
+(() => {
+  const PREF = 'pxd-preferencias';
+  let pref = { audio: false, texto: true, musica: false };
+  try { pref = { ...pref, ...JSON.parse(localStorage.getItem(PREF) || '{}'), audio: false, musica: false }; } catch {}
+  const guardar = () => { try { localStorage.setItem(PREF, JSON.stringify({ texto: pref.texto })); } catch {} };
+  const cAudio = $('#ctlAudio'), cTexto = $('#ctlTexto'), cMusica = $('#ctlMusica'), estado = $('#ctlEstado');
+
+  // ----- Texto -----
+  const aplicarTexto = () => { document.body.classList.toggle('solo-titulos', !pref.texto); cTexto.checked = pref.texto; };
+  cTexto.addEventListener('change', () => { pref.texto = cTexto.checked; guardar(); aplicarTexto(); });
+  aplicarTexto();
+
+  // ----- Música -----
+  const musica = crearMusica();
+  const VOL = 0.55, VOL_BAJO = 0.14;
+  const ajustarMusica = () => musica.volumen(narrador.hablando() ? VOL_BAJO : VOL);
+  cMusica.addEventListener('change', async () => {
+    pref.musica = cMusica.checked;
+    if (pref.musica) { await musica.empezar(); ajustarMusica(); } else musica.parar();
+  });
+
+  // ----- Audio (narración) -----
+  const narrador = crearNarrador();
+  cAudio.addEventListener('change', async () => {
+    pref.audio = cAudio.checked;
+    if (pref.audio) { const ok = await narrador.empezar(); if (!ok) { cAudio.checked = pref.audio = false; } }
+    else narrador.parar();
+    ajustarMusica();
+  });
+  addEventListener('pagehide', () => { narrador.parar(); musica.parar(); });
+
+  function crearNarrador() {
+    if (!window.guionVoz) return { empezar: async () => false, parar() {}, hablando: () => false };
+    const trozos = guionVoz(L).filter(t => t.clave !== '00').map(t => ({ ...t, url: `audio/${L.id}/${t.clave}.mp3` }));
+    let motor = null, actual = -1, activo = false, autoHasta = 0;
+    const destino = t => document.getElementById(t.destino);
+    const irA = el => {
+      const t = el.querySelector('.tarjeta, blockquote') || el, r = t.getBoundingClientRect();
+      autoHasta = performance.now() + 1800;
+      scrollTo({ top: r.top + scrollY - Math.max(80, (innerHeight - r.height) / 2), behavior: reducido ? 'auto' : 'smooth' });
+    };
+    const pintar = () => {
+      $$('.paso, .guardar, .oracion').forEach(e => e.classList.remove('leyendo'));
+      if (activo && actual >= 0) { destino(trozos[actual])?.classList.add('leyendo'); estado.textContent = trozos[actual].nombre; estado.hidden = false; }
+      else estado.hidden = true;
+      ajustarMusica();
+    };
+    function tocar(i, desplazar = true) {
+      if (i >= trozos.length) { parar(); cAudio.checked = pref.audio = false; avisar('Fin de la reflexión. Amén.'); return; }
+      actual = i; const t = trozos[i];
+      if (desplazar) { const el = destino(t); if (el) irA(el); }
+      motor.tocar(t); pintar();
+    }
+    function parar() { activo = false; motor?.parar(); actual = -1; pintar(); }
+    // si la persona baja o sube por su cuenta, la voz salta a ese apartado
+    addEventListener('cambio-plano', e => {
+      if (!activo || performance.now() < autoHasta) return;
+      const i = trozos.findIndex(t => destino(t)?.dataset.vista === e.detail);
+      if (i >= 0 && i !== actual) tocar(i, false);
+    });
+    return {
+      async empezar() {
+        if (!motor) {
+          let hayMp3 = false;
+          try { hayMp3 = (await fetch(trozos[0].url, { method: 'HEAD', cache: 'no-store' })).ok; } catch {}
+          motor = hayMp3 ? motorMp3() : await motorNavegador();
+          if (!motor) { avisar('Este dispositivo no tiene voz en español para leer en alto.'); return false; }
+          motor.alAcabar = () => { if (activo) setTimeout(() => activo && tocar(actual + 1), 1200); };
+          motor.alCambiar = pintar;
+          motor.alAvanzar = () => {};
+          motor.alFallar = () => { if (activo) tocar(actual + 1); };
+        }
+        activo = true;
+        const i = Math.max(0, trozos.findIndex(t => destino(t)?.dataset.vista === claveActual));
+        tocar(i);
+        return true;
+      },
+      parar,
+      hablando: () => !!(activo && motor && motor.sonando())
+    };
+  }
+
+  function motorMp3() {
+    const a = new Audio(); a.preload = 'none';
+    const m = {
+      tocar(t) { a.src = t.url; a.play().catch(() => avisar('Pulsa de nuevo para escuchar.')); },
+      parar() { a.pause(); a.removeAttribute('src'); },
+      alternar() { a.paused ? a.play() : a.pause(); },
+      sonando: () => !a.paused
+    };
+    a.addEventListener('ended', () => m.alAcabar());
+    a.addEventListener('timeupdate', () => m.alAvanzar(a.duration ? a.currentTime / a.duration : 0));
+    a.addEventListener('play', () => m.alCambiar()); a.addEventListener('pause', () => m.alCambiar());
+    a.addEventListener('error', () => { if (a.getAttribute('src')) m.alFallar(); });
+    return m;
+  }
+
+  async function motorNavegador() {
+    const ss = window.speechSynthesis; if (!ss) return null;
+    let voces = ss.getVoices();
+    if (!voces.length) voces = await new Promise(ok => { ss.addEventListener('voiceschanged', () => ok(ss.getVoices()), { once: true }); setTimeout(() => ok(ss.getVoices()), 1500); });
+    const es = voces.filter(v => /^es([-_]|$)/i.test(v.lang)); if (!es.length) return null;
+    // preferencia: hombre de España con voz neuronal; luego cualquier hombre en español
+    const HOMBRES = /alvaro|álvaro|pablo|jorge|enrique|diego|carlos|juan|raul|raúl|arnau|dario|darío|tomas|tomás|antonio|male|hombre/i;
+    const punt = v => (HOMBRES.test(v.name) ? 8 : 0) + (/es[-_]ES/i.test(v.lang) ? 4 : 0) + (/natural|neural|online|premium|enhanced|mejorad/i.test(v.name) ? 3 : 0) + (v.localService ? 0 : 1);
+    const voz = es.sort((a, b) => punt(b) - punt(a))[0];
+    const esHombre = HOMBRES.test(voz.name);
+    const MARCA = /<break time="([\d.]+)s"\s*\/>/g;
+    let cola = [], pos = 0, total = 0, hecho = 0, activo = false, pausado = false, espera = null, gen = 0;
+    const m = {
+      tocar(t) {
+        m.parar(); gen++; activo = true; pausado = false;
+        cola = []; let ult = 0, r;
+        MARCA.lastIndex = 0;
+        while ((r = MARCA.exec(t.texto))) { cola.push({ f: t.texto.slice(ult, r.index), p: +r[1] }); ult = MARCA.lastIndex; }
+        cola.push({ f: t.texto.slice(ult), p: 0 });
+        cola = cola.map(c => ({ f: c.f.replace(/\s+/g, ' ').trim(), p: c.p })).filter(c => c.f || c.p);
+        total = cola.reduce((s, c) => s + c.f.length, 0) || 1; hecho = 0; pos = 0;
+        siguiente(gen);
+      },
+      parar() { gen++; activo = false; pausado = false; clearTimeout(espera); ss.cancel(); },
+      alternar() {
+        if (!activo) return;
+        if (pausado) { pausado = false; ss.paused ? ss.resume() : siguiente(gen); }
+        else { pausado = true; ss.speaking ? ss.pause() : clearTimeout(espera); }
+        m.alCambiar();
+      },
+      sonando: () => activo && !pausado
+    };
+    function siguiente(g) {
+      if (g !== gen || pausado) return;
+      if (pos >= cola.length) { activo = false; m.alAvanzar(1); m.alAcabar(); return; }
+      const c = cola[pos];
+      if (!c.f) { pos++; espera = setTimeout(() => siguiente(g), c.p * 1000); return; }
+      const u = new SpeechSynthesisUtterance(c.f);
+      u.voice = voz; u.lang = voz.lang; u.rate = 0.86; u.pitch = esHombre ? 0.92 : 0.8;
+      u.onend = () => { if (g !== gen) return; hecho += c.f.length; m.alAvanzar(hecho / total); pos++; espera = setTimeout(() => siguiente(g), c.p * 1000 + 150); };
+      u.onerror = e => { if (g === gen && e.error !== 'interrupted' && e.error !== 'canceled') { activo = false; m.alFallar(); } };
+      ss.speak(u);
+    }
+    // Chrome corta frases largas tras ~15 s si no se «despierta» de vez en cuando
+    setInterval(() => { if (activo && !pausado && ss.speaking) { ss.pause(); ss.resume(); } }, 12000);
+    console.info('[peregrinar] voz del navegador:', voz.name, voz.lang);
+    return m;
+  }
+
+
+  function crearMusica() {
+    let ctx = null, salida = null, fuente = null, sinte = null, el = null;
+    const url = `audio/${L.id}/musica.mp3`;
+    return {
+      async empezar() {
+        if (!ctx) {
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          salida = ctx.createGain(); salida.gain.value = 0; salida.connect(ctx.destination);
+          let hay = false;
+          try { hay = (await fetch(url, { method: 'HEAD', cache: 'no-store' })).ok; } catch {}
+          if (hay) { el = new Audio(url); el.loop = true; el.crossOrigin = 'anonymous'; fuente = ctx.createMediaElementSource(el); fuente.connect(salida); }
+          else sinte = musicaGenerada(ctx, salida);
+        }
+        if (ctx.state === 'suspended') await ctx.resume();
+        if (el) el.play().catch(() => {});
+        sinte?.arrancar();
+      },
+      parar() {
+        if (!ctx) return;
+        salida.gain.cancelScheduledValues(ctx.currentTime);
+        salida.gain.setTargetAtTime(0, ctx.currentTime, 0.4);
+        setTimeout(() => { if (!pref.musica) { el?.pause(); sinte?.parar(); } }, 1800);
+      },
+      volumen(v) {
+        if (!ctx || !pref.musica) return;
+        salida.gain.cancelScheduledValues(ctx.currentTime);
+        salida.gain.setTargetAtTime(v, ctx.currentTime, v < 0.3 ? 0.35 : 1.4); // baja rápido, sube despacio
+      }
+    };
+  }
+
+  // Música serena generada: acordes en re menor (modo dórico) que cambian cada 12 s,
+  // un bordón grave, campanas suaves de vez en cuando y una reverberación amplia.
+  function musicaGenerada(ctx, salida) {
+    const reverb = ctx.createConvolver(), seco = ctx.createGain(), humedo = ctx.createGain();
+    const largo = ctx.sampleRate * 4, imp = ctx.createBuffer(2, largo, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) { const d = imp.getChannelData(c); for (let i = 0; i < largo; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / largo, 2.6); }
+    reverb.buffer = imp; seco.gain.value = 0.35; humedo.gain.value = 0.9;
+    const bus = ctx.createGain(); bus.gain.value = 0.32;
+    const filtro = ctx.createBiquadFilter(); filtro.type = 'lowpass'; filtro.frequency.value = 1400; filtro.Q.value = 0.4;
+    bus.connect(filtro); filtro.connect(seco); filtro.connect(reverb); reverb.connect(humedo); seco.connect(salida); humedo.connect(salida);
+    const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+    // Dm(add9) · B♭maj7 · Fadd9 · Csus2 · Gm7 · Dm
+    const ACORDES = [[50, 57, 62, 64, 65], [46, 53, 57, 62, 65], [41, 53, 57, 60, 67], [48, 55, 60, 62, 67], [43, 55, 58, 62, 65], [50, 57, 62, 65, 69]];
+    const ESCALA = [74, 76, 77, 79, 81, 84, 86];
+    let viva = false, paso = 0, temporizador = null, campanas = null, bordon = [];
+    function nota(f, t0, dur, vol, tipo = 'sine') {
+      const o = ctx.createOscillator(), g = ctx.createGain(); o.type = tipo; o.frequency.value = f; o.detune.value = (Math.random() - 0.5) * 8;
+      g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + dur * 0.35); g.gain.linearRampToValueAtTime(0, t0 + dur);
+      o.connect(g); g.connect(bus); o.start(t0); o.stop(t0 + dur + 0.1);
+    }
+    function acorde() {
+      if (!viva) return;
+      const t = ctx.currentTime + 0.05, dur = 15;
+      ACORDES[paso % ACORDES.length].forEach((m, k) => { nota(hz(m), t, dur, k === 0 ? 0.09 : 0.05, k % 2 ? 'triangle' : 'sine'); nota(hz(m) * 1.003, t, dur, 0.03, 'sine'); });
+      paso++; temporizador = setTimeout(acorde, 12000);
+    }
+    function campana() {
+      if (!viva) return;
+      const t = ctx.currentTime + 0.05, f = hz(ESCALA[Math.floor(Math.random() * ESCALA.length)]);
+      const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.045, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0005, t + 5);
+      o.connect(g); g.connect(bus); o.start(t); o.stop(t + 5.2);
+      campanas = setTimeout(campana, 5000 + Math.random() * 7000);
+    }
+    return {
+      arrancar() {
+        if (viva) return; viva = true;
+        bordon = [hz(38), hz(45)].map((f, k) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.value = k ? 0.03 : 0.05; o.connect(g); g.connect(bus); o.start(); return o; });
+        acorde(); campanas = setTimeout(campana, 4000);
+      },
+      parar() { viva = false; clearTimeout(temporizador); clearTimeout(campanas); bordon.forEach(o => { try { o.stop(); } catch {} }); bordon = []; }
+    };
+  }
 })();

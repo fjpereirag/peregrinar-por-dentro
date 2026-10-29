@@ -15,6 +15,9 @@ Cada lugar se recorre con imágenes creadas con IA, una por apartado, con movimi
 | `app.js` | Imágenes y su movimiento, mapa de situación, menú y botones |
 | `lugares.js` | **Los textos de cada lugar**: aquí se añade el lugar de cada día |
 | `img/<lugar>/` | Las imágenes de cada apartado (00.webp … 07.webp) |
+| `voz.js` | Cómo se reparte el texto en audios y dónde van las pausas |
+| `audio/<lugar>/` | (opcional) Voz en MP3 `01.mp3`…`07.mp3` y música de fondo `musica.mp3` |
+| `herramienta-voz/` | Para crear los MP3 de la voz en tu ordenador (`voz-gratis.bat`, gratis) |
 | `logo-revista-tierra-santa.png` | Logotipo de la Revista Tierra Santa (portada, «Sigue peregrinando» y pie) |
 | `favicon.svg`, `og.jpg`, `404.html` | Icono, imagen al compartir el enlace (1200×630) y página de error con el mismo estilo |
 | `herramienta-imagenes/` | Prompts para generar las imágenes y conversor a WebP (`preparar-imagenes.bat`) |
@@ -40,6 +43,19 @@ Cada apartado tiene su propia imagen a pantalla completa, con un movimiento muy 
 Mientras falte alguna imagen, ese apartado muestra un fondo oscuro con un halo dorado.
 
 Para mover el punto de interés de una imagen o cambiar cuánto se acerca, ajusta `imagenes` en `lugares.js` (`foco` y `zoom`).
+
+## Audio, Texto y Música
+
+Abajo a la izquierda (en el móvil, abajo en el centro) hay tres casillas:
+
+- **Audio:** lee en voz alta la reflexión desde el apartado en que estás, sin la portada, que es solo para leer. Al terminar cada apartado, baja sola al siguiente. Si bajas o subes por tu cuenta, la voz salta a ese apartado.
+  - Con los MP3 en `audio/<lugar>/01.mp3`…`07.mp3` suena esa voz. Se crean con doble clic en `herramienta-voz/voz-gratis.bat`: es gratis, con la voz de Álvaro, y hace falta Python.
+  - Sin MP3, usa la voz del propio móvil u ordenador.
+- **Texto:** marcado, se ve todo el texto. Desmarcado, solo los títulos, para dejar ver las imágenes.
+- **Música:** suena una música de fondo serena, en re menor y muy lenta, generada en el propio navegador. Si pones un archivo `audio/<lugar>/musica.mp3`, suena ese en su lugar, en bucle.
+- **Audio y Música a la vez:** la música baja de volumen mientras habla la voz y vuelve a subir en los silencios.
+
+La casilla Texto se recuerda en cada visita. Audio y Música empiezan siempre apagadas, porque los navegadores no dejan sonar nada sin que se pulse antes.
 
 ## Diseño
 
