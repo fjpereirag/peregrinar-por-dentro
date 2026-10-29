@@ -46,12 +46,12 @@ Para mover el punto de interés de una imagen o cambiar cuánto se acerca, ajust
 
 ## Audio, Texto y Música
 
-Abajo a la izquierda (en el móvil, abajo en el centro) hay tres casillas:
+En la portada, debajo de «Empezar a rezar», hay tres casillas. Se eligen solo al principio; mientras suena el audio o la música, abajo aparece un aviso pequeño con el apartado que se lee y un botón **Detener**.
 
 - **Audio:** lee en voz alta la reflexión desde el apartado en que estás, sin la portada, que es solo para leer. Al terminar cada apartado, baja sola al siguiente. Si bajas o subes por tu cuenta, la voz salta a ese apartado.
   - Con los MP3 en `audio/<lugar>/01.mp3`…`07.mp3` suena esa voz. Se crean con doble clic en `herramienta-voz/voz-gratis.bat`: es gratis, con la voz de Álvaro, y hace falta Python.
   - Sin MP3, usa la voz del propio móvil u ordenador.
-- **Texto:** marcado, se ve todo el texto. Desmarcado, solo los títulos, para dejar ver las imágenes.
+- **Texto:** marcado, se ve todo el texto. Desmarcado, cada apartado muestra su título, su cita y **la frase más importante**, para dejar ver las imágenes. Esa frase se escribe en `frase` de cada apartado, en `lugares.js`.
 - **Música:** suena el archivo `audio/<lugar>/musica.mp3` en bucle, con su crédito en el pie, que se pone en `musica` dentro de `lugares.js`. Para Getsemaní es «Light of Gethsemane», de TokyoRifft (Pixabay, licencia gratuita de Pixabay). Si falta el archivo, suena una música serena generada en el propio navegador.
 - **Audio y Música a la vez:** la música baja de volumen mientras habla la voz y vuelve a subir en los silencios.
 

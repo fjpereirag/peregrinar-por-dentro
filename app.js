@@ -25,12 +25,14 @@ $('#nombre').innerHTML = lineas(L.nombre);
 $('#titulo').textContent = L.titulo; $('#titulo').classList.add('revela'); $('#titulo').style.setProperty('--i', 4);
 $('#entradilla').textContent = L.entradilla; $('#entradilla').classList.add('revela'); $('#entradilla').style.setProperty('--i', 6);
 $('#inicio .acciones').classList.add('revela'); $('#inicio .acciones').style.setProperty('--i', 8);
+$('#inicio .controles').classList.add('revela'); $('#inicio .controles').style.setProperty('--i', 9);
 $('#reflexion').innerHTML = L.secciones.map((s, i) => `
   <section class="paso ${i % 2 ? 'derecha' : ''}" id="${esc(s.id)}" data-vista="${String(i + 1).padStart(2, '0')}" aria-labelledby="t-${esc(s.id)}">
     <article class="tarjeta">
       <p class="numeral revela" aria-hidden="true">${romano(i + 1)}</p>
       <h2 id="t-${esc(s.id)}">${lineas(s.titulo || 'Para empezar')}</h2>
       ${s.cita ? `<p class="cita revela" style="--i:2">${esc(s.cita)}</p>` : ''}
+      ${s.frase ? `<p class="frase-clave revela" style="--i:3">${esc(s.frase)}</p>` : ''}
       <div class="cuerpo">${s.parrafos.map((p, k) => `<p class="revela" style="--i:${k + 3}">${esc(p)}</p>`).join('')}</div>
     </article>
   </section>`).join('');
@@ -41,10 +43,6 @@ $('#lectura').innerHTML = `Para leer despacio: <b>${esc(L.lectura.cita)}</b> ↗
 const textoCompartir = () => `${L.whatsapp}\n\n👉 ${enlaceLugar(L.id)}`;
 $('#mensaje').textContent = textoCompartir().replace(/\*/g, '');
 $('#btnWhatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(textoCompartir());
-$('#btnCopiar').addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText(textoCompartir()); avisar('Mensaje copiado. Ya puedes pegarlo donde quieras.'); }
-  catch { avisar('No se ha podido copiar; selecciona el texto y cópialo a mano.'); }
-});
 
 const otros = LUGARES.filter(x => x.id !== L.id);
 if (otros.length) {
@@ -159,7 +157,9 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
   let pref = { audio: false, texto: true, musica: false };
   try { pref = { ...pref, ...JSON.parse(localStorage.getItem(PREF) || '{}'), audio: false, musica: false }; } catch {}
   const guardar = () => { try { localStorage.setItem(PREF, JSON.stringify({ texto: pref.texto })); } catch {} };
-  const cAudio = $('#ctlAudio'), cTexto = $('#ctlTexto'), cMusica = $('#ctlMusica'), estado = $('#ctlEstado');
+  const cAudio = $('#ctlAudio'), cTexto = $('#ctlTexto'), cMusica = $('#ctlMusica'), estado = $('#ctlEstado'), sonando = $('#sonando');
+  // aviso flotante mientras suena algo: qué apartado se lee y un botón para detener
+  const verSonando = () => { sonando.hidden = !(pref.audio || pref.musica); };
 
   // ----- Texto -----
   const aplicarTexto = () => { document.body.classList.toggle('solo-titulos', !pref.texto); cTexto.checked = pref.texto; };
@@ -173,6 +173,7 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
   cMusica.addEventListener('change', async () => {
     pref.musica = cMusica.checked;
     if (pref.musica) { await musica.empezar(); ajustarMusica(); } else musica.parar();
+    verSonando();
   });
 
   // ----- Audio (narración) -----
@@ -181,7 +182,11 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
     pref.audio = cAudio.checked;
     if (pref.audio) { const ok = await narrador.empezar(); if (!ok) { cAudio.checked = pref.audio = false; } }
     else narrador.parar();
-    ajustarMusica();
+    ajustarMusica(); verSonando();
+  });
+  $('#btnParar').addEventListener('click', () => {
+    narrador.parar(); musica.parar();
+    cAudio.checked = cMusica.checked = pref.audio = pref.musica = false; verSonando();
   });
   addEventListener('pagehide', () => { narrador.parar(); musica.parar(); });
 
@@ -197,12 +202,13 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
     };
     const pintar = () => {
       $$('.paso, .guardar, .oracion').forEach(e => e.classList.remove('leyendo'));
-      if (activo && actual >= 0) { destino(trozos[actual])?.classList.add('leyendo'); estado.textContent = trozos[actual].nombre; estado.hidden = false; }
-      else estado.hidden = true;
+      if (activo && actual >= 0) { destino(trozos[actual])?.classList.add('leyendo'); estado.textContent = trozos[actual].nombre; }
+      else estado.textContent = '';
+      verSonando();
       ajustarMusica();
     };
     function tocar(i, desplazar = true) {
-      if (i >= trozos.length) { parar(); cAudio.checked = pref.audio = false; avisar('Fin de la reflexión. Amén.'); return; }
+      if (i >= trozos.length) { cAudio.checked = pref.audio = false; parar(); avisar('Fin de la reflexión. Amén.'); return; }
       actual = i; const t = trozos[i];
       if (desplazar) { const el = destino(t); if (el) irA(el); }
       motor.tocar(t); pintar();

@@ -7,6 +7,7 @@
 // whatsapp: invitación breve (2-3 líneas) que se envía junto al enlace del lugar.
 // coord:   latitud y longitud del lugar, para el mapa de situación de la portada
 //          (Google Maps u OpenStreetMap → clic derecho sobre el lugar → copiar las dos cifras).
+// frase:   la frase más importante de cada apartado; se ve cuando se desmarca «Texto».
 // cita:    referencia bíblica de cada apartado (sale en versalitas bajo el título).
 // IMÁGENES: van en img/<id>/ con estos nombres (los mismos que los audios):
 //            00 portada · 01…05 apartados · 06 frase final · 07 oración
@@ -27,6 +28,7 @@ window.LUGARES = [
     secciones: [
       {
         id: 'pregunta',
+        frase: '¿Alguna vez has rezado y el miedo seguía ahí?',
         cita: 'Mc 14,34',
         parrafos: [
           '¿Alguna vez has rezado y el miedo seguía ahí? Has pedido por alguien, por una situación que no sabes resolver, por una noticia que temes recibir. Y, al terminar, la preocupación continuaba.',
@@ -36,6 +38,7 @@ window.LUGARES = [
       },
       {
         id: 'lugar',
+        frase: 'Desea que se aparte de él aquella hora y, al mismo tiempo, se entrega a su voluntad.',
         cita: 'Mc 14,32-42',
         titulo: 'Un lugar real y una experiencia cercana',
         parrafos: [
@@ -45,6 +48,7 @@ window.LUGARES = [
       },
       {
         id: 'tal-como-estas',
+        frase: 'Sentir miedo no significa haber perdido la fe.',
         cita: 'Mc 14,36',
         titulo: 'Puedes acercarte a Dios tal como estás',
         parrafos: [
@@ -55,6 +59,7 @@ window.LUGARES = [
       },
       {
         id: 'compania',
+        frase: 'La fe también se hace visible en esa presencia discreta.',
         cita: 'Mc 14,33-34',
         titulo: 'También necesitamos compañía',
         parrafos: [
@@ -65,6 +70,7 @@ window.LUGARES = [
       },
       {
         id: 'vida',
+        frase: 'Confiar también puede tomar la forma de pedir ayuda, aceptar compañía y dejarte cuidar.',
         cita: 'Mc 14,41-42',
         titulo: 'Llevar Getsemaní a nuestra vida',
         parrafos: [
