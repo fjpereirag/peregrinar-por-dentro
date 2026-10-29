@@ -51,7 +51,7 @@ En la portada, debajo de «Empezar a rezar», hay dos casillas. Se eligen solo a
 - **Audio:** lee en voz alta la reflexión desde el apartado en que estás, sin la portada, que es solo para leer. Al terminar cada apartado, baja sola al siguiente. Si bajas o subes por tu cuenta, la voz salta a ese apartado.
   - Con los MP3 en `audio/<lugar>/01.mp3`…`07.mp3` suena esa voz. Se crean con doble clic en `herramienta-voz/voz-gratis.bat`: es gratis, con la voz de Álvaro, y hace falta Python.
   - Sin MP3, usa la voz del propio móvil u ordenador.
-- **Música:** suena el archivo `audio/<lugar>/musica.mp3` en bucle, con su crédito en el pie, que se pone en `musica` dentro de `lugares.js`. Para Getsemaní es «Light of Gethsemane», de TokyoRifft (Pixabay, licencia gratuita de Pixabay). Si falta el archivo, suena una música serena generada en el propio navegador.
+- **Música:** suena el archivo `audio/<lugar>/musica.mp3` en bucle, con su crédito en el pie, que se pone en `musica` dentro de `lugares.js`. Para Getsemaní es «Light of Gethsemane», de TokyoRifft (Pixabay, licencia gratuita de Pixabay). Si falta el archivo, suena una música serena generada en el propio navegador. **Si cambias `musica.mp3`, sube el número de `version` en `musica`** (2, 3, 4…); si no, los móviles pueden seguir usando la música antigua.
 - **Audio y Música a la vez:** la música baja de volumen mientras habla la voz y vuelve a subir en los silencios.
 
 El texto se ve siempre. Audio y Música empiezan siempre apagadas, porque los navegadores no dejan sonar nada sin que se pulse antes.

@@ -307,7 +307,8 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
 
   function crearMusica() {
     let ctx = null, salida = null, fuente = null, sinte = null, el = null;
-    const url = `audio/${L.id}/musica.mp3`;
+    // ?v= obliga a los móviles a bajar el archivo nuevo cuando se cambia la música (subir «version» en lugares.js)
+    const url = `audio/${L.id}/musica.mp3?v=${L.musica?.version || 1}`;
     return {
       async empezar() {
         if (!ctx) {

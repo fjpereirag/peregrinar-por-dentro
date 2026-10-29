@@ -75,7 +75,8 @@ window.LUGARES = [
     ],
     guardar: 'Puedes tener miedo y seguir confiando en Dios.',
     // música de fondo: archivo audio/getsemani/musica.mp3 (si no está, suena la música generada)
-    musica: { titulo: 'Light of Gethsemane', autor: 'TokyoRifft', url: 'https://pixabay.com/music/ambient-light-of-gethsemane-470042/' },
+    // version: súbela (2, 3, 4…) cada vez que cambies musica.mp3, para que los móviles no usen la antigua
+    musica: { version: 2, titulo: 'Light of Gethsemane', autor: 'TokyoRifft', url: 'https://pixabay.com/music/ambient-light-of-gethsemane-470042/' },
     imagenes: {
       '00': { foco: '50% 55%', zoom: 1.12 },
       '02': { foco: '50% 40%', zoom: 1.10 },
