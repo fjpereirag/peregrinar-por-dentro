@@ -179,7 +179,8 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
 
   // ----- Música -----
   const musica = crearMusica();
-  const VOL = 0.55, VOL_BAJO = 0.14;
+  // «volumen» en musica (lugares.js) ajusta cada pieza: 1 = normal, 0.7 = más baja
+  const AJ = L.musica?.volumen ?? 1, VOL = 0.55 * AJ, VOL_BAJO = 0.14 * AJ;
   const ajustarMusica = () => musica.volumen(narrador.hablando() ? VOL_BAJO : VOL);
   cMusica.addEventListener('change', async () => {
     pref.musica = cMusica.checked;

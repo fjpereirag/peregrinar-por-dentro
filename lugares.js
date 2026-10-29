@@ -168,7 +168,9 @@ Te invito a leer esta breve reflexión desde el huerto de los Olivos.`
       }
     ],
     guardar: 'Aunque hoy te cueste reconocerlo, puedes pedirle a Jesús que siga caminando contigo.',
-    // sin musica.mp3 en audio/emaus/ suena la música serena generada en el navegador
+    // música de fondo: archivo audio/emaus/musica.mp3 (si no está, suena la música generada)
+    // volumen: 0.7 porque esta pieza tiene más ritmo y brillo; súbelo a 1 si la quieres más presente
+    musica: { version: 1, volumen: 0.7, titulo: 'Emmaus – Did not our heart burn within us? (Luke 24) [Instrumental]', autor: 'Misselle', url: 'https://pixabay.com/music/modern-country-emmaus-did-not-our-heart-burn-within-us-luke-24-instrumental-498105/' },
     oracion: [
       'Señor Jesús,',
       'tú conoces mis esperanzas y mis decepciones.',
