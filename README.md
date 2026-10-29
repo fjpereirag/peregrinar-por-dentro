@@ -20,6 +20,8 @@ En `lugares.js`, cada lugar tiene dos interruptores:
 
 El orden y las fechas de los 40 lugares están en `calendario.md`, siguiendo el año litúrgico.
 
+En la portada y en «Otros lugares» se indica el próximo lugar y su fecha («Próximo lugar: Nazaret, el domingo 1 de noviembre»). Solo aparece si ese lugar ya está en `lugares.js`.
+
 Si alguien abre el enlace de un lugar que todavía no ha salido, la web le avisa («Nazaret se publica el domingo 1 de noviembre») y le muestra el lugar actual.
 
 Cada lugar lleva en `lugares.js` su fecha de salida: `publicar: '2026-11-01'` (año-mes-día).

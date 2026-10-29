@@ -17,6 +17,10 @@ const pedido = params.get('l');
 const L = LUGARES.find(x => x.id === pedido) || LUGARES[LUGARES.length - 1];
 // si alguien abre un lugar que aún no ha salido (o está retirado), se le avisa y se le ofrece el actual
 const pendiente = pedido && L.id !== pedido ? (window.LUGARES || []).find(x => x.id === pedido) : null;
+const fechaLarga = f => new Date(f + 'T12:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '');
+// el próximo lugar que saldrá (el de fecha más cercana después de hoy)
+const proximo = (window.LUGARES || []).filter(x => x.activo !== false && x.publicar && x.publicar > hoy)
+  .sort((a, b) => a.publicar.localeCompare(b.publicar))[0] || null;
 const urlLugar = id => `${location.pathname}?l=${encodeURIComponent(id)}${previa ? '&previa' : ''}`;
 const WEB = 'https://fjpereirag.github.io/peregrinar-por-dentro/';
 // enlace para compartir: la página corta de cada lugar (getsemani/, emaus/…) trae su propia vista previa para WhatsApp
@@ -32,8 +36,7 @@ $('#serie').textContent = `Lugar ${romano(L.numero)} · ${L.ubicacion}`;
 $('#serie').classList.add('revela');
 if (pendiente) {
   const dia = pendiente.publicar && pendiente.publicar > hoy && pendiente.activo !== false
-    ? new Date(pendiente.publicar + 'T12:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '')
-    : null;
+    ? fechaLarga(pendiente.publicar) : null;
   const p = document.createElement('p'); p.className = 'proximo'; p.setAttribute('role', 'status');
   p.innerHTML = (dia
     ? `<span><b>${esc(pendiente.nombre)}</b> se publica el ${esc(dia)}. Mientras tanto, puedes rezar con ${esc(L.nombre)}.</span>`
@@ -85,9 +88,16 @@ $('#mensaje').textContent = textoCompartir().replace(/\*/g, '');
 $('#btnWhatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(textoCompartir());
 
 const otros = LUGARES.filter(x => x.id !== L.id);
-if (otros.length) {
+if (otros.length || proximo) {
   $('#serieLista').hidden = false;
-  $('#serieRejilla').innerHTML = otros.map(x => `<a class="serie-item" href="${urlLugar(x.id)}"><i>${x.numero}</i><span><b>${esc(x.nombre)}</b><small>${esc(x.titulo)}</small></span></a>`).join('');
+  $('#serieRejilla').innerHTML = otros.map(x => `<a class="serie-item" href="${urlLugar(x.id)}"><i>${x.numero}</i><span><b>${esc(x.nombre)}</b><small>${esc(x.titulo)}</small></span></a>`).join('')
+    + (proximo && proximo.id !== L.id ? `<div class="serie-item serie-proximo"><i>${proximo.numero}</i><span><b>${esc(proximo.nombre)}</b><small>Próximo lugar · ${esc(fechaLarga(proximo.publicar))}</small></span></div>` : '');
+}
+// en la portada: cuándo sale el siguiente lugar
+if (proximo && proximo.id !== L.id) {
+  const p = document.createElement('p'); p.className = 'proximo-lugar revela'; p.style.setProperty('--i', 10);
+  p.innerHTML = `Próximo lugar: <b>${esc(proximo.nombre)}</b>, el ${esc(fechaLarga(proximo.publicar))}`;
+  $('#inicio .portada-in').appendChild(p);
 }
 
 let tAviso;
