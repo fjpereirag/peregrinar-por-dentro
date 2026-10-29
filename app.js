@@ -29,12 +29,28 @@ $('#inicio .controles').classList.add('revela'); $('#inicio .controles').style.s
 $('#reflexion').innerHTML = L.secciones.map((s, i) => `
   <section class="paso ${i % 2 ? 'derecha' : ''}" id="${esc(s.id)}" data-vista="${String(i + 1).padStart(2, '0')}" aria-labelledby="t-${esc(s.id)}">
     <article class="tarjeta">
+      <button type="button" class="plegar" aria-expanded="true" aria-label="Ocultar el texto para ver la imagen"><span class="plegar-txt">Ver la imagen</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <p class="numeral revela" aria-hidden="true">${romano(i + 1)}</p>
       <h2 id="t-${esc(s.id)}">${lineas(s.titulo || 'Para empezar')}</h2>
       ${s.cita ? `<p class="cita revela" style="--i:2">${esc(s.cita)}</p>` : ''}
       <div class="cuerpo">${s.parrafos.map((p, k) => `<p class="revela" style="--i:${k + 3}">${esc(p)}</p>`).join('')}</div>
     </article>
   </section>`).join('');
+// ---------- plegar el texto (móvil): un toque oculta los textos para ver las imágenes; otro los devuelve ----------
+$('#oracion .oracion-in').insertAdjacentHTML('afterbegin', `<button type="button" class="plegar" aria-expanded="true" aria-label="Ocultar el texto para ver la imagen"><span class="plegar-txt">Ver la imagen</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`);
+const plegar = boton => {
+  const tarjeta = boton.closest('.tarjeta'), antes = tarjeta.getBoundingClientRect().bottom;
+  const plegado = !document.body.classList.contains('plegado');
+  document.body.classList.toggle('plegado', plegado);
+  $$('.plegar').forEach(b => {
+    b.setAttribute('aria-expanded', String(!plegado));
+    b.setAttribute('aria-label', plegado ? 'Mostrar el texto' : 'Ocultar el texto para ver la imagen');
+    b.querySelector('.plegar-txt').textContent = plegado ? 'Leer el texto' : 'Ver la imagen';
+  });
+  // mantiene la tarjeta pulsada en el mismo sitio de la pantalla
+  scrollBy({ top: tarjeta.getBoundingClientRect().bottom - antes, behavior: 'instant' });
+};
+document.addEventListener('click', e => { const b = e.target.closest('.plegar'); if (b) plegar(b); });
 $('#frase').textContent = L.guardar;
 $('#versos').innerHTML = L.oracion.map(esc).join('<br>');
 $('#lectura').href = L.lectura.url;

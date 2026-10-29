@@ -56,6 +56,10 @@ En la portada, debajo de «Empezar a rezar», hay dos casillas. Se eligen solo a
 
 El texto se ve siempre. Audio y Música empiezan siempre apagadas, porque los navegadores no dejan sonar nada sin que se pulse antes.
 
+## Ver mejor las imágenes en el móvil
+
+En el móvil, cada apartado y la oración tienen arriba a la derecha el botón **Ver la imagen**. Al pulsarlo se recogen los textos de todos los apartados y solo quedan el número, el título y la cita, para que se vea la imagen. Con **Leer el texto** vuelven a salir enteros. El texto nunca se quita.
+
 ## Diseño
 
 La web sigue la variante **pastoral** de las especificaciones Awwwards: «noche, oro y silencio».

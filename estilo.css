@@ -175,6 +175,7 @@ main{position:relative;z-index:3}
 }
 
 /* ---------- móvil ---------- */
+.plegar{display:none}
 @media (max-width:760px){
   :root{--gutter:1rem}
   .cabecera{padding:.6rem var(--gutter);background:var(--panel-fuerte);border-bottom-color:var(--line)}
@@ -205,6 +206,20 @@ main{position:relative;z-index:3}
   .guardar{min-height:80svh;align-items:flex-end;padding:var(--space-6) var(--gutter) var(--space-5)}
   .oracion,.compartir{display:block;padding:var(--space-4) var(--gutter)}
   .oracion-in{padding:var(--space-4) var(--space-3)}
+  /* plegar el texto para ver la imagen */
+  .tarjeta{position:relative}
+  .plegar{display:inline-flex;position:absolute;top:.35rem;right:.35rem;z-index:2;align-items:center;gap:.35rem;min-height:40px;padding:0 .7rem;
+    background:color-mix(in srgb,var(--bg) 70%,transparent);border:1px solid var(--line-oro);color:var(--fg);cursor:pointer;
+    font-variant:all-small-caps;letter-spacing:.12em;font-size:.95rem}
+  .plegar svg{width:16px;height:16px;fill:none;stroke:var(--accent);stroke-width:1.6;transform:rotate(180deg);transition:transform var(--dur-micro)}
+  .plegado .plegar svg{transform:none}
+  .paso .numeral,.oracion-in .antetitulo{padding-right:9.5rem}
+  .plegado .paso .cuerpo,.plegado .oracion-in .versos,.plegado .oracion-in .lectura{display:none}
+  .plegado .paso h2{font-size:1.45rem;margin-bottom:var(--space-1)}
+  .plegado .paso .numeral{font-size:1.5rem;margin-bottom:var(--space-1)}
+  .plegado .paso .tarjeta{padding-bottom:var(--space-2);background:color-mix(in srgb,var(--bg) 55%,transparent)}
+  .plegado .paso{padding-top:70svh}
+  .plegado .oracion-in{padding:var(--space-3) var(--space-3) var(--space-2)}
   .versos{font-size:1.35rem}
   .compartir{padding-bottom:var(--space-6)}
   .compartir-in{padding:var(--space-3)}
