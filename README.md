@@ -18,6 +18,10 @@ En `lugares.js`, cada lugar tiene dos interruptores:
 
 ## Un lugar nuevo cada semana
 
+El orden y las fechas de los 40 lugares están en `calendario.md`, siguiendo el año litúrgico.
+
+Si alguien abre el enlace de un lugar que todavía no ha salido, la web le avisa («Nazaret se publica el domingo 1 de noviembre») y le muestra el lugar actual.
+
 Cada lugar lleva en `lugares.js` su fecha de salida: `publicar: '2026-11-01'` (año-mes-día).
 
 - Antes de esa fecha, el lugar no aparece: ni en la portada, ni en la serie, ni en el mapa.
@@ -33,6 +37,7 @@ Cada lugar lleva en `lugares.js` su fecha de salida: `publicar: '2026-11-01'` (a
 | `index.html` | Estructura de la página (no hace falta tocarlo) |
 | `estilo.css` | Aspecto visual |
 | `app.js` | Imágenes y su movimiento, mapa de situación, menú y botones |
+| `calendario.md` | Orden y fechas de publicación de los 40 lugares |
 | `lugares.js` | **Los textos de cada lugar**: aquí se añade el lugar de cada día |
 | `img/<lugar>/` | Las imágenes de cada apartado (00.webp … 07.webp) |
 | `voz.js` | Cómo se reparte el texto en audios y dónde van las pausas |

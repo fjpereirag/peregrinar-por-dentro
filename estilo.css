@@ -254,6 +254,13 @@ main{position:relative;z-index:3}
   .sello-portada img{height:1.9rem}
 }
 
+.proximo{position:fixed;z-index:35;top:calc(4.6rem + .5rem);left:50%;transform:translateX(-50%);width:min(36rem,calc(100vw - 2 * var(--gutter)));margin:0;display:flex;gap:.75rem;align-items:flex-start;
+  padding:var(--space-2) .5rem var(--space-2) var(--space-3);background:var(--panel-fuerte);border:1px solid var(--line-oro);border-left:2px solid var(--accent);font-size:1rem;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.proximo span{flex:1}
+.proximo button{flex:none;min-width:40px;min-height:40px;background:none;border:0;color:var(--muted);font-size:1.4rem;line-height:1;cursor:pointer}
+.proximo button:hover{color:var(--fg)}
+.proximo b{color:var(--accent);font-weight:600}
+
 /* ---------- casillas: Audio · Música ---------- */
 .controles{border:0;margin:var(--space-3) 0 0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:.25rem}
 .controles legend{width:100%;padding:0;margin-bottom:.35rem;font:italic 500 1.05rem var(--font-display);color:var(--muted)}

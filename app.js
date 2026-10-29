@@ -15,6 +15,8 @@ const publicado = x => previa || (x.activo !== false && (!x.publicar || x.public
 const LUGARES = [...(window.LUGARES || [])].filter(publicado).sort((a, b) => a.numero - b.numero);
 const pedido = params.get('l');
 const L = LUGARES.find(x => x.id === pedido) || LUGARES[LUGARES.length - 1];
+// si alguien abre un lugar que aún no ha salido (o está retirado), se le avisa y se le ofrece el actual
+const pendiente = pedido && L.id !== pedido ? (window.LUGARES || []).find(x => x.id === pedido) : null;
 const urlLugar = id => `${location.pathname}?l=${encodeURIComponent(id)}${previa ? '&previa' : ''}`;
 const WEB = 'https://fjpereirag.github.io/peregrinar-por-dentro/';
 // enlace para compartir: la página corta de cada lugar (getsemani/, emaus/…) trae su propia vista previa para WhatsApp
@@ -28,6 +30,18 @@ $('meta[name="description"]')?.setAttribute('content', `${L.nombre}: ${L.titulo}
 $('#marcaLugar').textContent = `${romano(L.numero)} · ${L.nombre}`;
 $('#serie').textContent = `Lugar ${romano(L.numero)} · ${L.ubicacion}`;
 $('#serie').classList.add('revela');
+if (pendiente) {
+  const dia = pendiente.publicar && pendiente.publicar > hoy && pendiente.activo !== false
+    ? new Date(pendiente.publicar + 'T12:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '')
+    : null;
+  const p = document.createElement('p'); p.className = 'proximo'; p.setAttribute('role', 'status');
+  p.innerHTML = (dia
+    ? `<span><b>${esc(pendiente.nombre)}</b> se publica el ${esc(dia)}. Mientras tanto, puedes rezar con ${esc(L.nombre)}.</span>`
+    : `<span><b>${esc(pendiente.nombre)}</b> no está disponible en este momento. Puedes rezar con ${esc(L.nombre)}.</span>`)
+    + '<button type="button" aria-label="Cerrar el aviso">×</button>';
+  p.querySelector('button').addEventListener('click', () => p.remove());
+  document.body.appendChild(p);
+}
 $('#nombre').innerHTML = lineas(L.nombre);
 $('#titulo').textContent = L.titulo; $('#titulo').classList.add('revela'); $('#titulo').style.setProperty('--i', 4);
 $('#entradilla').textContent = L.entradilla; $('#entradilla').classList.add('revela'); $('#entradilla').style.setProperty('--i', 6);
