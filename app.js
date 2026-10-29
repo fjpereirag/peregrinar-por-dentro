@@ -11,7 +11,8 @@ const pedido = new URLSearchParams(location.search).get('l');
 const L = LUGARES.find(x => x.id === pedido) || LUGARES[LUGARES.length - 1];
 const urlLugar = id => `${location.pathname}?l=${encodeURIComponent(id)}`;
 const WEB = 'https://fjpereirag.github.io/peregrinar-por-dentro/';
-const enlaceLugar = id => `${WEB}?l=${encodeURIComponent(id)}`;
+// enlace para compartir: la página corta de cada lugar (getsemani/, emaus/…) trae su propia vista previa para WhatsApp
+const enlaceLugar = id => `${WEB}${encodeURIComponent(id)}/`;
 
 // ---------- texto ----------
 const romano = n => { const t = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']]; let r = ''; for (const [v, l] of t) while (n >= v) { r += l; n -= v; } return r; };
@@ -51,6 +52,10 @@ const plegar = boton => {
   scrollBy({ top: tarjeta.getBoundingClientRect().bottom - antes, behavior: 'instant' });
 };
 document.addEventListener('click', e => { const b = e.target.closest('.plegar'); if (b) plegar(b); });
+// las imágenes de la frase y la oración van después de los apartados (Getsemaní: 06 y 07; Emaús: 07 y 08)
+const dos = n => String(n).padStart(2, '0'), nSec = L.secciones.length;
+$('#guardar').dataset.vista = dos(nSec + 1);
+['#oracion', '#compartir', '#seguir'].forEach(q => { $(q).dataset.vista = dos(nSec + 2); });
 $('#frase').textContent = L.guardar;
 $('#versos').innerHTML = L.oracion.map(esc).join('<br>');
 $('#lectura').href = L.lectura.url;
@@ -94,7 +99,7 @@ document.addEventListener('click', e => {
 
 // ---------- escena: una imagen por apartado, con movimiento de cine lento ----------
 // Imágenes en img/<lugar>/<clave>.webp (horizontal) y, opcional, <clave>-movil.webp (vertical).
-// Claves: 00 portada · 01…05 apartados · 06 frase · 07 oración.
+// Claves: 00 portada · 01… un número por apartado · después, la frase y la oración.
 const CLAVES = ['00', ...L.secciones.map((_, i) => String(i + 1).padStart(2, '0')), String(L.secciones.length + 1).padStart(2, '0'), String(L.secciones.length + 2).padStart(2, '0')];
 const ajustes = L.imagenes || {};
 const escena = $('#escena');

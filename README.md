@@ -4,7 +4,10 @@ Una serie para rezar desde los lugares de Tierra Santa.
 Cada lugar se recorre con imágenes creadas con IA, una por apartado, con movimiento de cine lento, y la reflexión al ritmo del scroll.
 
 - Web: https://fjpereirag.github.io/peregrinar-por-dentro/
-- Un lugar concreto: `…/peregrinar-por-dentro/?l=getsemani`. Sin `?l=`, se abre el último lugar publicado.
+- Un lugar concreto: `…/peregrinar-por-dentro/?l=emaus`. Sin `?l=`, se abre el último lugar publicado.
+- Enlace para compartir cada lugar: `…/peregrinar-por-dentro/emaus/` o `…/getsemani/`. Es una página corta que da a WhatsApp la vista previa de ese lugar (título e imagen `og-<lugar>.jpg`) y lleva enseguida a la web.
+
+Lugares publicados: **I · Getsemaní** y **II · Emaús** (El Qubeibeh, el santuario franciscano de la Custodia).
 
 ## Archivos
 
@@ -19,7 +22,8 @@ Cada lugar se recorre con imágenes creadas con IA, una por apartado, con movimi
 | `audio/<lugar>/` | (opcional) Voz en MP3 `01.mp3`…`07.mp3` y música de fondo `musica.mp3` |
 | `herramienta-voz/` | Para crear los MP3 de la voz en tu ordenador (`voz-gratis.bat`, gratis) |
 | `logo-revista-tierra-santa.png` | Logotipo de la Revista Tierra Santa (portada, «Sigue peregrinando» y pie) |
-| `favicon.svg`, `og.jpg`, `404.html` | Icono, imagen al compartir el enlace (1200×630) y página de error con el mismo estilo |
+| `favicon.svg`, `og.jpg`, `404.html` | Icono, imagen al compartir la web de la serie (1200×630) y página de error con el mismo estilo |
+| `<lugar>/index.html`, `og-<lugar>.jpg` | Página para compartir cada lugar y su imagen de vista previa |
 | `herramienta-imagenes/` | Prompts para generar las imágenes y conversor a WebP (`preparar-imagenes.bat`) |
 
 ## Añadir un lugar nuevo
@@ -27,8 +31,10 @@ Cada lugar se recorre con imágenes creadas con IA, una por apartado, con movimi
 1. Abre `lugares.js`.
 2. Copia el bloque de Getsemaní entero, desde `{` hasta `},`, y pégalo debajo.
 3. Cambia `id` (sin espacios ni tildes, por ejemplo `belen`), `numero`, los textos, las citas y `coord`. Para sacar las coordenadas, haz clic derecho sobre el lugar en Google Maps o en OpenStreetMap y copia las dos cifras.
-4. Prepara sus imágenes (apartado de abajo).
-5. Sube `lugares.js` y la carpeta `img/<id>` a GitHub.
+4. Prepara sus imágenes (apartado de abajo). Hay una por apartado; después van la frase y la oración. Con 5 apartados son `06` y `07`; con 6, `07` y `08`.
+5. Crea la página para compartir: copia la carpeta `emaus/` con el nombre del `id` nuevo y cambia dentro el nombre, el título, la descripción y `emaus` por el `id`. Hace falta también su imagen `og-<id>.jpg` (1200×630); pídemela y te la preparo.
+6. Para la voz, crea `herramienta-voz/guion-<id>.json` con `generar-voz.html` (o pídemelo) y luego doble clic en `voz-gratis.bat`.
+7. Sube a GitHub `lugares.js`, la carpeta `img/<id>`, la carpeta `<id>/` y `og-<id>.jpg`.
 
 ## Imágenes (creadas con IA)
 

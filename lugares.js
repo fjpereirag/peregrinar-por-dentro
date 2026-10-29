@@ -9,7 +9,8 @@
 //          (Google Maps u OpenStreetMap → clic derecho sobre el lugar → copiar las dos cifras).
 // cita:    referencia bíblica de cada apartado (sale en versalitas bajo el título).
 // IMÁGENES: van en img/<id>/ con estos nombres (los mismos que los audios):
-//            00 portada · 01…05 apartados · 06 frase final · 07 oración
+//            00 portada · 01, 02… un número por apartado · después, la frase final y la oración
+//            (Getsemaní, 5 apartados: 06 frase, 07 oración · Emaús, 6 apartados: 07 frase, 08 oración)
 //          00.webp (horizontal, 16:9) y, si quieres, 00-movil.webp (vertical, 9:16).
 // imagenes: (opcional) ajuste de cada imagen:
 //            foco   qué punto se mantiene a la vista al recortar y hacia dónde se acerca ('50% 50%' = centro)
@@ -95,5 +96,93 @@ window.LUGARES = [
 
 ¿Has rezado alguna vez y seguías preocupado?
 Te invito a leer esta breve reflexión desde el huerto de los Olivos.`
+  },
+  {
+    id: 'emaus',
+    numero: 2,
+    nombre: 'Emaús',
+    titulo: 'Cuando te cuesta reconocer que Dios camina contigo',
+    entradilla: 'Hay días en los que seguimos caminando, pero hemos perdido la ilusión.',
+    ubicacion: 'El Qubeibeh · Camino de Jerusalén',
+    coord: [31.8439, 35.1353],
+    secciones: [
+      {
+        id: 'ilusion',
+        cita: 'Lc 24,21',
+        parrafos: [
+          'Habías puesto mucho cariño en algo. Una relación, un proyecto, una tarea en la parroquia, una esperanza para tu familia. Pensabas que las cosas acabarían de otra manera.',
+          'Y ahora te sorprendes diciendo: «Yo esperaba…».',
+          'Así comienza también el camino interior de los discípulos de Emaús.'
+        ]
+      },
+      {
+        id: 'camino',
+        cita: 'Lc 24,13-35',
+        titulo: 'Un camino marcado por la decepción',
+        parrafos: [
+          'El Evangelio de Lucas cuenta que dos discípulos se alejaban de Jerusalén después de la muerte de Jesús. Mientras caminaban, hablaban de lo sucedido. Jesús se acercó y comenzó a caminar con ellos, pero no lo reconocieron.',
+          'Él les preguntó de qué hablaban. Y ellos pudieron expresar su tristeza y aquella esperanza que parecía haberse roto: habían esperado que Jesús liberara a Israel (Lc 24,13-35).',
+          'A veces, también nosotros miramos nuestra vida desde lo que no llegó a ser.'
+        ]
+      },
+      {
+        id: 'se-acerca',
+        cita: 'Lc 24,15-16',
+        titulo: 'Jesús se acerca antes de que lo reconozcan',
+        parrafos: [
+          'Hay un detalle que puede ayudarnos mucho: Jesús ya caminaba con ellos cuando todavía eran incapaces de reconocerlo.',
+          'Podemos contemplar esa escena cuando sentimos a Dios lejos. Nuestra dificultad para percibir su presencia no tiene por qué ser la última palabra sobre nuestra relación con él.',
+          'Hay etapas en las que rezamos sin entusiasmo, vamos a misa con el corazón cansado o seguimos ayudando a los demás sin encontrar consuelo. Podemos llevar también ese cansancio a la oración.',
+          'El camino de Emaús nos invita a dejar abierta una posibilidad: quizá todavía no hemos comprendido todo lo que está sucediendo.'
+        ]
+      },
+      {
+        id: 'escucha',
+        cita: 'Lc 24,17-27',
+        titulo: 'Dios también escucha nuestras decepciones',
+        parrafos: [
+          'Jesús deja que los discípulos cuenten lo que llevan dentro. Después les ayuda a comprender las Escrituras y a mirar su historia desde una luz nueva.',
+          'También nosotros necesitamos ese espacio para hablar con sinceridad.',
+          'Podemos decirle a Dios: «Yo esperaba otra cosa». Esperaba que aquella persona mejorara. Que mi familia estuviera más unida. Que mi esfuerzo diera fruto. Que creer fuera más fácil.',
+          'Nombrar una decepción puede ser el comienzo de una oración sincera.'
+        ]
+      },
+      {
+        id: 'mesa',
+        cita: 'Lc 24,28-35',
+        titulo: 'Una mesa en medio del camino',
+        parrafos: [
+          'Al llegar a la aldea, los discípulos invitan a Jesús a quedarse. Cuando se sienta con ellos, toma el pan, pronuncia la bendición, lo parte y se lo da. Entonces lo reconocen.',
+          'La escena tiene una resonancia especial para nuestra vida eucarística: nos invita a acercarnos a la mesa del Señor con nuestra historia real, con lo que entendemos y con lo que todavía nos cuesta aceptar.',
+          'Después del encuentro, los discípulos regresan a Jerusalén. Tienen algo que compartir. El camino que habían recorrido tristes se convierte en un camino de vuelta hacia los demás.'
+        ]
+      },
+      {
+        id: 'vida-emaus',
+        cita: 'Lc 24,29',
+        titulo: 'Llevar Emaús a nuestra vida',
+        parrafos: [
+          'Quizá hoy necesites hablar con alguien que sepa escucharte. Leer despacio este Evangelio. Acercarte a la Eucaristía con una decepción que llevas guardada desde hace tiempo.',
+          'No hace falta fingir entusiasmo. Puedes empezar con una petición sencilla: «Señor, quédate conmigo. Ayúdame a reconocer tu presencia».'
+        ]
+      }
+    ],
+    guardar: 'Aunque hoy te cueste reconocerlo, puedes pedirle a Jesús que siga caminando contigo.',
+    // sin musica.mp3 en audio/emaus/ suena la música serena generada en el navegador
+    oracion: [
+      'Señor Jesús,',
+      'tú conoces mis esperanzas y mis decepciones.',
+      'Escucha lo que todavía me cuesta expresar.',
+      'Abre mi corazón a tu Palabra',
+      'y mis ojos a tu presencia.',
+      'Quédate conmigo',
+      'y ayúdame a volver al encuentro de los demás.',
+      'Amén.'
+    ],
+    lectura: { cita: 'Lucas 24,13-35', url: 'https://www.ewtn.com/es/biblia/51-lucas/24' },
+    whatsapp: `Una mirada a Tierra Santa: *el camino de Emaús*
+
+«Yo esperaba que las cosas fueran de otra manera…».
+Te invito a leer esta breve reflexión: Jesús camina con nosotros antes de que lo reconozcamos.`
   }
 ];

@@ -224,6 +224,7 @@ main{position:relative;z-index:3}
   .compartir{padding-bottom:var(--space-6)}
   .compartir-in{padding:var(--space-3)}
   .situacion{top:5.2rem;bottom:auto;right:var(--gutter);width:5.6rem;padding:.4rem}
+  .portada-in .antetitulo{padding-right:6.4rem}
   .situacion p{display:none}
   .situacion .sit-rotulo{display:none}
 }
