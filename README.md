@@ -7,7 +7,7 @@ Cada lugar se recorre con imágenes creadas con IA, una por apartado, con movimi
 - Un lugar concreto: `…/peregrinar-por-dentro/?l=emaus`. Sin `?l=`, se abre el último lugar publicado.
 - Enlace para compartir cada lugar: `…/peregrinar-por-dentro/emaus/` o `…/getsemani/`. Es una página corta que da a WhatsApp la vista previa de ese lugar (título e imagen `og-<lugar>.jpg`) y lleva enseguida a la web.
 
-Lugares: **I · Getsemaní**, **II · Emaús** (El Qubeibeh, el santuario franciscano de la Custodia) y **III · Nazaret** (sale el domingo 1 de noviembre de 2026).
+Lugares preparados: **I · Getsemaní**, **II · Emaús** (El Qubeibeh, el santuario franciscano de la Custodia), **III · Nazaret** (1 nov), **IV · El Templo de Jerusalén** (8 nov), **V · Dominus Flevit** (15 nov), **VI · Siquén** (22 nov) y **VII · El monte Carmelo** (29 nov). Las fechas siguen `calendario.md`.
 
 ## Qué lugares se ven (lo decides tú)
 
