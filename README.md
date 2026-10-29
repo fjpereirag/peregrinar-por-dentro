@@ -7,7 +7,24 @@ Cada lugar se recorre con imágenes creadas con IA, una por apartado, con movimi
 - Un lugar concreto: `…/peregrinar-por-dentro/?l=emaus`. Sin `?l=`, se abre el último lugar publicado.
 - Enlace para compartir cada lugar: `…/peregrinar-por-dentro/emaus/` o `…/getsemani/`. Es una página corta que da a WhatsApp la vista previa de ese lugar (título e imagen `og-<lugar>.jpg`) y lleva enseguida a la web.
 
-Lugares publicados: **I · Getsemaní** y **II · Emaús** (El Qubeibeh, el santuario franciscano de la Custodia).
+Lugares: **I · Getsemaní**, **II · Emaús** (El Qubeibeh, el santuario franciscano de la Custodia) y **III · Nazaret** (sale el domingo 1 de noviembre de 2026).
+
+## Qué lugares se ven (lo decides tú)
+
+En `lugares.js`, cada lugar tiene dos interruptores:
+
+- `activo: true` lo deja ver a partir de su fecha; `activo: false` lo retira de la web, aunque ya haya salido.
+- `publicar: '2026-11-01'` es el día en que sale.
+
+## Un lugar nuevo cada semana
+
+Cada lugar lleva en `lugares.js` su fecha de salida: `publicar: '2026-11-01'` (año-mes-día).
+
+- Antes de esa fecha, el lugar no aparece: ni en la portada, ni en la serie, ni en el mapa.
+- Ese día, la portada abre sola el lugar nuevo. Los anteriores quedan en «Otros lugares».
+- Así puedes subir a GitHub varias semanas por adelantado.
+- Para revisar un lugar antes de que salga, abre `…/peregrinar-por-dentro/?l=nazaret&previa`.
+- La fecha se cuenta en el reloj del móvil u ordenador de quien lo abre: sale a medianoche de cada país.
 
 ## Archivos
 
@@ -30,7 +47,7 @@ Lugares publicados: **I · Getsemaní** y **II · Emaús** (El Qubeibeh, el sant
 
 1. Abre `lugares.js`.
 2. Copia el bloque de Getsemaní entero, desde `{` hasta `},`, y pégalo debajo.
-3. Cambia `id` (sin espacios ni tildes, por ejemplo `belen`), `numero`, los textos, las citas y `coord`. Para sacar las coordenadas, haz clic derecho sobre el lugar en Google Maps o en OpenStreetMap y copia las dos cifras.
+3. Cambia `id` (sin espacios ni tildes, por ejemplo `belen`), `numero`, `publicar`, los textos, las citas y `coord`. Para sacar las coordenadas, haz clic derecho sobre el lugar en Google Maps o en OpenStreetMap y copia las dos cifras.
 4. Prepara sus imágenes (apartado de abajo). Hay una por apartado; después van la frase y la oración. Con 5 apartados son `06` y `07`; con 6, `07` y `08`.
 5. Crea la página para compartir: copia la carpeta `emaus/` con el nombre del `id` nuevo y cambia dentro el nombre, el título, la descripción y `emaus` por el `id`. Hace falta también su imagen `og-<id>.jpg` (1200×630); pídemela y te la preparo.
 6. Para la voz, crea `herramienta-voz/guion-<id>.json` con `generar-voz.html` (o pídemelo) y luego doble clic en `voz-gratis.bat`.
@@ -57,7 +74,7 @@ En la portada, debajo de «Empezar a rezar», hay dos casillas. Se eligen solo a
 - **Audio:** lee en voz alta la reflexión desde el apartado en que estás, sin la portada, que es solo para leer. Al terminar cada apartado, baja sola al siguiente. Si bajas o subes por tu cuenta, la voz salta a ese apartado.
   - Con los MP3 en `audio/<lugar>/01.mp3`…`07.mp3` suena esa voz. Se crean con doble clic en `herramienta-voz/voz-gratis.bat`: es gratis, con la voz de Álvaro, y hace falta Python.
   - Sin MP3, usa la voz del propio móvil u ordenador.
-- **Música:** suena el archivo `audio/<lugar>/musica.mp3` en bucle, con su crédito en el pie, que se pone en `musica` dentro de `lugares.js`. Para Getsemaní es «Light of Gethsemane», de TokyoRifft, y para Emaús «Emmaus – Did not our heart burn within us?», de Misselle (las dos de Pixabay, con su licencia gratuita). Con `volumen` en `musica` se ajusta cada pieza: 1 es lo normal y 0.7, más baja. Si falta el archivo, suena una música serena generada en el propio navegador. **Si cambias `musica.mp3`, sube el número de `version` en `musica`** (2, 3, 4…); si no, los móviles pueden seguir usando la música antigua.
+- **Música:** suena el archivo `audio/<lugar>/musica.mp3` en bucle, con su crédito en el pie, que se pone en `musica` dentro de `lugares.js`. Para Getsemaní es «Light of Gethsemane», de TokyoRifft, para Emaús «Emmaus – Did not our heart burn within us?», de Misselle, y para Nazaret «The Day the Angels Greeted Mary», de TokyoRifft (todas de Pixabay, con su licencia gratuita). Con `volumen` en `musica` se ajusta cada pieza: 1 es lo normal y 0.7, más baja. Si falta el archivo, suena una música serena generada en el propio navegador. **Si cambias `musica.mp3`, sube el número de `version` en `musica`** (2, 3, 4…); si no, los móviles pueden seguir usando la música antigua.
 - **Audio y Música a la vez:** la música baja de volumen mientras habla la voz y vuelve a subir en los silencios.
 
 El texto se ve siempre. Audio y Música empiezan siempre apagadas, porque los navegadores no dejan sonar nada sin que se pulse antes.

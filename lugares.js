@@ -4,6 +4,8 @@
 // (desde la llave { hasta la llave } con coma), pégalo debajo y cambia
 // los textos y las coordenadas. El número 1, 2, 3… marca el orden.
 //
+// publicar: día en que sale el lugar (AAAA-MM-DD). Antes no se ve; para revisarlo, ?l=<id>&previa
+// activo:   true = se ve (a partir de su fecha) · false = retirado de la web, aunque haya llegado la fecha
 // whatsapp: invitación breve (2-3 líneas) que se envía junto al enlace del lugar.
 // coord:   latitud y longitud del lugar, para el mapa de situación de la portada
 //          (Google Maps u OpenStreetMap → clic derecho sobre el lugar → copiar las dos cifras).
@@ -20,6 +22,8 @@ window.LUGARES = [
   {
     id: 'getsemani',
     numero: 1,
+    publicar: '2026-10-28',
+    activo: true,
     nombre: 'Getsemaní',
     titulo: 'Cuando rezar no significa dejar de tener miedo',
     entradilla: 'Hay noches en las que la fe apenas consigue pronunciar una frase: «Padre, estoy aquí».',
@@ -100,6 +104,8 @@ Te invito a leer esta breve reflexión desde el huerto de los Olivos.`
   {
     id: 'emaus',
     numero: 2,
+    publicar: '2026-10-29',
+    activo: true,
     nombre: 'Emaús',
     titulo: 'Cuando te cuesta reconocer que Dios camina contigo',
     entradilla: 'Hay días en los que seguimos caminando, pero hemos perdido la ilusión.',
@@ -186,5 +192,96 @@ Te invito a leer esta breve reflexión desde el huerto de los Olivos.`
 
 «Yo esperaba que las cosas fueran de otra manera…».
 Te invito a leer esta breve reflexión: Jesús camina con nosotros antes de que lo reconozcamos.`
+  },
+  {
+    id: 'nazaret',
+    numero: 3,
+    publicar: '2026-11-01',
+    activo: true,
+    nombre: 'Nazaret',
+    titulo: 'Cuando la vida te pide un paso que no habías previsto',
+    entradilla: 'Puedes responder a Dios sin tener resueltas todas tus preguntas.',
+    ubicacion: 'Basílica de la Anunciación · Galilea',
+    coord: [32.7022, 35.2977],
+    secciones: [
+      {
+        id: 'imprevisto',
+        cita: 'Lc 1,34',
+        parrafos: [
+          'Tenías una idea de cómo iban a ser las cosas. Habías organizado tu tiempo y aprendido a moverte dentro de lo conocido. Entonces llegó una noticia, una responsabilidad o una decisión que cambió tus planes.',
+          'Lo primero que apareció quizá fue una pregunta: «¿Cómo voy a hacerlo?».',
+          'En Nazaret, el Evangelio nos acerca a María en un momento que transforma su vida. Su respuesta puede acompañarnos cuando necesitamos discernir un paso nuevo.'
+        ]
+      },
+      {
+        id: 'anuncio',
+        cita: 'Lc 1,26-38',
+        titulo: 'Un anuncio en medio de la vida',
+        parrafos: [
+          'Lucas sitúa la anunciación en Nazaret, una ciudad de Galilea. Gabriel es enviado a María, desposada con José. El saludo la turba; escucha el anuncio del nacimiento de Jesús y pregunta cómo sucederá. El ángel le habla de la acción del Espíritu Santo y María expresa su disponibilidad a la palabra de Dios (Lc 1,26-38).',
+          'Su pregunta forma parte del encuentro. El relato permite contemplar una confianza que escucha y responde.'
+        ]
+      },
+      {
+        id: 'preguntas',
+        cita: 'Lc 1,34',
+        titulo: 'Hacer preguntas también es tomarse algo en serio',
+        parrafos: [
+          'A veces confundimos confiar con no preguntar. Por eso nos sentimos culpables cuando una decisión nos inquieta o necesitamos comprender mejor lo que se nos propone.',
+          'La pregunta de María nos invita a expresar con sinceridad lo que no entendemos.',
+          'Podemos rezar: «Señor, ayúdame a ver qué me estás pidiendo». También podemos pedir consejo, reunir información y reconocer nuestras posibilidades reales. La prudencia y la oración pueden ayudarse mutuamente.',
+          'No todo lo inesperado debe interpretarse como una orden de Dios. Discernir requiere tiempo, libertad y atención a las consecuencias de nuestras decisiones.'
+        ]
+      },
+      {
+        id: 'confianza',
+        cita: 'Lc 1,38',
+        titulo: 'La confianza se concreta',
+        parrafos: [
+          'María ofrece una respuesta personal. Su disponibilidad tiene rostro, nombre y una vida concreta en la que habrá de desarrollarse.',
+          'También nuestra respuesta a Dios toma forma en circunstancias precisas: cómo cuidamos a alguien, cómo asumimos una responsabilidad, cómo decimos una verdad difícil o cómo reconocemos que necesitamos ayuda.',
+          'No siempre veremos el camino entero. Podemos intentar distinguir cuál es el siguiente paso bueno y posible.',
+          'Ese paso puede ser aceptar una tarea. En otras ocasiones será poner un límite, compartir una carga o esperar hasta comprender mejor la situación.'
+        ]
+      },
+      {
+        id: 'recibir',
+        cita: 'Lc 1,28',
+        titulo: 'Recibir antes de responder',
+        parrafos: [
+          'El anuncio a María comienza con la iniciativa de Dios y con su cercanía. Al contemplarlo, podemos recordar que la vida cristiana nace de un don que recibimos.',
+          'Antes de preguntarnos cuánto somos capaces de hacer, podemos detenernos a escuchar la Palabra y dejarnos acompañar por la comunidad.',
+          'La oración nos ofrece ese espacio para descansar de la exigencia de resolverlo todo solos. Podemos reconocer el miedo y pedir luz sin apresurarnos a dar una respuesta que todavía no podemos sostener.'
+        ]
+      },
+      {
+        id: 'vida-nazaret',
+        cita: 'Lc 1,37',
+        titulo: 'Llevar Nazaret a nuestra vida',
+        parrafos: [
+          'Piensa en una decisión que tengas pendiente. Escribe qué te preocupa, qué información te falta y con quién podrías hablar.',
+          'Después, pide al Señor claridad para elegir con libertad y amor. Un sí sincero necesita verdad; también necesita reconocer los propios límites.'
+        ]
+      }
+    ],
+    guardar: 'Puedes dar un paso de confianza sin conocer todavía todo el camino.',
+    // música de fondo: archivo audio/nazaret/musica.mp3 · volumen 0.85 porque tiene momentos que crecen
+    musica: { version: 1, volumen: 0.85, titulo: 'The Day the Angels Greeted Mary', autor: 'TokyoRifft', url: 'https://pixabay.com/music/ambient-the-day-the-angels-greeted-mary-460026/' },
+    oracion: [
+      'Señor,',
+      'cuando mis planes cambien,',
+      'ayúdame a escucharte.',
+      'Dame libertad para preguntar,',
+      'prudencia para discernir',
+      'y valor para responder con amor.',
+      'Que no me falten personas',
+      'con quienes buscar tu voluntad.',
+      'Amén.'
+    ],
+    lectura: { cita: 'Lucas 1,26-38', url: 'https://www.ewtn.com/es/biblia/51-lucas/1' },
+    whatsapp: `Una mirada a Tierra Santa: *Nazaret*
+
+¿Tienes una decisión pendiente que no esperabas?
+Te invito a leer esta breve reflexión: puedes dar un paso de confianza sin conocer todavía todo el camino.`
   }
 ];

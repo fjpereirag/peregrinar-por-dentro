@@ -5,11 +5,17 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const estrecho = () => innerWidth <= 760;
 
-// ---------- qué lugar se muestra: ?l=getsemani (por defecto, el último) ----------
-const LUGARES = [...(window.LUGARES || [])].sort((a, b) => a.numero - b.numero);
-const pedido = new URLSearchParams(location.search).get('l');
+// ---------- qué lugar se muestra: ?l=getsemani (por defecto, el último publicado) ----------
+// Cada lugar sale el día de su «publicar» (AAAA-MM-DD, en lugares.js). Antes de esa fecha no aparece.
+// Para revisarlo antes de que salga: añade &previa a la dirección, por ejemplo ?l=nazaret&previa
+const params = new URLSearchParams(location.search), previa = params.has('previa');
+const hoy = (d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`)(new Date());
+// activo: false lo retira de la web aunque haya llegado su fecha (lo decides tú en lugares.js)
+const publicado = x => previa || (x.activo !== false && (!x.publicar || x.publicar <= hoy));
+const LUGARES = [...(window.LUGARES || [])].filter(publicado).sort((a, b) => a.numero - b.numero);
+const pedido = params.get('l');
 const L = LUGARES.find(x => x.id === pedido) || LUGARES[LUGARES.length - 1];
-const urlLugar = id => `${location.pathname}?l=${encodeURIComponent(id)}`;
+const urlLugar = id => `${location.pathname}?l=${encodeURIComponent(id)}${previa ? '&previa' : ''}`;
 const WEB = 'https://fjpereirag.github.io/peregrinar-por-dentro/';
 // enlace para compartir: la página corta de cada lugar (getsemani/, emaus/…) trae su propia vista previa para WhatsApp
 const enlaceLugar = id => `${WEB}${encodeURIComponent(id)}/`;
