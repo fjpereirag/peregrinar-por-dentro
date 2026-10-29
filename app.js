@@ -301,6 +301,14 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
   }
 
 
+  // crédito de la música en el pie (solo si se usa el archivo musica.mp3)
+  const creditoMusica = () => {
+    const m = L.musica, pie = $('.pie-nota'); if (!m || !pie || $('#creditoMusica')) return;
+    const p = document.createElement('p'); p.className = 'pie-nota'; p.id = 'creditoMusica';
+    p.innerHTML = `Música: «${esc(m.titulo)}», de ${esc(m.autor)}${m.url ? ` (<a href="${esc(m.url)}" target="_blank" rel="noopener">Pixabay</a>)` : ''}.`;
+    pie.after(p);
+  };
+
   function crearMusica() {
     let ctx = null, salida = null, fuente = null, sinte = null, el = null;
     const url = `audio/${L.id}/musica.mp3`;
@@ -311,7 +319,7 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
           salida = ctx.createGain(); salida.gain.value = 0; salida.connect(ctx.destination);
           let hay = false;
           try { hay = (await fetch(url, { method: 'HEAD', cache: 'no-store' })).ok; } catch {}
-          if (hay) { el = new Audio(url); el.loop = true; el.crossOrigin = 'anonymous'; fuente = ctx.createMediaElementSource(el); fuente.connect(salida); }
+          if (hay) { creditoMusica(); el = new Audio(url); el.loop = true; el.crossOrigin = 'anonymous'; fuente = ctx.createMediaElementSource(el); fuente.connect(salida); }
           else sinte = musicaGenerada(ctx, salida);
         }
         if (ctx.state === 'suspended') await ctx.resume();

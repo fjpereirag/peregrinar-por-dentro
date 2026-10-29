@@ -52,7 +52,7 @@ Abajo a la izquierda (en el móvil, abajo en el centro) hay tres casillas:
   - Con los MP3 en `audio/<lugar>/01.mp3`…`07.mp3` suena esa voz. Se crean con doble clic en `herramienta-voz/voz-gratis.bat`: es gratis, con la voz de Álvaro, y hace falta Python.
   - Sin MP3, usa la voz del propio móvil u ordenador.
 - **Texto:** marcado, se ve todo el texto. Desmarcado, solo los títulos, para dejar ver las imágenes.
-- **Música:** suena una música de fondo serena, en re menor y muy lenta, generada en el propio navegador. Si pones un archivo `audio/<lugar>/musica.mp3`, suena ese en su lugar, en bucle.
+- **Música:** suena el archivo `audio/<lugar>/musica.mp3` en bucle, con su crédito en el pie, que se pone en `musica` dentro de `lugares.js`. Para Getsemaní es «Light of Gethsemane», de TokyoRifft (Pixabay, licencia gratuita de Pixabay). Si falta el archivo, suena una música serena generada en el propio navegador.
 - **Audio y Música a la vez:** la música baja de volumen mientras habla la voz y vuelve a subir en los silencios.
 
 La casilla Texto se recuerda en cada visita. Audio y Música empiezan siempre apagadas, porque los navegadores no dejan sonar nada sin que se pulse antes.
