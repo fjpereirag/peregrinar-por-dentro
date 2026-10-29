@@ -238,7 +238,7 @@ main{position:relative;z-index:3}
   .sello-portada img{height:1.9rem}
 }
 
-/* ---------- casillas: Audio · Texto · Música ---------- */
+/* ---------- casillas: Audio · Música ---------- */
 .controles{border:0;margin:var(--space-3) 0 0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:.25rem}
 .controles legend{width:100%;padding:0;margin-bottom:.35rem;font:italic 500 1.05rem var(--font-display);color:var(--muted)}
 .ctl{position:relative;display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:0 .7rem;cursor:pointer;color:var(--muted);
@@ -261,12 +261,6 @@ main{position:relative;z-index:3}
 .leyendo .tarjeta,.leyendo.guardar .guardar-in,.leyendo .oracion-in{box-shadow:inset 2px 0 0 var(--accent)}
 
 /* solo títulos */
-/* sin texto: título, cita y la frase más importante del apartado */
-.frase-clave{display:none}
-.solo-titulos .paso .cuerpo{display:none}
-.solo-titulos .paso .frase-clave{display:block;margin:var(--space-2) 0 0;font:italic 500 clamp(1.35rem,1.1rem + 1vw,1.8rem)/1.3 var(--font-display);color:var(--fg)}
-.solo-titulos .paso .frase-clave::before{content:"«";color:var(--accent)}
-.solo-titulos .paso .frase-clave::after{content:"»";color:var(--accent)}
 
 @media (max-width:760px){
   .ctl{padding:0 .55rem;font-size:.95rem}

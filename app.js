@@ -32,7 +32,6 @@ $('#reflexion').innerHTML = L.secciones.map((s, i) => `
       <p class="numeral revela" aria-hidden="true">${romano(i + 1)}</p>
       <h2 id="t-${esc(s.id)}">${lineas(s.titulo || 'Para empezar')}</h2>
       ${s.cita ? `<p class="cita revela" style="--i:2">${esc(s.cita)}</p>` : ''}
-      ${s.frase ? `<p class="frase-clave revela" style="--i:3">${esc(s.frase)}</p>` : ''}
       <div class="cuerpo">${s.parrafos.map((p, k) => `<p class="revela" style="--i:${k + 3}">${esc(p)}</p>`).join('')}</div>
     </article>
   </section>`).join('');
@@ -146,25 +145,16 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
   </svg><p>${romano(L.numero)} · ${esc(L.nombre)}</p>`;
 })();
 
-// ================= Audio, Texto y Música (tres casillas) =================
+// ================= Audio y Música (dos casillas) =================
 // Audio: lee la reflexión (no la portada, que es solo para leer) y va bajando la página.
 //        Usa audio/<lugar>/01.mp3… si existen; si no, la voz del propio dispositivo.
-// Texto: si se desmarca, solo se ven los títulos.
 // Música: audio/<lugar>/musica.mp3 si existe; si no, una música de fondo serena generada en el navegador.
 //        Con Audio y Música a la vez, la música baja de volumen mientras habla la voz.
 (() => {
-  const PREF = 'pxd-preferencias';
-  let pref = { audio: false, texto: true, musica: false };
-  try { pref = { ...pref, ...JSON.parse(localStorage.getItem(PREF) || '{}'), audio: false, musica: false }; } catch {}
-  const guardar = () => { try { localStorage.setItem(PREF, JSON.stringify({ texto: pref.texto })); } catch {} };
-  const cAudio = $('#ctlAudio'), cTexto = $('#ctlTexto'), cMusica = $('#ctlMusica'), estado = $('#ctlEstado'), sonando = $('#sonando');
+  const pref = { audio: false, musica: false };
+  const cAudio = $('#ctlAudio'), cMusica = $('#ctlMusica'), estado = $('#ctlEstado'), sonando = $('#sonando');
   // aviso flotante mientras suena algo: qué apartado se lee y un botón para detener
   const verSonando = () => { sonando.hidden = !(pref.audio || pref.musica); };
-
-  // ----- Texto -----
-  const aplicarTexto = () => { document.body.classList.toggle('solo-titulos', !pref.texto); cTexto.checked = pref.texto; };
-  cTexto.addEventListener('change', () => { pref.texto = cTexto.checked; guardar(); aplicarTexto(); });
-  aplicarTexto();
 
   // ----- Música -----
   const musica = crearMusica();
