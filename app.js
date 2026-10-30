@@ -99,6 +99,24 @@ if (proximo && proximo.id !== L.id) {
   p.innerHTML = `Próximo lugar: <b>${esc(proximo.nombre)}</b>, el ${esc(fechaLarga(proximo.publicar))} · <a href="calendario.html">Ver el calendario</a>`;
   $('#inicio .portada-in').appendChild(p);
 }
+// ---------- Canal de WhatsApp (ajustes.js) ----------
+const CANAL = (window.AJUSTES || {}).canalWhatsapp;
+if (CANAL) {
+  $$('.suscribir').forEach(el => { el.hidden = false; });
+  const p = document.createElement('p'); p.className = 'suscribir-portada revela'; p.style.setProperty('--i', 11);
+  p.innerHTML = '<a class="btn-canal" target="_blank" rel="noopener">Recibe cada domingo un lugar en WhatsApp ↗</a>';
+  $('#inicio .portada-in').appendChild(p);
+  $$('.btn-canal').forEach(a => { a.href = CANAL; });
+}
+// ---------- qué se usa (contador sin cookies, ajustes.js) ----------
+const contar = e => window.contar && window.contar(e);
+document.addEventListener('click', e => {
+  if (e.target.closest('.btn-canal')) contar('canal-whatsapp');
+  if (e.target.closest('#btnWhatsapp')) contar('compartir-whatsapp/' + L.id);
+  if (e.target.closest('a[href="calendario.html"]')) contar('ir-al-calendario');
+});
+// llega hasta la oración = ha hecho el recorrido entero
+new IntersectionObserver((es, o) => { if (es.some(x => x.isIntersecting)) { contar('llega-a-la-oracion/' + L.id); o.disconnect(); } }, { threshold: .5 }).observe($('#oracion'));
 
 let tAviso;
 function avisar(t, ms = 3800) {
@@ -212,6 +230,8 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
   // «volumen» en musica (lugares.js) ajusta cada pieza: 1 = normal, 0.7 = más baja
   const AJ = L.musica?.volumen ?? 1, VOL = 0.55 * AJ, VOL_BAJO = 0.14 * AJ;
   const ajustarMusica = () => musica.volumen(narrador.hablando() ? VOL_BAJO : VOL);
+  cMusica.addEventListener('change', () => { if (cMusica.checked) window.contar && contar('musica/' + L.id); });
+  cAudio.addEventListener('change', () => { if (cAudio.checked) window.contar && contar('audio/' + L.id); });
   cMusica.addEventListener('change', async () => {
     pref.musica = cMusica.checked;
     if (pref.musica) { await musica.empezar(); ajustarMusica(); } else musica.parar();

@@ -41,6 +41,8 @@ Cada lugar lleva en `lugares.js` su fecha de salida: `publicar: '2026-11-01'` (a
 | `app.js` | Imágenes y su movimiento, mapa de situación, menú y botones |
 | `calendario.html`, `calendario.js` | Página del calendario y sus datos |
 | `calendario.md` | Orden y fechas de publicación de los 40 lugares |
+| `ajustes.js` | Enlace del Canal de WhatsApp y contador de visitas |
+| `herramienta-video/` | Crea el vídeo vertical de cada lugar para redes |
 | `lugares.js` | **Los textos de cada lugar**: aquí se añade el lugar de cada día |
 | `img/<lugar>/` | Las imágenes de cada apartado (00.webp … 07.webp) |
 | `voz.js` | Cómo se reparte el texto en audios y dónde van las pausas |
@@ -91,6 +93,17 @@ El texto se ve siempre. Audio y Música empiezan siempre apagadas, porque los na
 ## Ver mejor las imágenes en el móvil
 
 En el móvil, cada apartado y la oración tienen arriba a la derecha el botón **Ver la imagen**. Al pulsarlo se recogen los textos de todos los apartados y solo quedan el número, el título y la cita, para que se vea la imagen. Con **Leer el texto** vuelven a salir enteros. El texto nunca se quita.
+
+## Canal de WhatsApp y visitas (`ajustes.js`)
+
+- `canalWhatsapp`: pega aquí el enlace de tu Canal de WhatsApp. Aparecen entonces los botones «Recibe cada domingo un lugar» en la portada, en «Compártelo» y en el calendario.
+- `goatcounter`: el código de tu cuenta gratuita de GoatCounter (por ejemplo `peregrinar`). Cuenta las visitas de cada lugar y estas acciones: `audio/<lugar>`, `musica/<lugar>`, `compartir-whatsapp/<lugar>`, `canal-whatsapp`, `ir-al-calendario` y `llega-a-la-oracion/<lugar>` (quien recorre el lugar entero). No usa cookies. No cuenta tus visitas con `?previa`.
+
+## Vídeo para redes (`herramienta-video/`)
+
+Doble clic en `crear-video.bat` y escribe el lugar (por ejemplo `nazaret`). Crea `video/<lugar>.mp4` (vertical, 1080×1920, alrededor de 1 minuto) con las imágenes verticales, el «Guion para vídeo» leído por la voz de Álvaro, subtítulos, la música del lugar y un cierre con el enlace. También crea `video/<lugar>-texto.txt` con el texto para publicar. Sirve para TikTok, Reels, Shorts y Estados de WhatsApp.
+
+La carpeta `video/` no hace falta subirla a GitHub.
 
 ## Diseño
 

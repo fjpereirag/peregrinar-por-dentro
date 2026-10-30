@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="estilo.css?v=25">
+<link rel="stylesheet" href="estilo.css?v=26">
 </head>
 <body class="pagina-calendario">
 <header class="cabecera solida">
@@ -33,6 +33,7 @@
   <p class="antetitulo">La serie</p>
   <h1>Calendario</h1>
   <p class="cal-intro">Un lugar de Tierra Santa cada domingo, siguiendo el año litúrgico. Algunas fiestas tienen su propio día: Navidad, Epifanía, Jueves Santo y Viernes Santo.</p>
+  <p class="suscribir suscribir-cal" hidden><a class="btn oro btn-canal" target="_blank" rel="noopener">Recibe cada domingo un lugar · Canal de WhatsApp</a></p>
   <div id="calLista"></div>
 </main>
 
@@ -41,6 +42,7 @@
   <p><b>Peregrinar por dentro</b> · Una mirada a Tierra Santa para rezar desde lo que vivimos.</p>
 </footer>
 
+<script src="ajustes.js?v=2"></script>
 <script src="lugares.js?v=18"></script>
 <script src="calendario.js?v=1"></script>
 <script>
@@ -77,6 +79,9 @@
   }
   if (mes) html += '</ol>';
   document.getElementById('calLista').innerHTML = html;
+  const canal = (window.AJUSTES || {}).canalWhatsapp;
+  if (canal) document.querySelectorAll('.suscribir').forEach(el => { el.hidden = false; el.querySelector('.btn-canal').href = canal; });
+  document.addEventListener('click', e => { if (e.target.closest('.btn-canal')) window.contar && contar('canal-whatsapp'); });
 })();
 </script>
 </body>
