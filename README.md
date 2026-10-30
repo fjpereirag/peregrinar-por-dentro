@@ -18,7 +18,7 @@ En `lugares.js`, cada lugar tiene dos interruptores:
 
 ## Un lugar nuevo cada semana
 
-El orden y las fechas de los 40 lugares están en `calendario.md`, siguiendo el año litúrgico.
+El orden y las fechas de los 40 lugares están en `calendario.md`, siguiendo el año litúrgico. En la web, la página **Calendario** (`calendario.html`, en el menú) los muestra todos; sus datos están en `calendario.js`. Cuando prepares un lugar nuevo en `lugares.js`, pon su `id` en la fila correspondiente de `calendario.js` para que el calendario enlace con él.
 
 En la portada y en «Otros lugares» se indica el próximo lugar y su fecha («Próximo lugar: Nazaret, el domingo 1 de noviembre»). Solo aparece si ese lugar ya está en `lugares.js`.
 
@@ -39,6 +39,7 @@ Cada lugar lleva en `lugares.js` su fecha de salida: `publicar: '2026-11-01'` (a
 | `index.html` | Estructura de la página (no hace falta tocarlo) |
 | `estilo.css` | Aspecto visual |
 | `app.js` | Imágenes y su movimiento, mapa de situación, menú y botones |
+| `calendario.html`, `calendario.js` | Página del calendario y sus datos |
 | `calendario.md` | Orden y fechas de publicación de los 40 lugares |
 | `lugares.js` | **Los textos de cada lugar**: aquí se añade el lugar de cada día |
 | `img/<lugar>/` | Las imágenes de cada apartado (00.webp … 07.webp) |
@@ -78,7 +79,7 @@ Para mover el punto de interés de una imagen o cambiar cuánto se acerca, ajust
 
 En la portada, debajo de «Empezar a rezar», hay dos casillas. Se eligen solo al principio; mientras suena el audio o la música, abajo aparece un aviso pequeño con el apartado que se lee y un botón **Detener**.
 
-- **Audio:** lee en voz alta la reflexión desde el apartado en que estás, sin la portada, que es solo para leer. Al terminar cada apartado, baja sola al siguiente. Si bajas o subes por tu cuenta, la voz salta a ese apartado.
+- **Audio:** lee en voz alta la reflexión siempre desde el principio (el primer apartado), sin la portada, que es solo para leer, y sin pausas dentro de cada apartado. Al terminar cada apartado, baja sola al siguiente. Si bajas o subes por tu cuenta, la voz salta a ese apartado.
   - Con los MP3 en `audio/<lugar>/01.mp3`…`07.mp3` suena esa voz. Se crean con doble clic en `herramienta-voz/voz-gratis.bat`: es gratis, con la voz de Álvaro, y hace falta Python.
   - Sin MP3, usa la voz del propio móvil u ordenador.
 - **Música:** suena el archivo `audio/<lugar>/musica.mp3` en bucle, con su crédito en el pie, que se pone en `musica` dentro de `lugares.js`. Para Getsemaní es «Light of Gethsemane», de TokyoRifft, para Emaús «Emmaus – Did not our heart burn within us?», de Misselle, y para Nazaret «The Day the Angels Greeted Mary», de TokyoRifft (todas de Pixabay, con su licencia gratuita). Con `volumen` en `musica` se ajusta cada pieza: 1 es lo normal y 0.7, más baja. Si falta el archivo, suena una música serena generada en el propio navegador. **Si cambias `musica.mp3`, sube el número de `version` en `musica`** (2, 3, 4…); si no, los móviles pueden seguir usando la música antigua.

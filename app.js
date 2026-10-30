@@ -83,7 +83,7 @@ $('#frase').textContent = L.guardar;
 $('#versos').innerHTML = L.oracion.map(esc).join('<br>');
 $('#lectura').href = L.lectura.url;
 $('#lectura').innerHTML = `Para leer despacio: <b>${esc(L.lectura.cita)}</b> ↗`;
-const textoCompartir = () => `${L.whatsapp}\n\n👉 ${enlaceLugar(L.id)}`;
+const textoCompartir = () => `${L.whatsapp}\n👉 ${enlaceLugar(L.id)}`;
 $('#mensaje').textContent = textoCompartir().replace(/\*/g, '');
 $('#btnWhatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(textoCompartir());
 
@@ -96,7 +96,7 @@ if (otros.length || proximo) {
 // en la portada: cuándo sale el siguiente lugar
 if (proximo && proximo.id !== L.id) {
   const p = document.createElement('p'); p.className = 'proximo-lugar revela'; p.style.setProperty('--i', 10);
-  p.innerHTML = `Próximo lugar: <b>${esc(proximo.nombre)}</b>, el ${esc(fechaLarga(proximo.publicar))}`;
+  p.innerHTML = `Próximo lugar: <b>${esc(proximo.nombre)}</b>, el ${esc(fechaLarga(proximo.publicar))} · <a href="calendario.html">Ver el calendario</a>`;
   $('#inicio .portada-in').appendChild(p);
 }
 
@@ -275,8 +275,7 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
           motor.alFallar = () => { if (activo) tocar(actual + 1); };
         }
         activo = true;
-        const i = Math.max(0, trozos.findIndex(t => destino(t)?.dataset.vista === claveActual));
-        tocar(i);
+        tocar(0); // siempre desde el principio de la reflexión
         return true;
       },
       parar,
@@ -319,6 +318,8 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
         while ((r = MARCA.exec(t.texto))) { cola.push({ f: t.texto.slice(ult, r.index), p: +r[1] }); ult = MARCA.lastIndex; }
         cola.push({ f: t.texto.slice(ult), p: 0 });
         cola = cola.map(c => ({ f: c.f.replace(/\s+/g, ' ').trim(), p: c.p })).filter(c => c.f || c.p);
+        // frases seguidas, sin pausa entre ellas (evita que el navegador corte textos largos)
+        cola = cola.flatMap(c => { const fr = c.f.split(/(?<=[.!?»])\s+(?=[«¿¡A-ZÁÉÍÓÚÑ])/); return fr.map((f, k) => ({ f, p: k === fr.length - 1 ? c.p : 0 })); });
         total = cola.reduce((s, c) => s + c.f.length, 0) || 1; hecho = 0; pos = 0;
         siguiente(gen);
       },
@@ -338,7 +339,7 @@ addEventListener('load', () => { let k = 0; const sig = () => { if (k < CLAVES.l
       if (!c.f) { pos++; espera = setTimeout(() => siguiente(g), c.p * 1000); return; }
       const u = new SpeechSynthesisUtterance(c.f);
       u.voice = voz; u.lang = voz.lang; u.rate = 0.86; u.pitch = esHombre ? 0.92 : 0.8;
-      u.onend = () => { if (g !== gen) return; hecho += c.f.length; m.alAvanzar(hecho / total); pos++; espera = setTimeout(() => siguiente(g), c.p * 1000 + 150); };
+      u.onend = () => { if (g !== gen) return; hecho += c.f.length; m.alAvanzar(hecho / total); pos++; espera = setTimeout(() => siguiente(g), c.p * 1000 + 40); };
       u.onerror = e => { if (g === gen && e.error !== 'interrupted' && e.error !== 'canceled') { activo = false; m.alFallar(); } };
       ss.speak(u);
     }

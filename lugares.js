@@ -6,7 +6,7 @@
 //
 // publicar: día en que sale el lugar (AAAA-MM-DD). Antes no se ve; para revisarlo, ?l=<id>&previa
 // activo:   true = se ve (a partir de su fecha) · false = retirado de la web, aunque haya llegado la fecha
-// whatsapp: invitación breve (2-3 líneas) que se envía junto al enlace del lugar.
+// whatsapp: una sola frase impactante (con el nombre del lugar entre *asteriscos*) que invita a abrir el enlace.
 // coord:   latitud y longitud del lugar, para el mapa de situación de la portada
 //          (Google Maps u OpenStreetMap → clic derecho sobre el lugar → copiar las dos cifras).
 // cita:    referencia bíblica de cada apartado (sale en versalitas bajo el título).
@@ -96,10 +96,7 @@ window.LUGARES = [
       'Amén.'
     ],
     lectura: { cita: 'Marcos 14,32-42', url: 'https://www.ewtn.com/es/biblia/53-marcos/14' },
-    whatsapp: `Una mirada a Tierra Santa: *Getsemaní*
-
-¿Has rezado alguna vez y seguías preocupado?
-Te invito a leer esta breve reflexión desde el huerto de los Olivos.`
+    whatsapp: `*Getsemaní* · ¿Has rezado y el miedo seguía ahí? Jesús también pasó por esa noche.`
   },
   {
     id: 'emaus',
@@ -188,10 +185,7 @@ Te invito a leer esta breve reflexión desde el huerto de los Olivos.`
       'Amén.'
     ],
     lectura: { cita: 'Lucas 24,13-35', url: 'https://www.ewtn.com/es/biblia/51-lucas/24' },
-    whatsapp: `Una mirada a Tierra Santa: *el camino de Emaús*
-
-«Yo esperaba que las cosas fueran de otra manera…».
-Te invito a leer esta breve reflexión: Jesús camina con nosotros antes de que lo reconozcamos.`
+    whatsapp: `*Emaús* · Jesús camina contigo, aunque todavía no lo reconozcas.`
   },
   {
     id: 'nazaret',
@@ -279,10 +273,7 @@ Te invito a leer esta breve reflexión: Jesús camina con nosotros antes de que 
       'Amén.'
     ],
     lectura: { cita: 'Lucas 1,26-38', url: 'https://www.ewtn.com/es/biblia/51-lucas/1' },
-    whatsapp: `Una mirada a Tierra Santa: *Nazaret*
-
-¿Tienes una decisión pendiente que no esperabas?
-Te invito a leer esta breve reflexión: puedes dar un paso de confianza sin conocer todavía todo el camino.`
+    whatsapp: `*Nazaret* · Puedes decir sí a Dios sin conocer todavía todo el camino.`
   },
   {
     id: 'templo',
@@ -365,10 +356,7 @@ Te invito a leer esta breve reflexión: puedes dar un paso de confianza sin cono
       'Amén.'
     ],
     lectura: { cita: 'Marcos 12,38-44', url: 'https://www.ewtn.com/es/biblia/53-marcos/12' },
-    whatsapp: `Una mirada a Tierra Santa: *el Templo de Jerusalén*
-
-¿Sientes alguna vez que lo que das apenas cuenta?
-Te invito a leer esta breve reflexión: Dios conoce la historia que hay detrás de un gesto sencillo.`
+    whatsapp: `*El Templo de Jerusalén* · Lo que das en silencio, Dios lo ve.`
   },
   {
     id: 'dominus-flevit',
@@ -451,10 +439,7 @@ Te invito a leer esta breve reflexión: Dios conoce la historia que hay detrás 
       'Amén.'
     ],
     lectura: { cita: 'Lucas 19,41-44', url: 'https://www.ewtn.com/es/biblia/51-lucas/19' },
-    whatsapp: `Una mirada a Tierra Santa: *Dominus Flevit*
-
-¿Hay noticias que te dejan sin palabras?
-Te invito a leer esta breve reflexión desde el lugar donde Jesús lloró sobre Jerusalén.`
+    whatsapp: `*Dominus Flevit* · Jesús también lloró ante el dolor del mundo.`
   },
   {
     id: 'siquen',
@@ -537,10 +522,7 @@ Te invito a leer esta breve reflexión desde el lugar donde Jesús lloró sobre 
       'Amén.'
     ],
     lectura: { cita: 'Josué 24,1-28', url: 'https://www.ewtn.com/es/biblia/45-josue/24' },
-    whatsapp: `Una mirada a las tierras bíblicas: *Siquén*
-
-¿Necesitas renovar tu decisión de seguir a Dios?
-Te invito a leer esta breve reflexión: la fe puede renovarse en la vida que tienes hoy.`
+    whatsapp: `*Siquén* · Hoy puedes volver a elegir a Dios.`
   },
   {
     id: 'carmelo',
@@ -623,9 +605,6 @@ Te invito a leer esta breve reflexión: la fe puede renovarse en la vida que tie
       'Amén.'
     ],
     lectura: { cita: '1 Reyes 18,41-46', url: 'https://www.ewtn.com/es/biblia/4-1-reyes/18' },
-    whatsapp: `Una mirada a las tierras bíblicas: *el monte Carmelo*
-
-¿Te cuesta detenerte para volver a escuchar?
-Te invito a leer esta breve reflexión junto a Elías, que espera en oración la lluvia.`
+    whatsapp: `*El monte Carmelo* · Una nube pequeña anunció la lluvia. Detente y escucha.`
   }
 ];

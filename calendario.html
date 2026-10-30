@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es" data-variant="pastoral">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calendario · Peregrinar por dentro</title>
+<meta name="description" content="Los lugares de la serie Peregrinar por dentro y el día en que sale cada uno, siguiendo el año litúrgico.">
+<meta name="theme-color" content="#0B0A08">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Peregrinar por dentro">
+<meta property="og:title" content="Calendario · Peregrinar por dentro">
+<meta property="og:description" content="Un lugar de Tierra Santa cada domingo, siguiendo el año litúrgico.">
+<meta property="og:image" content="https://fjpereirag.github.io/peregrinar-por-dentro/og.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css?v=25">
+</head>
+<body class="pagina-calendario">
+<header class="cabecera solida">
+  <a class="marca" href="./" aria-label="Peregrinar por dentro · lugar de hoy">
+    <svg viewBox="0 0 40 40" class="marca-ic" aria-hidden="true"><circle cx="20" cy="20" r="18"/><path d="M20 10v21M13 15h14"/></svg>
+    <span><b>Peregrinar por dentro</b><small>Calendario</small></span>
+  </a>
+  <nav class="menu menu-fijo" aria-label="Páginas">
+    <a href="./">Lugar de hoy</a>
+  </nav>
+</header>
+
+<main class="calendario" id="contenido">
+  <p class="antetitulo">La serie</p>
+  <h1>Calendario</h1>
+  <p class="cal-intro">Un lugar de Tierra Santa cada domingo, siguiendo el año litúrgico. Algunas fiestas tienen su propio día: Navidad, Epifanía, Jueves Santo y Viernes Santo.</p>
+  <div id="calLista"></div>
+</main>
+
+<footer class="pie">
+  <a class="sello sello-pie" href="https://revistatierrasanta.com/" target="_blank" rel="noopener"><img src="logo-revista-tierra-santa.png" width="225" height="98" alt="Revista Tierra Santa"></a>
+  <p><b>Peregrinar por dentro</b> · Una mirada a Tierra Santa para rezar desde lo que vivimos.</p>
+</footer>
+
+<script src="lugares.js?v=18"></script>
+<script src="calendario.js?v=1"></script>
+<script>
+(function () {
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const d = new Date();
+  const hoy = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const LUG = window.LUGARES || [];
+  // la fecha que manda es la de lugares.js (si el lugar ya está preparado); si no, la del calendario
+  const filas = (window.CALENDARIO || []).map(c => {
+    const l = c.id && LUG.find(x => x.id === c.id);
+    return { ...c, fecha: (l && l.publicar) || c.fecha, listo: !!l, activo: !l || l.activo !== false };
+  }).sort((a, b) => a.fecha.localeCompare(b.fecha));
+  const salido = f => f.fecha <= hoy && f.activo;
+  const actual = [...filas].reverse().find(f => salido(f) && f.listo);
+  const proximo = filas.find(f => f.fecha > hoy && f.activo);
+  const mesDe = f => { const t = new Date(f.fecha + 'T12:00').toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }); return t.charAt(0).toUpperCase() + t.slice(1); };
+  const diaDe = f => new Date(f.fecha + 'T12:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' });
+  let html = '', mes = '';
+  for (const f of filas) {
+    const m = mesDe(f);
+    if (m !== mes) { if (mes) html += '</ol>'; html += `<h2 class="cal-mes">${esc(m)}</h2><ol class="cal-lista">`; mes = m; }
+    const estado = f === actual ? 'hoy' : f === proximo ? 'proximo' : salido(f) && f.listo ? 'salido' : 'futuro';
+    const etiqueta = { hoy: 'Esta semana', proximo: 'Próximo', salido: '', futuro: '' }[estado];
+    const nombre = esc(f.lugar);
+    const titulo = estado === 'hoy' || estado === 'salido'
+      ? `<a href="./?l=${encodeURIComponent(f.id)}">${nombre} <span aria-hidden="true">→</span></a>` : nombre;
+    html += `<li class="cal-item cal-${estado}">
+      <span class="cal-num">${esc(f.n)}</span>
+      <span class="cal-fecha">${esc(diaDe(f))}${f.liturgia ? `<small>${esc(f.liturgia)}</small>` : ''}</span>
+      <span class="cal-lugar"><b>${titulo}</b><small>${esc(f.leer)}</small></span>
+      ${etiqueta ? `<span class="cal-marca">${etiqueta}</span>` : ''}
+    </li>`;
+  }
+  if (mes) html += '</ol>';
+  document.getElementById('calLista').innerHTML = html;
+})();
+</script>
+</body>
+</html>

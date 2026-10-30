@@ -266,18 +266,20 @@ main{position:relative;z-index:3}
 .proximo b{color:var(--accent);font-weight:600}
 
 /* ---------- casillas: Audio · Música ---------- */
-.controles{border:0;margin:var(--space-3) 0 0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:.25rem}
-.controles legend{width:100%;padding:0;margin-bottom:.35rem;font:italic 500 1.05rem var(--font-display);color:var(--muted)}
-.ctl{position:relative;display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:0 .7rem;cursor:pointer;color:var(--muted);
-  font-variant:all-small-caps;letter-spacing:.14em;font-size:1rem;user-select:none;transition:color var(--dur-micro)}
+.controles{border:0;margin:var(--space-3) 0 0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem}
+.controles legend{width:100%;padding:0;margin-bottom:.6rem;font:italic 500 1.2rem var(--font-display);color:var(--fg)}
+/* casillas grandes y visibles: botón con borde dorado; marcada = relleno dorado */
+.ctl{position:relative;display:inline-flex;align-items:center;gap:.7rem;min-height:52px;padding:0 1.2rem 0 .9rem;cursor:pointer;color:var(--fg);
+  background:color-mix(in srgb,var(--bg) 70%,transparent);border:1.5px solid var(--accent);
+  font-variant:all-small-caps;letter-spacing:.14em;font-size:1.2rem;user-select:none;transition:background var(--dur-micro),color var(--dur-micro)}
 .ctl input{position:absolute;opacity:0;width:1px;height:1px}
-.ctl-caja{width:16px;height:16px;border:1px solid var(--line-oro);display:grid;place-items:center;transition:background var(--dur-micro),border-color var(--dur-micro)}
-.ctl input:checked + .ctl-caja{background:var(--accent);border-color:var(--accent)}
-.ctl input:checked + .ctl-caja::after{content:"";width:8px;height:4px;border:2px solid var(--bg);border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
-.ctl input:checked ~ span:last-child{color:var(--fg)}
-.ctl:hover{color:var(--fg)}
-.ctl input:focus-visible + .ctl-caja{outline:2px solid var(--accent);outline-offset:3px}
-.ctl:first-of-type{padding-left:0}
+.ctl-caja{width:22px;height:22px;border:1.5px solid var(--accent);display:grid;place-items:center;flex:none;transition:background var(--dur-micro),border-color var(--dur-micro)}
+.ctl:has(input:checked){background:var(--accent);color:var(--bg)}
+.ctl input:checked + .ctl-caja{background:var(--bg);border-color:var(--bg)}
+.ctl input:checked + .ctl-caja::after{content:"";width:11px;height:6px;border:2.5px solid var(--accent);border-top:0;border-right:0;transform:translateY(-2px) rotate(-45deg)}
+.ctl:hover{background:color-mix(in srgb,var(--accent) 18%,var(--bg))}
+.ctl:has(input:checked):hover{background:var(--accent)}
+.ctl input:focus-visible + .ctl-caja{outline:2px solid var(--fg);outline-offset:3px}
 .sonando{position:fixed;left:var(--gutter);bottom:var(--space-3);z-index:30;display:flex;align-items:center;gap:.5rem;padding:.25rem .3rem .25rem .9rem;
   background:var(--panel-fuerte);border:1px solid var(--line-oro);max-width:calc(100vw - 2 * var(--gutter))}
 .sonando-txt{font:italic 500 1.05rem var(--font-display);color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:16rem}
@@ -290,9 +292,35 @@ main{position:relative;z-index:3}
 /* solo títulos */
 
 @media (max-width:760px){
-  .ctl{padding:0 .55rem;font-size:.95rem}
+  .ctl{padding:0 1rem 0 .8rem;font-size:1.15rem;flex:1;justify-content:center}
   .sonando{left:50%;transform:translateX(-50%);bottom:.6rem}
   .sonando-txt{max-width:11rem}
   .pie,.seguir{padding-bottom:calc(var(--space-6) + 1rem)}
 }
 
+
+/* ---------- calendario de la serie (calendario.html) ---------- */
+.calendario{max-width:52rem;margin:0 auto;padding:calc(4.6rem + var(--space-5)) var(--gutter) var(--space-6)}
+.calendario h1{font-size:var(--step-h2);line-height:1;margin:0 0 var(--space-2)}
+.cal-intro{color:var(--muted);max-width:var(--medida);margin:0 0 var(--space-4)}
+.cal-mes{font:italic 500 1.6rem/1 var(--font-display);color:var(--accent);margin:var(--space-5) 0 var(--space-2)}
+.cal-lista{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.cal-item{display:grid;grid-template-columns:3rem 11rem 1fr auto;gap:var(--space-2);align-items:baseline;padding:var(--space-2) 0;border-bottom:1px solid var(--line)}
+.cal-num{font:italic 500 1.3rem/1 var(--font-display);color:var(--accent)}
+.cal-fecha{text-transform:capitalize}
+.cal-fecha small,.cal-lugar small{display:block;color:var(--muted);font-size:.9rem;text-transform:none}
+.cal-lugar b{font:500 1.35rem/1.2 var(--font-display)}
+.cal-lugar a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line-oro)}
+.cal-lugar a:hover{color:var(--accent)}
+.cal-marca{font-variant:all-small-caps;letter-spacing:.14em;font-size:.95rem;color:var(--bg);background:var(--accent);padding:.15rem .6rem;white-space:nowrap}
+.cal-proximo .cal-marca{background:none;color:var(--accent);border:1px solid var(--line-oro)}
+.cal-hoy{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.cal-futuro .cal-lugar b,.cal-futuro .cal-fecha{color:color-mix(in srgb,var(--fg) 70%,var(--muted))}
+.pagina-calendario .menu-fijo{position:static;visibility:visible;opacity:1;transform:none;flex-direction:row;padding:0;background:none;border:0}
+.pagina-calendario .menu-fijo a{font-size:1.05rem;min-height:44px;border-bottom:0;white-space:nowrap;padding:0 .4rem}
+@media (max-width:760px){
+  .cal-item{grid-template-columns:2.4rem 1fr;row-gap:.35rem}
+  .cal-lugar{grid-column:2}
+  .cal-marca{grid-column:2;justify-self:start}
+}
+.proximo-lugar a{color:var(--fg);text-decoration-color:var(--line-oro);font-style:normal;font-size:1rem;white-space:nowrap}

@@ -11,13 +11,14 @@
       texto: `${L.nombre}.` + pausa(1.0) + `${limpia(L.titulo)}.` + pausa(1.4) + limpia(L.entradilla) });
     L.secciones.forEach((s, i) => trozos.push({
       clave: String(i + 1).padStart(2, '0'), destino: s.id, nombre: s.titulo || 'Para empezar',
-      texto: (s.titulo ? `${limpia(s.titulo)}.` + pausa(1.2) : '') + s.parrafos.map(limpia).join(pausa(1.1))
+      // sin pausas dentro del apartado, para que la escucha sea ágil
+      texto: (s.titulo ? `${limpia(s.titulo)}. ` : '') + s.parrafos.map(limpia).join(' ')
     }));
     const n = L.secciones.length + 1;
     trozos.push({ clave: String(n).padStart(2, '0'), destino: 'guardar', nombre: 'Para guardar en el corazón',
-      texto: 'Para guardar en el corazón.' + pausa(1.4) + limpia(L.guardar) + pausa(1.0) });
+      texto: 'Para guardar en el corazón. ' + limpia(L.guardar) });
     trozos.push({ clave: String(n + 1).padStart(2, '0'), destino: 'oracion', nombre: 'Una oración',
-      texto: 'Una oración.' + pausa(1.4) + L.oracion.map(limpia).join(pausa(0.8)) + pausa(1.2) +
+      texto: 'Una oración. ' + L.oracion.map(limpia).join(' ') + ' ' +
         `Para leer despacio: ${limpia(L.lectura.cita).replace(/(\d+),(\d+)-(\d+)/, 'capítulo $1, versículos $2 al $3')}.` });
     return trozos;
   };
