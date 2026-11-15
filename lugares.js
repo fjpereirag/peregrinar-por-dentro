@@ -606,5 +606,343 @@ window.LUGARES = [
     ],
     lectura: { cita: '1 Reyes 18,41-46', url: 'https://www.ewtn.com/es/biblia/4-1-reyes/18' },
     whatsapp: `*El monte Carmelo* · Una nube pequeña anunció la lluvia. Detente y escucha.`
+  },
+  {
+    id: 'sinai',
+    numero: 8,
+    publicar: '2026-12-06',
+    activo: true,
+    nombre: 'El desierto del Sinaí',
+    titulo: 'Cuando la libertad da miedo y añoras lo conocido',
+    entradilla: 'Aprender a vivir de otra manera requiere apoyo, decisiones y tiempo.',
+    ubicacion: 'Monte Sinaí · Península del Sinaí',
+    coord: [28.5394, 33.9753],
+    // entrega 39 del documento «Tierra Santa · 40 entregas»
+    secciones: [
+      {
+        id: 'intro-sinai',
+        cita: 'Éx 16,3',
+        parrafos: [
+          'Has dejado atrás una situación que te hacía daño o una costumbre que limitaba tu vida. Al principio sentiste alivio. Después llegaron dificultades nuevas, y lo conocido empezó a parecer más sencillo de lo que realmente había sido.',
+          'A veces la memoria selecciona los momentos cómodos y borra el precio que pagábamos por ellos. El camino de Israel por el desierto nos permite reconocer esa tensión entre la libertad recibida y el aprendizaje que todavía queda por hacer.'
+        ]
+      },
+      {
+        id: 'sinai-1',
+        cita: 'Éx 16,1-18',
+        titulo: 'Un pueblo aprende a caminar',
+        parrafos: [
+          'En Éxodo 16, el pueblo siente hambre y añora el alimento de Egipto. Dios le da el maná y le enseña a recogerlo según sus indicaciones. El episodio se sitúa en el desierto de Sin, entre Elín y Sinaí. Más adelante, Israel llega al desierto del Sinaí y recibe la propuesta de la alianza (Ex 19,1-8).',
+          'Distinguimos ambos lugares: el relato del maná ocurre durante el camino hacia el Sinaí. Esta entrega contempla ese recorrido por las tierras bíblicas.'
+        ]
+      },
+      {
+        id: 'sinai-2',
+        cita: 'Éx 16,2-4',
+        titulo: 'Escuchar la necesidad real',
+        parrafos: [
+          'El pueblo tiene hambre. Reconocer la necesidad concreta impide reducir toda dificultad a una falta de confianza. También nosotros necesitamos medios para sostener un cambio: apoyo, organización y unas condiciones posibles.',
+          'Si una decisión buena nos está resultando difícil, podemos preguntar qué falta. Quizá necesitamos aprender algo, repartir una carga o encontrar un recurso que todavía desconocemos.',
+          'Pedir esa ayuda forma parte del camino. La libertad se fortalece cuando contamos con relaciones que respetan nuestras decisiones y nos permiten afrontar la realidad sin volver a una dependencia dañina.'
+        ]
+      },
+      {
+        id: 'sinai-3',
+        cita: 'Éx 16,3',
+        titulo: 'Revisar la nostalgia',
+        parrafos: [
+          'Recordar el pasado puede dar consuelo, pero conviene mirarlo completo. Podemos escribir qué echamos de menos y qué nos hizo decidir el cambio. Ambas cosas pertenecen a nuestra historia.',
+          'La dificultad presente no demuestra por sí sola que la decisión fuera equivocada. Tampoco debemos sostener una elección sin revisarla cuando aparecen datos importantes. Discernir requiere atender a la verdad de la situación y buscar consejo prudente.',
+          'Podemos preguntarnos qué paso nos acerca hoy a una vida más responsable, libre y capaz de amar. A veces será perseverar; otras, ajustar el camino o pedir una ayuda distinta.'
+        ]
+      },
+      {
+        id: 'sinai-4',
+        cita: 'Éx 19,1-8',
+        titulo: 'La libertad aprende a cuidar',
+        parrafos: [
+          'La alianza del Sinaí une al pueblo con Dios y orienta su vida compartida. Esa dimensión nos recuerda que la libertad tiene consecuencias en las relaciones: cómo tratamos a otros, qué acuerdos respetamos y qué responsabilidades asumimos.',
+          'Desde la fe cristiana, miramos a Jesús para aprender una libertad que se entrega en el amor. El padrenuestro nos enseña además a pedir el pan de cada día: podemos confiar lo necesario a Dios y colaborar para que llegue a todos.',
+          'No necesitamos resolver todo el futuro hoy. Sí podemos cuidar la decisión concreta que tenemos delante.'
+        ]
+      },
+      {
+        id: 'vida-sinai',
+        cita: 'Éx 16,4',
+        titulo: 'Llevar el Sinaí a nuestra vida',
+        parrafos: [
+          'Piensa en un cambio que estés atravesando. Escribe qué apoyo necesitas para sostenerlo y qué parte del pasado conviene recordar con más verdad. Elige un paso posible para esta semana.'
+        ]
+      }
+    ],
+    guardar: 'La libertad crece cuando aprendemos a cuidar el paso de hoy.',
+    oracion: [
+      'Dios que acompañas a tu pueblo,',
+      'sostén nuestros caminos de libertad.',
+      'Ayúdanos a reconocer lo que necesitamos,',
+      'a pedir apoyo',
+      'y a decidir con verdad.',
+      'Danos hoy el pan y la confianza para seguir.',
+      'Amén.'
+    ],
+    lectura: { cita: 'Éxodo 16,1-18 y 19,1-8', url: 'https://www.vatican.va/content/bibbia/es/antico-testamento/pentateuco/esodo/capitolo-16.index.html' },
+    whatsapp: `*El desierto del Sinaí* · La libertad también se aprende. Cuida el paso de hoy.`
+  },
+  {
+    id: 'ain-karem',
+    numero: 9,
+    publicar: '2026-12-13',
+    activo: true,
+    nombre: 'Ain Karem',
+    titulo: 'Cuando te cuesta alegrarte por lo bueno que les pasa a otros',
+    entradilla: 'La alegría de otra persona también puede ensanchar tu corazón.',
+    ubicacion: 'Iglesia de la Visitación · Montaña de Judá',
+    coord: [31.7645, 35.1583],
+    // entrega 15 del documento «Tierra Santa · 40 entregas»
+    secciones: [
+      {
+        id: 'intro-ain-karem',
+        cita: 'Lc 1,39',
+        parrafos: [
+          'Alguien cuenta una buena noticia y tú sonríes. Sin embargo, por dentro aparece una punzada. Esa reconciliación, ese nacimiento o esa compañía te recuerda algo que tú sigues esperando. Puedes alegrarte por el otro y sentir tristeza por ti al mismo tiempo.',
+          'Reconocerlo con sinceridad ayuda más que castigarte. El corazón necesita aprender a recibir el bien sin convertir cada historia en una comparación. La visita de María a Isabel nos ofrece una escena para empezar ese aprendizaje.'
+        ]
+      },
+      {
+        id: 'ain-karem-1',
+        cita: 'Lc 1,39-56',
+        titulo: 'Una casa donde se reconoce el don',
+        parrafos: [
+          'Ain Karem está vinculado por la tradición cristiana a la Visitación. Lucas habla de una población de la montaña de Judá, sin nombrarla. María entra en casa de Zacarías y saluda a Isabel. Esta reconoce, movida por el Espíritu, la bendición que María lleva consigo. María responde alabando a Dios (Lc 1,39-56).',
+          'El encuentro permite que cada una reconozca la acción de Dios en la vida de la otra. La conversación se convierte en gratitud.'
+        ]
+      },
+      {
+        id: 'ain-karem-2',
+        cita: 'Lc 1,40-41',
+        titulo: 'Escuchar sin llevarlo todo a nuestra historia',
+        parrafos: [
+          'A veces, cuando alguien comparte algo importante, respondemos contando enseguida lo que nos pasó a nosotros. No siempre lo hacemos por egoísmo. Quizá queremos demostrar que comprendemos. Pero la otra persona puede quedarse sin espacio para terminar.',
+          'Podemos aprender a preguntar, a dejar un silencio y a escuchar hasta el final. Una visita se vuelve un regalo cuando quien nos recibe siente que su vida merece atención.',
+          'También conviene preguntar antes de aconsejar. Hay noticias que necesitan una celebración tranquila; otras piden simplemente compañía. No tenemos que ocupar el centro de todos los encuentros para ser queridos.'
+        ]
+      },
+      {
+        id: 'ain-karem-3',
+        cita: 'Lc 1,42-45',
+        titulo: 'La comparación estrecha la mirada',
+        parrafos: [
+          'La vida ajena suele mostrarnos una parte de su historia. Desconocemos muchas de sus noches, esfuerzos y heridas. Compararla con toda nuestra vida resulta injusto para ambos.',
+          'Si una buena noticia te duele, puedes poner ese dolor ante Dios sin avergonzarte. Después, cuando puedas, ofrecer una palabra sincera: «Me alegro de que estés acompañado» o «Gracias por contármelo». No hace falta exagerar el entusiasmo ni negar lo que estás viviendo.',
+          'La gratitud puede crecer despacio. Quizá hoy solo puedas reconocer que el bien recibido por otro merece ser cuidado. Ese pequeño reconocimiento ya abre una puerta.'
+        ]
+      },
+      {
+        id: 'ain-karem-4',
+        cita: 'Lc 1,56',
+        titulo: 'Visitar también es dejarse encontrar',
+        parrafos: [
+          'En una comunidad cristiana todos necesitamos dar y recibir. Quien suele acompañar puede necesitar que alguien lo escuche. Quien está pasando una dificultad sigue teniendo cosas valiosas que compartir.',
+          'Una llamada, una conversación después de misa o una visita acordada pueden ayudarnos a salir del aislamiento. Lo importante es acercarnos con respeto, sin imponer horarios ni exigir confidencias. La cercanía nace cuando hay libertad para abrir la puerta y también para decir que hoy hace falta descansar.'
+        ]
+      },
+      {
+        id: 'vida-ain-karem',
+        cita: 'Lc 1,46-47',
+        titulo: 'Llevar Ain Karem a nuestra vida',
+        parrafos: [
+          'Piensa en alguien que haya recibido una buena noticia. Escríbele una frase concreta de alegría o agradecimiento. Si también hay tristeza en ti, reserva otro momento para hablar de ella con una persona de confianza.'
+        ]
+      }
+    ],
+    guardar: 'Celebrar el bien de otro puede enseñarnos a reconocer los dones de Dios.',
+    oracion: [
+      'Señor,',
+      'libera mi mirada de la comparación.',
+      'Enséñame a escuchar con atención,',
+      'a compartir la alegría',
+      'y a confiarte lo que todavía me duele.',
+      'Haz de mis visitas un lugar de encuentro.',
+      'Amén.'
+    ],
+    lectura: { cita: 'Lucas 1,39-56', url: 'https://www.ewtn.com/es/biblia/51-lucas/1' },
+    whatsapp: `*Ain Karem* · María e Isabel se alegran la una por la otra. Celebra hoy el bien ajeno.`
+  },
+  {
+    id: 'betesda',
+    numero: 10,
+    publicar: '2026-12-20',
+    activo: true,
+    nombre: 'Betesda',
+    titulo: 'Cuando llevas demasiado tiempo esperando',
+    entradilla: 'Tu vida merece atención también cuando la dificultad se prolonga.',
+    ubicacion: 'Piscina de Betesda · Jerusalén',
+    coord: [31.7813, 35.2366],
+    // entrega 13 del documento «Tierra Santa · 40 entregas»
+    secciones: [
+      {
+        id: 'intro-betesda',
+        cita: 'Jn 5,5',
+        parrafos: [
+          'Al principio, todos preguntaban. Había llamadas, ofrecimientos y palabras de ánimo. Pero pasan los meses, la situación continúa y las conversaciones se hacen más cortas.',
+          'Quizá tú mismo has dejado de contar cómo estás. Te parece que repites siempre lo mismo o temes cansar a los demás.',
+          'En Jerusalén, junto a la piscina de Betesda, el Evangelio nos presenta a un hombre cuya enfermedad llevaba mucho tiempo acompañándolo.'
+        ]
+      },
+      {
+        id: 'betesda-1',
+        cita: 'Jn 5,1-9',
+        titulo: 'Jesús se acerca a una espera larga',
+        parrafos: [
+          'Juan sitúa la escena junto a la Puerta de las Ovejas, en una piscina con cinco soportales. Allí había muchos enfermos. Uno de ellos llevaba treinta y ocho años enfermo.',
+          'Jesús lo ve, conoce la duración de su situación y le pregunta si quiere quedar sano. El hombre responde explicando que no tiene a nadie que lo introduzca en la piscina. Jesús le manda levantarse, tomar su camilla y caminar; el relato narra su curación (Jn 5,1-9).',
+          'La escena permite detenernos en una necesidad que el hombre expresa: le falta quien lo ayude.'
+        ]
+      },
+      {
+        id: 'betesda-2',
+        cita: 'Jn 5,5-6',
+        titulo: 'El tiempo no hace menos importante a una persona',
+        parrafos: [
+          'Cuando una situación dura mucho, podemos acostumbrarnos a ella. Corremos el riesgo de dejar de percibir lo que cuesta a quien la vive.',
+          'La enfermedad prolongada, la dependencia o la soledad requieren una atención que se renueve. La persona sigue teniendo algo que decir, aunque su dificultad se parezca a la del mes pasado.',
+          'Podemos preguntar cómo está hoy, qué ha cambiado y qué necesita. Escuchar de nuevo es reconocer que su vida continúa siendo importante para nosotros.'
+        ]
+      },
+      {
+        id: 'betesda-3',
+        cita: 'Jn 5,6',
+        titulo: 'Ayudar sin convertirlo todo en una exigencia',
+        parrafos: [
+          'La pregunta de Jesús no debe utilizarse para culpar a quien sigue enfermo. El relato anuncia una acción suya, no una técnica que podamos reproducir mediante suficiente voluntad.',
+          'A veces hacemos daño con frases como «tienes que poner más de tu parte», sin conocer el esfuerzo que ya realiza la otra persona.',
+          'Acompañar pide escuchar sus posibilidades reales, respetar sus decisiones y colaborar en lo que necesite. Puede ser una visita, un traslado, una gestión o una ayuda profesional adecuada.',
+          'La oración puede acompañar esos cuidados y sostenernos en ellos.'
+        ]
+      },
+      {
+        id: 'betesda-4',
+        cita: 'Jn 5,7',
+        titulo: 'Cuidar sin prometer lo que no sabemos',
+        parrafos: [
+          'El Evangelio narra una curación. Nuestra responsabilidad al acompañar a alguien incluye no prometerle que su situación tendrá el mismo desenlace.',
+          'Podemos comprometernos con algo verdadero: llamar, regresar, escuchar o ayudar a buscar recursos.',
+          'También quienes cuidan necesitan apoyo. Repartir las tareas y reconocer el agotamiento favorece una presencia más estable y respetuosa.',
+          'La fidelidad se construye con compromisos posibles, no con ofrecimientos que después no podemos mantener.'
+        ]
+      },
+      {
+        id: 'vida-betesda',
+        cita: 'Jn 5,8',
+        titulo: 'Llevar Betesda a nuestra vida',
+        parrafos: [
+          'Piensa en alguien cuya dificultad se haya prolongado. Puedes contactar con esa persona y preguntarle qué le ayudaría esta semana.',
+          'Si eres tú quien está esperando, intenta nombrar una necesidad concreta ante alguien de confianza.',
+          'También puedes rezar con estas palabras: «Señor, sigo aquí. Ayúdame a encontrar compañía para este tramo».'
+        ]
+      }
+    ],
+    guardar: 'El tiempo que llevas sufriendo no disminuye el valor de tu vida.',
+    oracion: [
+      'Señor Jesús,',
+      'mira a quienes esperan desde hace tiempo.',
+      'Ayúdanos a escuchar',
+      'sin cansarnos de la fragilidad.',
+      'Danos constancia para acompañar',
+      'y humildad para pedir apoyo.',
+      'Que nadie se sienta olvidado',
+      'porque su dificultad todavía no termina.',
+      'Amén.'
+    ],
+    lectura: { cita: 'Juan 5,1-9', url: 'https://www.ewtn.com/es/biblia/43-juan/5' },
+    whatsapp: `*Betesda* · Treinta y ocho años esperando, y Jesús se detuvo ante él.`
+  },
+  {
+    id: 'belen',
+    numero: 11,
+    publicar: '2026-12-25',
+    activo: true,
+    nombre: 'Belén',
+    titulo: 'Cuando piensas que lo que haces es demasiado pequeño',
+    entradilla: 'Hay gestos de amor que sostienen una vida sin que casi nadie los vea.',
+    ubicacion: 'Basílica de la Natividad · Belén',
+    coord: [31.7043, 35.2075],
+    // entrega 11 del documento «Tierra Santa · 40 entregas»
+    secciones: [
+      {
+        id: 'intro-belen',
+        cita: 'Lc 2,7',
+        parrafos: [
+          'Preparar una comida. Acompañar a alguien a una consulta. Cambiar unas sábanas. Volver a llamar a quien ayer no tenía ganas de hablar.',
+          'Muchas de las cosas que más cuidan a las personas apenas reciben atención. A veces, después de un día lleno de estas tareas, nos preguntamos si hemos hecho algo importante.',
+          'Belén nos invita a mirar de nuevo lo pequeño.'
+        ]
+      },
+      {
+        id: 'belen-1',
+        cita: 'Lc 2,1-20',
+        titulo: 'Un niño que necesita cuidados',
+        parrafos: [
+          'Lucas cuenta que María y José fueron a Belén y que allí nació Jesús. María lo envolvió en pañales y lo acostó en un pesebre. Unos pastores recibieron el anuncio de su nacimiento y acudieron a verlo. Después compartieron lo que habían escuchado y regresaron alabando a Dios (Lc 2,1-20).',
+          'La señal que encuentran es un niño. El Evangelio nos sitúa ante una vida que necesita ser acogida y cuidada.'
+        ]
+      },
+      {
+        id: 'belen-2',
+        cita: 'Lc 2,7',
+        titulo: 'Dios se acerca a nuestra fragilidad',
+        parrafos: [
+          'La fe cristiana reconoce en Jesús al Hijo de Dios hecho hombre. Al contemplar su nacimiento, podemos detenernos ante la profundidad de esa cercanía: Dios entra en nuestra historia compartiendo una vida humana real.',
+          'Por eso, los cuidados cotidianos merecen nuestra atención. Dar de comer, abrigar y acompañar son gestos que responden a necesidades verdaderas.',
+          'También quien necesita recibirlos conserva toda su dignidad. Depender de otros no disminuye el valor de una persona.',
+          'Belén puede enseñarnos a tratar con más delicadeza tanto la fragilidad ajena como la propia.'
+        ]
+      },
+      {
+        id: 'belen-3',
+        cita: 'Lc 2,12',
+        titulo: 'Lo pequeño merece hacerse con amor',
+        parrafos: [
+          'Quizá tu vida de ahora tiene menos actividad que antes. Tal vez ya no puedes asumir las mismas tareas o desplazarte con facilidad.',
+          'Puedes preguntarte qué forma puede tomar hoy tu cariño. Escuchar a alguien, agradecer un cuidado, recordar a una persona en la oración o compartir una experiencia puede ser valioso.',
+          'No necesitas comparar tu aportación con la de quien tiene otras fuerzas y posibilidades.',
+          'Tampoco es justo pedir a una persona agotada que dé siempre un poco más. El cuidado necesita descanso, apoyo y responsabilidades compartidas.'
+        ]
+      },
+      {
+        id: 'belen-4',
+        cita: 'Lc 2,16-19',
+        titulo: 'Aprender a mirar despacio',
+        parrafos: [
+          'Los pastores se acercan y encuentran a la familia. María guarda lo sucedido y lo medita en su corazón.',
+          'La escena nos invita a prestar atención antes de pasar a otra cosa. A veces vivimos con tanta prisa que dejamos de percibir el bien que recibimos y el que podemos ofrecer.',
+          'Una mirada agradecida puede reconocer el esfuerzo de quien prepara nuestra comida, limpia un espacio común o permanece disponible cuando necesitamos compañía.',
+          'Decir gracias también es una forma de cuidar.'
+        ]
+      },
+      {
+        id: 'vida-belen',
+        cita: 'Lc 2,19',
+        titulo: 'Llevar Belén a nuestra vida',
+        parrafos: [
+          'Elige un gesto cotidiano que suelas dar por supuesto. Hoy puedes hacerlo con más atención o agradecer a la persona que lo realiza.',
+          'Y si eres tú quien necesita ayuda, procura recibirla sin pedir perdón por existir. También tu vida merece tiempo, ternura y cuidado.'
+        ]
+      }
+    ],
+    guardar: 'El amor de cada día tiene valor, aunque casi nadie lo vea.',
+    oracion: [
+      'Jesús, nacido en Belén,',
+      'enséñame a reconocer el valor',
+      'de los gestos sencillos.',
+      'Dame ternura para cuidar,',
+      'gratitud para recibir',
+      'y respeto por la fragilidad.',
+      'Que nadie a mi lado',
+      'se sienta una carga.',
+      'Amén.'
+    ],
+    lectura: { cita: 'Lucas 2,1-20', url: 'https://www.ewtn.com/es/biblia/51-lucas/2' },
+    whatsapp: `*Belén* · Un niño envuelto en pañales. Lo pequeño también sostiene la vida.`
   }
 ];
