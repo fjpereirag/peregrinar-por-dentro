@@ -5,7 +5,7 @@
   --font-body:"Source Serif 4","Literata",Georgia,serif;
   --step-hero:clamp(4rem,10vw,9.5rem); --step-h2:clamp(2.1rem,4.2vw,3.6rem); --step-h3:clamp(1.4rem,2.4vw,2rem);
   --step-body:clamp(1.02rem,1.1vw,1.16rem); --step-small:.8rem;
-  --bg:#0B0A08; --fg:#F2EBDD; --muted:#A89F8C; --accent:#C9A35B; --accent-2:#7A1F1F;
+  --bg:#F8F2E4; --fg:#3B2A18; --muted:#7C6447; --accent:#9C6B30; --accent-2:#6E3B23;
   --accent-suave:color-mix(in srgb,var(--accent) 16%,transparent);
   --line:color-mix(in srgb,var(--fg) 14%,transparent);
   --line-oro:color-mix(in srgb,var(--accent) 45%,transparent);
@@ -17,7 +17,7 @@
   --ease-out:cubic-bezier(.22,1,.36,1); --ease-in-out:cubic-bezier(.65,0,.35,1);
   --dur-micro:180ms; --dur-ui:380ms; --dur-reveal:1100ms; --stagger:60ms;
   --sombra-texto:0 2px 24px color-mix(in srgb,var(--bg) 85%,transparent);
-  color-scheme:dark;
+  color-scheme:light;
 }
 @media (prefers-reduced-motion:reduce){ :root{ --dur-reveal:150ms; --dur-ui:150ms; --stagger:0ms } }
 
@@ -55,21 +55,21 @@ h1,h2,h3{font-family:var(--font-display);font-weight:500;margin:0}
              linear-gradient(0deg,color-mix(in srgb,var(--bg) 60%,transparent),transparent 30%)}
 #velo.lectura{opacity:.55}
 
-/* ---------- mapa ilustrado de situación ---------- */
-.situacion{position:absolute;right:var(--gutter);bottom:var(--space-5);width:clamp(11rem,15vw,15rem);margin:0;color:var(--muted);padding:var(--space-2);background:var(--panel);border-left:1px solid var(--line-oro)}
+/* ---------- mapa ilustrado de situación (colores reales de mapa: tierra, mar, río) ---------- */
+.situacion{position:absolute;right:var(--gutter);bottom:var(--space-5);width:clamp(11rem,15vw,15rem);margin:0;color:#4a3c22;padding:var(--space-2);background:#E6D7AE;border-left:1px solid #8a7550;box-shadow:0 14px 30px rgba(0,0,0,.35)}
 .situacion svg{display:block;width:100%;height:auto;overflow:visible}
-.situacion p{margin:var(--space-1) 0 0;font-variant:all-small-caps;letter-spacing:.16em;font-size:.9rem;color:var(--accent);text-align:center}
+.situacion p{margin:var(--space-1) 0 0;font-variant:all-small-caps;letter-spacing:.16em;font-size:.9rem;color:#7a3a28;text-align:center}
 .situacion svg *{stroke:none}
-.sit-mar{fill:color-mix(in srgb,#3a5a78 22%,transparent)}
-.situacion .sit-costa{fill:none;stroke:var(--line-oro);stroke-width:1}
-.situacion .sit-agua{fill:color-mix(in srgb,#3a5a78 40%,transparent);stroke:var(--line-oro);stroke-width:.6}
-.situacion .sit-rio{fill:none;stroke:color-mix(in srgb,#6f8fae 70%,transparent);stroke-width:.9}
-.sit-ciudad{fill:var(--muted)}
-.sit-rotulo{font:400 7px var(--font-body);fill:var(--muted)}
-.sit-rotulo.mar,.sit-rotulo.agua{font-style:italic;letter-spacing:.06em;font-size:6.5px}
-.sit-actual circle{fill:var(--accent)}
-.situacion .sit-otro circle{fill:none;stroke:var(--accent);stroke-width:1}
-.situacion .sit-pulso{fill:none!important;stroke:var(--accent);stroke-width:1;transform-box:fill-box;transform-origin:center;animation:pulso 3.2s var(--ease-out) infinite}
+.sit-mar{fill:#9CC4DA}
+.situacion .sit-costa{fill:none;stroke:#8a7550;stroke-width:1}
+.situacion .sit-agua{fill:#8bb9d1;stroke:#6f93a8;stroke-width:.6}
+.situacion .sit-rio{fill:none;stroke:#6f93a8;stroke-width:.9}
+.sit-ciudad{fill:#3B2A18}
+.sit-rotulo{font:400 7px var(--font-body);fill:#3B2A18}
+.sit-rotulo.mar,.sit-rotulo.agua{font-style:italic;letter-spacing:.06em;font-size:6.5px;fill:#3d6276}
+.sit-actual circle{fill:#B6482E}
+.situacion .sit-otro circle{fill:none;stroke:#8a7550;stroke-width:1}
+.situacion .sit-pulso{fill:none!important;stroke:#B6482E;stroke-width:1;transform-box:fill-box;transform-origin:center;animation:pulso 3.2s var(--ease-out) infinite}
 @keyframes pulso{from{transform:scale(1);opacity:.9}to{transform:scale(3.4);opacity:0}}
 @media (prefers-reduced-motion:reduce){.sit-pulso{animation:none}}
 
@@ -255,7 +255,7 @@ main{position:relative;z-index:3}
 }
 
 .proximo{position:fixed;z-index:35;top:calc(4.6rem + .5rem);left:50%;transform:translateX(-50%);width:min(36rem,calc(100vw - 2 * var(--gutter)));margin:0;display:flex;gap:.75rem;align-items:flex-start;
-  padding:var(--space-2) .5rem var(--space-2) var(--space-3);background:var(--panel-fuerte);border:1px solid var(--line-oro);border-left:2px solid var(--accent);font-size:1rem;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+  padding:var(--space-2) .5rem var(--space-2) var(--space-3);background:var(--panel-fuerte);border:1px solid var(--line-oro);border-left:2px solid var(--accent);font-size:1rem;line-height:1.45;box-shadow:0 10px 30px rgba(59,42,24,.22)}
 .proximo span{flex:1}
 .proximo-lugar{margin:var(--space-3) 0 0;padding-top:var(--space-2);border-top:1px solid var(--line);max-width:30rem;color:var(--muted);font:italic 500 1.15rem/1.3 var(--font-display)}
 .proximo-lugar b{color:var(--accent);font-weight:600;font-style:normal}
